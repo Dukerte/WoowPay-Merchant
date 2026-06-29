@@ -1,0 +1,1934 @@
+<!DOCTYPE html>
+<html lang="mn">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Woow Pay – Мерчант бүртгэл</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;500;600;700;800;900&family=Manrope:wght@600;700;800&display=swap');
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --primary: #29BDE0;
+      --primary-dark: #1A9CBD;
+      --accent: #5CD4EE;
+      --accent-soft: #A8E9F7;
+      --dark: #060C24;
+      --dark-2: #0A1840;
+      --text: #0F1C3F;
+      --muted: #5A7A8A;
+      --soft: #EBF8FC;
+      --soft-2: #F5FBFE;
+      --line: #C4E8F5;
+      --card: #FFFFFF;
+      --success: #10B981;
+      --warning: #F59E0B;
+      --error: #EF4444;
+      --radius: 18px;
+      --shadow: 0 20px 70px rgba(6, 12, 36, .40);
+      --shadow-soft: 0 8px 28px rgba(41, 189, 224, .10);
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Noto Sans', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+      min-height: 100vh;
+      color: var(--text);
+      background:
+        radial-gradient(circle at top left, rgba(41,189,224,.22), transparent 36%),
+        radial-gradient(circle at 82% 0%, rgba(92,212,238,.12), transparent 30%),
+        linear-gradient(135deg, var(--dark) 0%, var(--dark-2) 52%, var(--dark) 100%);
+    }
+
+    a { color: inherit; }
+
+    h1, h2, h3, .btn-primary, .btn-secondary, .mini-cta, .header-badge, .stat-card strong {
+      font-family: 'Manrope', 'Noto Sans', system-ui, sans-serif;
+    }
+
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      background: rgba(6,12,36,.82);
+      backdrop-filter: blur(18px);
+      border-bottom: 1px solid rgba(255,255,255,.10);
+      padding: 0 1.25rem;
+    }
+
+    .header-inner {
+      max-width: 1160px;
+      height: 70px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+    }
+
+    .logo { display: flex; align-items: center; text-decoration: none; }
+
+    .logo-wordmark {
+      height: 38px;
+      width: auto;
+      mix-blend-mode: screen; /* makes black background transparent */
+      display: block;
+    }
+
+    /* Fallback if image missing */
+    .logo-fallback {
+      display: none;
+      align-items: center;
+      gap: .8rem;
+    }
+    .logo-fallback.show { display: flex; }
+    .logo-mark-fb {
+      width: 42px; height: 42px;
+      border-radius: 13px;
+      background: var(--dark);
+      display: grid; place-items: center;
+      overflow: hidden;
+      box-shadow: 0 8px 24px rgba(41,189,224,.28);
+    }
+    .logo-mark-fb img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .logo-text-fb {
+      font-size: 1.28rem; font-weight: 900; letter-spacing: -.03em;
+      background: linear-gradient(90deg, #fff, #A8E9F7 60%, var(--accent-soft));
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    }
+
+    .header-actions { display: flex; align-items: center; gap: .75rem; }
+
+    .header-badge, .mini-cta {
+      display: inline-flex;
+      align-items: center;
+      border-radius: 999px;
+      font-weight: 800;
+      font-size: .78rem;
+      white-space: nowrap;
+      text-decoration: none;
+    }
+
+    .header-badge {
+      padding: .45rem .9rem;
+      background: rgba(41,189,224,.12);
+      border: 1px solid rgba(41,189,224,.28);
+      color: #A8E9F7;
+    }
+
+    .mini-cta {
+      padding: .55rem 1rem;
+      color: #fff;
+      background: linear-gradient(135deg, var(--primary), var(--accent));
+      box-shadow: 0 10px 24px rgba(41,189,224,.28);
+    }
+
+    .page { max-width: 1160px; margin: 0 auto; padding: 0 1.25rem; }
+
+    .hero {
+      display: grid;
+      grid-template-columns: minmax(0, 1.08fr) minmax(320px, .92fr);
+      align-items: center;
+      gap: 2rem;
+      padding: 4.5rem 0 2.6rem;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: .45rem;
+      background: rgba(255,255,255,.08);
+      border: 1px solid rgba(255,255,255,.13);
+      color: #A8E9F7;
+      font-size: .8rem;
+      font-weight: 800;
+      padding: .45rem .9rem;
+      border-radius: 999px;
+      margin-bottom: 1.25rem;
+    }
+
+    .hero h1 {
+      color: #fff;
+      font-family: 'Manrope', 'Noto Sans', system-ui, sans-serif;
+      font-size: clamp(2rem, 4.6vw, 3.75rem);
+      line-height: 1.14;
+      font-weight: 800;
+      letter-spacing: -.035em;
+      margin-bottom: 1.1rem;
+    }
+
+    .hero h1 span {
+      background: linear-gradient(90deg, var(--accent), var(--accent-soft));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .hero-copy {
+      color: #A8D8E8;
+      font-size: 1.02rem;
+      line-height: 1.85;
+      max-width: 680px;
+      margin-bottom: 1.45rem;
+    }
+
+    .hero-buttons { display: flex; flex-wrap: wrap; gap: .8rem; align-items: center; }
+
+    .btn-primary, .btn-secondary {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: .45rem;
+      border-radius: 14px;
+      padding: .9rem 1.15rem;
+      font-weight: 850;
+      font-size: .94rem;
+      text-decoration: none;
+    }
+
+    .btn-primary {
+      color: #fff;
+      background: linear-gradient(135deg, var(--primary), var(--accent));
+      box-shadow: 0 14px 30px rgba(41,189,224,.36);
+    }
+
+    .btn-secondary {
+      color: #D0F3FB;
+      border: 1px solid rgba(255,255,255,.15);
+      background: rgba(255,255,255,.06);
+    }
+
+    .hero-note { color: #7BC8DA; font-size: .84rem; margin-top: 1rem; line-height: 1.6; }
+
+    /* Mascot */
+    .hero-mascot-wrap {
+      position: relative;
+      display: flex;
+      justify-content: center;
+      margin-bottom: -1.5rem;
+      z-index: 2;
+      pointer-events: none;
+    }
+    .hero-mascot-wrap img {
+      height: 210px;
+      width: auto;
+      object-fit: contain;
+      object-position: bottom;
+      filter: drop-shadow(0 16px 32px rgba(0,0,0,.35));
+      animation: mascot-float 4s ease-in-out infinite;
+    }
+    @keyframes mascot-float {
+      0%,100% { transform: translateY(0); }
+      50%      { transform: translateY(-10px); }
+    }
+
+    .hero-panel {
+      background: rgba(255,255,255,.08);
+      border: 1px solid rgba(255,255,255,.14);
+      border-radius: 28px;
+      padding: 1.1rem;
+      box-shadow: var(--shadow);
+    }
+
+    .merchant-card {
+      background: rgba(255,255,255,.97);
+      border-radius: 22px;
+      padding: 1.35rem;
+      overflow: hidden;
+    }
+
+    .merchant-card-top { display: flex; align-items: center; justify-content: space-between; gap: 1rem; margin-bottom: 1rem; }
+
+    .merchant-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: .35rem;
+      background: var(--soft);
+      color: var(--primary-dark);
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      padding: .4rem .75rem;
+      font-size: .76rem;
+      font-weight: 850;
+    }
+
+    .approval { color: var(--success); font-size: .78rem; font-weight: 850; }
+
+    .sample-product {
+      background: linear-gradient(135deg, #EBF8FC, #FFFFFF);
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      padding: 1rem;
+      margin-bottom: 1rem;
+    }
+
+    .sample-product h3 { font-size: 1rem; color: #060C24; margin-bottom: .45rem; }
+    .sample-product p { color: var(--muted); font-size: .84rem; line-height: 1.65; }
+
+    .amount-row { display: grid; grid-template-columns: 1fr 1fr; gap: .7rem; margin-top: .9rem; }
+
+    .amount-box {
+      background: #fff;
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      padding: .85rem;
+    }
+
+    .amount-box small { display: block; color: var(--muted); font-size: .7rem; margin-bottom: .25rem; }
+    .amount-box strong { color: var(--primary-dark); font-size: 1rem; }
+
+    .ref-preview {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 1rem;
+      background: #060C24;
+      color: #fff;
+      border-radius: 18px;
+      padding: 1rem;
+      margin-top: 1rem;
+    }
+
+    .ref-preview small { display: block; color: #7ED4EA; font-size: .72rem; margin-bottom: .28rem; }
+    .ref-preview strong { font-size: 1.15rem; letter-spacing: .08em; }
+    .bonus-badge { background: rgba(16,185,129,.16); color: #A7F3D0; border: 1px solid rgba(16,185,129,.28); border-radius: 999px; padding: .35rem .7rem; font-size: .74rem; font-weight: 850; white-space: nowrap; }
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1rem;
+      padding: .7rem 0 2.7rem;
+    }
+
+    .stat-card {
+      background: rgba(255,255,255,.09);
+      border: 1px solid rgba(255,255,255,.13);
+      border-radius: 20px;
+      padding: 1.15rem;
+      color: #fff;
+      min-height: 118px;
+      transition: transform .22s ease, box-shadow .22s ease, border-color .22s ease;
+    }
+    .stat-card:hover {
+      transform: translateY(-4px);
+      border-color: rgba(92,212,238,.38);
+      box-shadow: 0 18px 42px rgba(0,0,0,.22);
+    }
+
+    .stat-card strong { display: block; font-size: clamp(1.7rem, 4vw, 2.35rem); font-weight: 900; letter-spacing: -.04em; margin-bottom: .25rem; }
+    .stat-card span { color: #C8B7E8; font-size: .9rem; line-height: 1.55; }
+    .stat-card > span { display: block; }
+    .stat-card.boost {
+      position: relative;
+      overflow: hidden;
+      background: linear-gradient(135deg, rgba(255,255,255,.13), rgba(41,189,224,.18));
+      border-color: rgba(92,212,238,.28);
+    }
+    .stat-card.boost::after {
+      content: '';
+      position: absolute;
+      width: 120px; height: 120px;
+      right: -42px; top: -44px;
+      border-radius: 50%;
+      background: rgba(16,185,129,.20);
+    }
+    .stat-icon {
+      position: relative;
+      z-index: 1;
+      display: inline-grid;
+      place-items: center;
+      width: 40px; height: 40px;
+      border-radius: 14px;
+      background: rgba(16,185,129,.18);
+      border: 1px solid rgba(16,185,129,.30);
+      margin-bottom: 0;
+      font-size: 1.25rem;
+    }
+    .boost-number { position: relative; z-index: 1; display: flex; align-items: center; gap: .7rem; margin-bottom: .42rem; width: 100%; }
+    .boost-number strong { margin-bottom: 0; line-height: 1; }
+    .stat-card.boost > span { padding-left: 0; margin-top: .15rem; }
+    .stat-card.boost strong, .stat-card.boost span { position: relative; z-index: 1; }
+
+    .ref-tools-grid {
+      display: grid;
+      grid-template-columns: 1fr 1.08fr;
+      gap: 1rem;
+      margin-top: 1rem;
+    }
+
+    .bonus-table-box {
+      margin-top: 1rem;
+      border: 1px solid var(--line);
+      background: linear-gradient(135deg, #FFFFFF, var(--soft));
+      border-radius: 20px;
+      padding: 1.2rem;
+      box-shadow: var(--shadow-soft);
+      transition: transform .22s ease, box-shadow .22s ease, border-color .22s ease;
+    }
+    .bonus-table-box:hover {
+      transform: translateY(-3px);
+      border-color: rgba(108,43,217,.32);
+      box-shadow: 0 18px 40px rgba(41,189,224,.14);
+    }
+    .bonus-table-head {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 1rem;
+      align-items: center;
+    }
+    .bonus-table-box h3 { font-size: 1.02rem; color: #060C24; margin-bottom: .35rem; }
+    .bonus-table-box p { color: var(--muted); font-size: .86rem; line-height: 1.6; }
+    .bonus-table-head.compact { align-items: flex-start; }
+    .code-check-row {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: .75rem;
+      margin-top: 1rem;
+    }
+    .code-check-row input {
+      width: 100%;
+      border: 1.5px solid var(--line);
+      border-radius: 12px;
+      padding: .86rem .95rem;
+      font-family: inherit;
+      font-size: .9rem;
+      outline: none;
+      background: #fff;
+      transition: border-color .18s ease, box-shadow .18s ease;
+    }
+    .code-check-row input:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(41,189,224,.15);
+    }
+    .lookup-result {
+      display: none;
+      margin-top: .9rem;
+      background: #060C24;
+      color: #fff;
+      border-radius: 16px;
+      padding: .9rem 1rem;
+      border: 1px solid rgba(41,189,224,.22);
+    }
+    .lookup-result.show { display: block; }
+    .lookup-result small { display: block; color: #7ED4EA; font-size: .75rem; margin-bottom: .25rem; }
+    .lookup-result strong { font-size: 1.35rem; letter-spacing: .12em; color: #fff; }
+    .bonus-updated {
+      background: var(--soft);
+      border: 1px solid var(--line);
+      color: #0A2A3A;
+      border-radius: 12px;
+      padding: .7rem .85rem;
+      font-size: .84rem;
+      margin-bottom: .8rem;
+    }
+
+    .btn-check-code {
+      border: none;
+      border-radius: 12px;
+      padding: .88rem 1.05rem;
+      color: #fff;
+      background: linear-gradient(135deg, var(--primary), var(--accent));
+      font-family: inherit;
+      font-weight: 850;
+      cursor: pointer;
+      white-space: nowrap;
+      box-shadow: 0 10px 24px rgba(41,189,224,.25);
+      transition: transform .18s ease, box-shadow .18s ease;
+    }
+    .btn-check-code:hover { transform: translateY(-2px); box-shadow: 0 16px 30px rgba(108,43,217,.34); }
+    .bonus-table-wrap { display: none; margin-top: 1rem; }
+    .bonus-table-wrap.show { display: block; }
+    .bonus-table {
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 0;
+      overflow: hidden;
+      border-radius: 14px;
+      border: 1px solid var(--line);
+      background: #fff;
+    }
+    .bonus-table th, .bonus-table td {
+      text-align: left;
+      padding: .85rem .95rem;
+      border-bottom: 1px solid var(--line);
+      font-size: .9rem;
+    }
+    .bonus-table th {
+      background: #060C24;
+      color: #fff;
+      font-weight: 850;
+    }
+    .bonus-table td:first-child { color: var(--primary-dark); font-weight: 900; letter-spacing: .08em; }
+    .bonus-table td:last-child { color: var(--success); font-weight: 900; }
+    .bonus-table tr:last-child td { border-bottom: none; }
+    .bonus-table tbody tr { transition: background .18s ease, transform .18s ease; }
+    .bonus-table tbody tr:hover { background: var(--soft); }
+    .bonus-note { margin-top: .7rem; font-size: .78rem !important; color: var(--muted); }
+
+    .section { margin: 0 0 2rem; }
+
+    .white-section {
+      background: #fff;
+      border-radius: 28px;
+      padding: 2rem;
+      box-shadow: var(--shadow-soft);
+    }
+
+    .section-title {
+      max-width: 760px;
+      margin-bottom: 1.4rem;
+    }
+
+    .section-title .kicker {
+      color: var(--primary);
+      font-weight: 900;
+      font-size: .78rem;
+      margin-bottom: .45rem;
+    }
+
+    .section-title h2 { font-size: clamp(1.45rem, 3vw, 2.1rem); letter-spacing: -.04em; color: #060C24; margin-bottom: .5rem; }
+    .section-title p { color: var(--muted); line-height: 1.7; font-size: .96rem; }
+
+    .benefit-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1rem;
+    }
+
+    .benefit-card {
+      border: 1px solid var(--line);
+      background: var(--soft-2);
+      border-radius: 18px;
+      padding: 1.1rem;
+      min-height: 178px;
+      transition: transform .22s ease, box-shadow .22s ease, border-color .22s ease, background .22s ease;
+    }
+    .benefit-card:hover {
+      transform: translateY(-4px);
+      background: #fff;
+      border-color: rgba(41,189,224,.28);
+      box-shadow: 0 16px 34px rgba(41,189,224,.10);
+    }
+
+    .benefit-icon { font-size: 1.45rem; margin-bottom: .75rem; }
+    .benefit-card h3 { font-size: .98rem; color: #060C24; margin-bottom: .45rem; }
+    .benefit-card p { color: var(--muted); font-size: .86rem; line-height: 1.65; }
+
+    .process-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1rem;
+    }
+
+    .process-card {
+      position: relative;
+      border-radius: 18px;
+      background: linear-gradient(135deg, var(--soft), #fff);
+      border: 1px solid var(--line);
+      padding: 1.15rem;
+      min-height: 155px;
+      transition: transform .22s ease, box-shadow .22s ease, border-color .22s ease;
+    }
+    .process-card:hover {
+      transform: translateY(-4px);
+      border-color: rgba(41,189,224,.28);
+      box-shadow: 0 16px 34px rgba(41,189,224,.10);
+    }
+
+    .process-num {
+      width: 34px;
+      height: 34px;
+      display: grid;
+      place-items: center;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--primary), var(--accent));
+      color: white;
+      font-weight: 900;
+      margin-bottom: .75rem;
+    }
+
+    .process-card h3 { font-size: .98rem; margin-bottom: .42rem; color: #060C24; }
+    .process-card p { color: var(--muted); font-size: .84rem; line-height: 1.6; }
+
+    .category-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: .8rem;
+    }
+
+    .category-item {
+      display: flex;
+      gap: .55rem;
+      align-items: flex-start;
+      background: var(--soft-2);
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      padding: .8rem;
+      color: #0A2A3A;
+      font-size: .86rem;
+      line-height: 1.45;
+      font-weight: 650;
+      transition: transform .2s ease, background .2s ease, border-color .2s ease, box-shadow .2s ease;
+    }
+    .category-item:hover {
+      transform: translateY(-3px);
+      background: #fff;
+      border-color: rgba(108,43,217,.26);
+      box-shadow: 0 12px 28px rgba(41,189,224,.12);
+    }
+
+    .category-item span { color: var(--success); font-weight: 900; }
+
+    .form-wrapper { margin: 0 auto 3rem; }
+
+    .form-card {
+      background: var(--card);
+      border-radius: 28px;
+      overflow: hidden;
+      box-shadow: var(--shadow);
+      border: 1px solid rgba(168,85,247,.16);
+    }
+
+    .form-top {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      align-items: center;
+      gap: 1rem;
+      padding: 1.5rem 1.7rem;
+      background: linear-gradient(135deg, var(--soft), #fff);
+      border-bottom: 1px solid var(--line);
+    }
+
+    .form-top h2 { font-size: 1.25rem; color: #060C24; letter-spacing: -.03em; margin-bottom: .22rem; }
+    .form-top p { color: var(--muted); font-size: .88rem; line-height: 1.6; }
+
+    .form-pill { background: #fff; border: 1px solid var(--line); color: var(--primary-dark); padding: .55rem .85rem; border-radius: 999px; font-size: .78rem; font-weight: 850; white-space: nowrap; }
+
+    .section-header {
+      display: flex;
+      align-items: center;
+      gap: .75rem;
+      padding: 1.45rem 1.8rem 1.05rem;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .section-icon {
+      width: 39px;
+      height: 39px;
+      border-radius: 12px;
+      background: var(--soft);
+      display: grid;
+      place-items: center;
+      font-size: 1.1rem;
+      flex: 0 0 auto;
+    }
+
+    .section-header h2 { font-size: 1rem; font-weight: 850; color: var(--text); }
+    .section-header p { font-size: .8rem; color: var(--muted); margin-top: .15rem; line-height: 1.45; }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.1rem;
+      padding: 1.55rem 1.8rem;
+    }
+
+    .form-grid.three { grid-template-columns: 1fr 1fr 1fr; }
+    .form-grid.single { grid-template-columns: 1fr; }
+    .span-2 { grid-column: span 2; }
+    .span-3 { grid-column: span 3; }
+
+    .section-divider { height: 8px; background: #F0FAFD; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
+
+    .field { display: flex; flex-direction: column; gap: .42rem; }
+    .field label { font-size: .78rem; font-weight: 760; color: #1A5068; line-height: 1.45; }
+    .field label .req { color: var(--error); margin-left: 2px; }
+    .field label small { color: var(--muted); font-weight: 500; }
+
+    .field input, .field select, .field textarea {
+      width: 100%;
+      padding: .78rem .95rem;
+      border: 1.5px solid var(--line);
+      border-radius: 12px;
+      font-size: .9rem;
+      font-family: inherit;
+      color: var(--text);
+      background: #FDFBFF;
+      transition: border-color .2s, box-shadow .2s, background .2s;
+      outline: none;
+    }
+
+    .field input:focus, .field select:focus, .field textarea:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(41,189,224,.15);
+      background: #fff;
+    }
+
+    .field input::placeholder, .field textarea::placeholder { color: #9DD4E4; }
+    .field select { cursor: pointer; }
+    .field textarea { resize: vertical; min-height: 92px; }
+    .field .hint { font-size: .73rem; color: var(--muted); line-height: 1.5; }
+
+    .invite-wrap { position: relative; }
+    .invite-wrap .ticket {
+      position: absolute;
+      left: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 1rem;
+      pointer-events: none;
+    }
+    .invite-wrap input { padding-left: 2.45rem; letter-spacing: .16em; font-weight: 800; }
+
+    .upload-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1rem;
+      padding: 1.55rem 1.8rem;
+    }
+
+    .upload-card {
+      border: 1.5px dashed var(--line);
+      border-radius: 16px;
+      padding: 1.15rem .9rem;
+      text-align: center;
+      cursor: pointer;
+      transition: all .25s;
+      background: #FDFBFF;
+      position: relative;
+      min-height: 166px;
+    }
+
+    .upload-card:hover { border-color: var(--primary); background: var(--soft); transform: translateY(-1px); }
+    .upload-card.has-file { border-color: var(--success); background: #F0FDF4; }
+    .upload-card input[type="file"] { position: absolute; inset: 0; opacity: 0; cursor: pointer; }
+    .upload-icon { font-size: 1.55rem; margin-bottom: .55rem; }
+    .upload-card h4 { font-size: .82rem; font-weight: 850; color: var(--text); margin-bottom: .32rem; line-height: 1.35; }
+    .upload-card p { font-size: .72rem; color: var(--muted); line-height: 1.45; }
+    .upload-card .file-name { font-size: .72rem; color: var(--success); font-weight: 750; margin-top: .45rem; word-break: break-word; }
+
+    .upload-actions {
+      display: inline-flex;
+      align-items: center;
+      gap: .3rem;
+      font-size: .7rem;
+      color: var(--primary-dark);
+      font-weight: 800;
+      background: var(--soft);
+      border: 1px solid var(--line);
+      border-radius: 20px;
+      padding: .3rem .75rem;
+      margin-top: .6rem;
+    }
+
+    .notice-box {
+      margin: 0 1.8rem 1.55rem;
+      background: #FFFBEB;
+      border: 1px solid #FDE68A;
+      color: #7C4A03;
+      border-radius: 16px;
+      padding: 1rem;
+      font-size: .84rem;
+      line-height: 1.65;
+    }
+
+    .submit-area {
+      padding: 1.45rem 1.8rem 1.9rem;
+      border-top: 1px solid var(--line);
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+      align-items: center;
+      background: #fff;
+    }
+
+    .terms { display: flex; align-items: flex-start; gap: .6rem; font-size: .82rem; color: var(--muted); line-height: 1.55; max-width: 760px; }
+    .terms input[type="checkbox"] { margin-top: 2px; accent-color: var(--primary); width: 16px; height: 16px; cursor: pointer; flex-shrink: 0; }
+    .terms a { color: var(--primary-dark); text-decoration: none; font-weight: 750; }
+
+    .btn-submit {
+      width: 100%;
+      max-width: 430px;
+      padding: 1rem;
+      background: linear-gradient(135deg, var(--primary), var(--accent));
+      color: #fff;
+      border: none;
+      border-radius: 14px;
+      font-size: 1rem;
+      font-weight: 900;
+      font-family: inherit;
+      cursor: pointer;
+      transition: transform .15s, box-shadow .15s, opacity .15s;
+      box-shadow: 0 4px 20px rgba(41,189,224,.38);
+    }
+
+    .btn-submit:hover { transform: translateY(-1px); box-shadow: 0 8px 28px rgba(41,189,224,.48); }
+    .btn-submit:active { transform: translateY(0); }
+    .btn-submit:disabled { opacity: .62; cursor: not-allowed; transform: none; }
+
+    #success-screen { display: none; flex-direction: column; align-items: center; text-align: center; padding: 4rem 2rem; }
+    .success-icon { width: 82px; height: 82px; background: linear-gradient(135deg, var(--success), #34D399); border-radius: 50%; display: grid; place-items: center; font-size: 2rem; color: #fff; margin-bottom: 1.5rem; box-shadow: 0 8px 24px rgba(16,185,129,.3); }
+    #success-screen h2 { font-size: 1.65rem; font-weight: 900; color: var(--text); margin-bottom: .75rem; }
+    #success-screen p { color: var(--muted); font-size: .96rem; line-height: 1.75; max-width: 460px; }
+    .ref-box { margin-top: 1.5rem; background: var(--soft); border: 1px solid var(--line); border-radius: 12px; padding: .9rem 1.5rem; font-size: .86rem; color: var(--muted); }
+    .ref-box strong { color: var(--primary); font-size: 1.12rem; }
+
+    .field input.invalid, .field select.invalid, .field textarea.invalid { border-color: var(--error); background: #FFF7F7; }
+    .field .err-msg { font-size: .72rem; color: var(--error); display: none; }
+    .field input.invalid ~ .err-msg, .field select.invalid ~ .err-msg, .field textarea.invalid ~ .err-msg { display: block; }
+
+    footer { text-align: center; padding: 1.7rem 1rem 2.3rem; color: rgba(255,255,255,.35); font-size: .78rem; line-height: 1.7; }
+    footer a { color: rgba(216,190,255,.82); text-decoration: none; }
+
+    @media (max-width: 980px) {
+      .hero { grid-template-columns: 1fr; padding-top: 3.2rem; }
+      .benefit-grid, .process-grid { grid-template-columns: repeat(2, 1fr); }
+      .category-grid { grid-template-columns: repeat(2, 1fr); }
+      .upload-grid { grid-template-columns: repeat(2, 1fr); }
+      .stats { grid-template-columns: 1fr; }
+    }
+
+    @media (max-width: 640px) {
+      header { padding: 0 1rem; }
+      .header-inner { height: 66px; }
+      .header-badge { display: none; }
+      .mini-cta { padding: .48rem .75rem; font-size: .74rem; }
+      .page { padding: 0 1rem; }
+      .hero { padding: 2.5rem 0 1.8rem; }
+      .hero h1 { letter-spacing: -.025em; }
+      .hero-buttons { flex-direction: column; align-items: stretch; }
+      .btn-primary, .btn-secondary { width: 100%; }
+      .hero-panel { border-radius: 22px; padding: .75rem; }
+      .merchant-card { padding: 1rem; border-radius: 18px; }
+      .amount-row { grid-template-columns: 1fr; }
+      .ref-preview { flex-direction: column; align-items: flex-start; }
+      .white-section { padding: 1.25rem; border-radius: 22px; }
+      .benefit-grid, .process-grid, .category-grid, .upload-grid { grid-template-columns: 1fr; }
+      .form-top { grid-template-columns: 1fr; padding: 1.25rem; }
+      .form-pill { width: fit-content; }
+      .section-header, .form-grid, .upload-grid, .submit-area { padding-left: 1.25rem; padding-right: 1.25rem; }
+      .form-grid, .form-grid.three { grid-template-columns: 1fr; }
+      .span-2, .span-3 { grid-column: span 1; }
+      .notice-box { margin-left: 1.25rem; margin-right: 1.25rem; }
+      .code-check-row { grid-template-columns: 1fr; }
+      .bonus-table-head.compact { align-items: flex-start; }
+    .code-check-row {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: .75rem;
+      margin-top: 1rem;
+    }
+    .code-check-row input {
+      width: 100%;
+      border: 1.5px solid var(--line);
+      border-radius: 12px;
+      padding: .86rem .95rem;
+      font-family: inherit;
+      font-size: .9rem;
+      outline: none;
+      background: #fff;
+      transition: border-color .18s ease, box-shadow .18s ease;
+    }
+    .code-check-row input:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(41,189,224,.15);
+    }
+    .lookup-result {
+      display: none;
+      margin-top: .9rem;
+      background: #060C24;
+      color: #fff;
+      border-radius: 16px;
+      padding: .9rem 1rem;
+      border: 1px solid rgba(41,189,224,.22);
+    }
+    .lookup-result.show { display: block; }
+    .lookup-result small { display: block; color: #7ED4EA; font-size: .75rem; margin-bottom: .25rem; }
+    .lookup-result strong { font-size: 1.35rem; letter-spacing: .12em; color: #fff; }
+    .bonus-updated {
+      background: var(--soft);
+      border: 1px solid var(--line);
+      color: #0A2A3A;
+      border-radius: 12px;
+      padding: .7rem .85rem;
+      font-size: .84rem;
+      margin-bottom: .8rem;
+    }
+
+    .btn-check-code { width: 100%; }
+    }
+  
+    @media (max-width: 600px) {
+      .bonus-table-head { grid-template-columns: 1fr; }
+      .ref-tools-grid { grid-template-columns: 1fr; }
+      .code-check-row { grid-template-columns: 1fr; }
+      .bonus-table-head.compact { align-items: flex-start; }
+    .code-check-row {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: .75rem;
+      margin-top: 1rem;
+    }
+    .code-check-row input {
+      width: 100%;
+      border: 1.5px solid var(--line);
+      border-radius: 12px;
+      padding: .86rem .95rem;
+      font-family: inherit;
+      font-size: .9rem;
+      outline: none;
+      background: #fff;
+      transition: border-color .18s ease, box-shadow .18s ease;
+    }
+    .code-check-row input:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(41,189,224,.15);
+    }
+    .lookup-result {
+      display: none;
+      margin-top: .9rem;
+      background: #060C24;
+      color: #fff;
+      border-radius: 16px;
+      padding: .9rem 1rem;
+      border: 1px solid rgba(41,189,224,.22);
+    }
+    .lookup-result.show { display: block; }
+    .lookup-result small { display: block; color: #7ED4EA; font-size: .75rem; margin-bottom: .25rem; }
+    .lookup-result strong { font-size: 1.35rem; letter-spacing: .12em; color: #fff; }
+    .bonus-updated {
+      background: var(--soft);
+      border: 1px solid var(--line);
+      color: #0A2A3A;
+      border-radius: 12px;
+      padding: .7rem .85rem;
+      font-size: .84rem;
+      margin-bottom: .8rem;
+    }
+
+    .btn-check-code { width: 100%; }
+    }
+
+    /* ─────────────────────────────────────────────
+       MOBILE-FIRST OVERRIDES — optimized for phone users
+       Most Woow Pay merchants will open this page on mobile.
+       ───────────────────────────────────────────── */
+    @media (max-width: 760px) {
+      html { scroll-padding-top: 74px; }
+      body {
+        background:
+          radial-gradient(circle at top left, rgba(41,189,224,.20), transparent 30%),
+          linear-gradient(145deg, #060C24 0%, #0A1840 55%, #060C24 100%);
+      }
+      header { padding: 0 .85rem; }
+      .header-inner { height: 60px; }
+      .logo { gap: .55rem; }
+      .logo-mark { width: 34px; height: 34px; border-radius: 11px; font-size: 1rem; }
+      .logo-text { font-size: 1.05rem; }
+      .header-actions { gap: .45rem; }
+      .header-badge { display: none; }
+      .mini-cta {
+        padding: .58rem .8rem;
+        font-size: .76rem;
+        border-radius: 12px;
+      }
+
+      .page { padding: 0 .9rem; }
+      .hero {
+        display: block;
+        padding: 1.55rem 0 1.15rem;
+      }
+      .eyebrow {
+        font-size: .72rem;
+        padding: .38rem .72rem;
+        margin-bottom: .85rem;
+      }
+      .hero h1 {
+        font-size: clamp(1.72rem, 8.5vw, 2.35rem);
+        line-height: 1.18;
+        letter-spacing: -.025em;
+        margin-bottom: .8rem;
+      }
+      .hero-copy {
+        font-size: .9rem;
+        line-height: 1.72;
+        margin-bottom: 1rem;
+      }
+      .hero-buttons {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: .65rem;
+        margin-bottom: 1rem;
+      }
+      .btn-primary,
+      .btn-secondary {
+        width: 100%;
+        min-height: 52px;
+        padding: .86rem .95rem;
+        border-radius: 14px;
+        font-size: .92rem;
+        text-align: center;
+      }
+
+      .hero-panel {
+        margin-top: 1rem;
+        border-radius: 22px;
+        padding: .68rem;
+      }
+      .merchant-card {
+        border-radius: 18px;
+        padding: 1rem;
+      }
+      .merchant-card-top {
+        align-items: flex-start;
+        gap: .55rem;
+        margin-bottom: .85rem;
+      }
+      .merchant-chip,
+      .approval {
+        font-size: .72rem;
+        padding: .34rem .6rem;
+      }
+      .sample-product h3 { font-size: .98rem; }
+      .sample-product p { font-size: .82rem; line-height: 1.6; }
+      .amount-row { grid-template-columns: 1fr 1fr; gap: .55rem; }
+      .amount-box { padding: .72rem; border-radius: 13px; }
+      .amount-box small { font-size: .66rem; }
+      .amount-box strong { font-size: .9rem; }
+      .ref-preview {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: .65rem;
+        padding: .88rem;
+        border-radius: 15px;
+      }
+      .bonus-badge { width: fit-content; font-size: .7rem; }
+
+      .stats {
+        grid-template-columns: 1fr;
+        gap: .72rem;
+        padding: .55rem 0 1.25rem;
+      }
+      .stat-card {
+        min-height: auto;
+        padding: 1rem 1.05rem;
+        border-radius: 18px;
+      }
+      .stat-card strong {
+        font-size: 2rem;
+        line-height: 1;
+        margin-bottom: .3rem;
+      }
+      .stat-card span {
+        display: block;
+        font-size: .86rem;
+        line-height: 1.45;
+      }
+      .stat-card.boost { padding: 1rem 1.05rem; }
+      .boost-number {
+        display: flex;
+        align-items: center;
+        gap: .65rem;
+        margin-bottom: .42rem;
+      }
+      .stat-icon {
+        width: 38px;
+        height: 38px;
+        border-radius: 13px;
+        font-size: 1.08rem;
+        flex: 0 0 38px;
+      }
+      .stat-card.boost > span {
+        display: block;
+        padding-left: 0;
+        margin-top: 0;
+        clear: both;
+      }
+
+      .section { margin-bottom: 1rem; }
+      .white-section {
+        border-radius: 22px;
+        padding: 1.05rem;
+      }
+      .section-title { margin-bottom: 1rem; }
+      .section-title .kicker { font-size: .72rem; margin-bottom: .35rem; }
+      .section-title h2 {
+        font-size: 1.28rem;
+        line-height: 1.28;
+        letter-spacing: -.025em;
+      }
+      .section-title p {
+        font-size: .86rem;
+        line-height: 1.62;
+      }
+
+      .benefit-grid,
+      .process-grid,
+      .category-grid {
+        grid-template-columns: 1fr;
+        gap: .7rem;
+      }
+      .benefit-card,
+      .process-card,
+      .category-item {
+        border-radius: 16px;
+        padding: .92rem;
+        min-height: auto;
+      }
+      .benefit-icon { margin-bottom: .45rem; }
+      .benefit-card h3,
+      .process-card h3 {
+        font-size: .93rem;
+        margin-bottom: .28rem;
+      }
+      .benefit-card p,
+      .process-card p,
+      .category-item {
+        font-size: .82rem;
+        line-height: 1.55;
+      }
+      .process-num {
+        width: 30px;
+        height: 30px;
+        margin-bottom: .55rem;
+      }
+
+      .ref-tools-grid {
+        grid-template-columns: 1fr;
+        gap: .8rem;
+        margin-top: .9rem;
+      }
+      .bonus-table-box {
+        border-radius: 18px;
+        padding: 1rem;
+      }
+      .bonus-table-head,
+      .bonus-table-head.compact {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: .75rem;
+      }
+      .bonus-table-box h3 {
+        font-size: .95rem;
+        line-height: 1.42;
+      }
+      .bonus-table-box p {
+        font-size: .82rem;
+        line-height: 1.58;
+      }
+      .code-check-row {
+        grid-template-columns: 1fr;
+        gap: .6rem;
+      }
+      .code-check-row input,
+      .field input,
+      .field select,
+      .field textarea {
+        font-size: 16px; /* prevents iPhone auto-zoom */
+        min-height: 50px;
+      }
+      .btn-check-code {
+        width: 100%;
+        min-height: 50px;
+        font-size: .9rem;
+      }
+      .bonus-table-wrap {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+      }
+      .bonus-table th,
+      .bonus-table td {
+        padding: .78rem .82rem;
+        font-size: .85rem;
+        white-space: nowrap;
+      }
+
+      .form-wrapper { margin-top: 1rem; }
+      .form-card { border-radius: 22px; }
+      .form-top {
+        grid-template-columns: 1fr;
+        gap: .85rem;
+        padding: 1.05rem;
+      }
+      .form-top h2 { font-size: 1.28rem; }
+      .form-top p { font-size: .84rem; line-height: 1.58; }
+      .form-pill { width: fit-content; font-size: .72rem; }
+      .section-header {
+        padding: 1rem 1.05rem .85rem;
+        gap: .65rem;
+      }
+      .section-icon {
+        width: 34px;
+        height: 34px;
+        border-radius: 10px;
+        font-size: 1rem;
+      }
+      .section-header h2 { font-size: .94rem; }
+      .section-header p { font-size: .76rem; }
+      .form-grid,
+      .form-grid.three {
+        grid-template-columns: 1fr;
+        gap: .9rem;
+        padding: 1.05rem;
+      }
+      .span-2,
+      .span-3 { grid-column: auto; }
+      .field label { font-size: .76rem; }
+      .field .hint { font-size: .72rem; }
+      .upload-grid {
+        grid-template-columns: 1fr;
+        gap: .75rem;
+        padding: 1.05rem;
+      }
+      .upload-card {
+        min-height: 132px;
+        padding: 1rem .8rem;
+        border-radius: 15px;
+      }
+      .notice-box {
+        margin: 0 1.05rem 1.05rem;
+        font-size: .8rem;
+        border-radius: 14px;
+      }
+      .submit-area {
+        padding: 1.05rem 1.05rem 1.25rem;
+      }
+      .terms { font-size: .78rem; line-height: 1.5; }
+      .btn-submit {
+        max-width: none;
+        min-height: 54px;
+        font-size: .95rem;
+      }
+      footer { padding-bottom: 1.4rem; font-size: .72rem; }
+    }
+
+    @media (max-width: 380px) {
+      .page { padding: 0 .75rem; }
+      .hero h1 { font-size: 1.58rem; }
+      .hero-copy { font-size: .84rem; }
+      .amount-row { grid-template-columns: 1fr; }
+      .mini-cta { font-size: .7rem; padding: .52rem .62rem; }
+      .logo-text { font-size: .98rem; }
+    }
+
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="header-inner">
+    <a class="logo" href="#top" aria-label="Woow Pay">
+      <img class="logo-wordmark" src="woow-logo.png" alt="Woow Pay"
+           onerror="this.style.display='none'; this.nextElementSibling.classList.add('show')" />
+      <div class="logo-fallback">
+        <div class="logo-mark-fb"><img src="owl-icon.png" alt="W" /></div>
+        <span class="logo-text-fb">Woow Pay</span>
+      </div>
+    </a>
+    <div class="header-actions">
+      <span class="header-badge">Мерчант бүртгэл</span>
+      <a href="#register" class="mini-cta">Бүртгүүлэх</a>
+    </div>
+  </div>
+</header>
+
+<main id="top" class="page">
+  <section class="hero">
+    <div>
+      <div class="eyebrow">Мерчант бүртгэл</div>
+      <h1>Woow Pay-тай хамтран<br><span>бизнесээ өргөжүүл</span></h1>
+      <p class="hero-copy">
+        Хэрэглэгч хүссэн бүтээгдэхүүнээ газар дээр нь шимтгэлгүй, хүүгүй авах боломжтой. Харин мерчант та борлуулалтаа нэмэгдүүлэх, борлуулалтын орлогоо шууд хүлээн авах, эргэлтийн хөрөнгөө хурдасгах, бизнесээ таниулах, идэвхижүүлэлтийн аянуудад хамрагдах, бонус оноо цуглуулах г.м олон төрлийн давуу талтай.
+      </p>
+      <div class="hero-buttons">
+        <a class="btn-primary" href="#register">🚀 Мерчантаар бүртгүүлэх</a>
+        <a class="btn-secondary" href="#who">Хэн бүртгүүлж болох вэ?</a>
+      </div>
+    </div>
+
+    <div>
+      <div class="hero-mascot-wrap">
+        <img src="mascot-point.png" alt="Woow Pay mascot"
+             onerror="this.parentElement.style.display='none'" />
+      </div>
+    <div class="hero-panel" aria-label="Woow Pay merchant preview">
+      <div class="merchant-card">
+        <div class="merchant-card-top">
+          <div class="merchant-chip">✓ Мерчант боломж</div>
+          <div class="approval">Шуурхай бүртгэл</div>
+        </div>
+        <div class="sample-product">
+          <h3>Худалдан авагчийн жишээ</h3>
+          <p>Хэрэглэгч Woow Pay-р хүүгүй, шимтгэлгүй худалдан авалт хийх бүртээ бонус оноо цуглуулах боломжтой.</p>
+          <div class="amount-row">
+            <div class="amount-box">
+              <small>Худалдан авалтын эрх</small>
+              <strong>~100,000₮+</strong>
+            </div>
+            <div class="amount-box">
+              <small>Эргэн төлөх хугацаа</small>
+              <strong>10 / 20 хоног</strong>
+            </div>
+          </div>
+        </div>
+        <div class="ref-preview">
+          <div>
+            <small>Урилгын кодын жишээ</small>
+            <strong>89100017</strong>
+          </div>
+          <div class="bonus-badge">30,000 хүртэлх бонус</div>
+        </div>
+      </div>
+    </div>
+    </div><!-- /mascot+panel wrapper -->
+  </section>
+
+  <section class="stats" aria-label="Woow Pay тоон үзүүлэлт">
+    <div class="stat-card"><strong>200+</strong><span>Одоогоор хамтран ажиллаж буй байгууллага</span></div>
+    <div class="stat-card boost"><div class="boost-number"><span class="stat-icon">🚀</span><strong>36%</strong></div><span>Борлуулалтын дундаж өсөлт</span></div>
+    <div class="stat-card"><strong>500+</strong><span>2026 онд нэмэгдэхээр төлөвлөж буй мерчант</span></div>
+  </section>
+
+  <section class="section white-section">
+    <div class="section-title">
+      <div class="kicker">ДАВУУ ТАЛ</div>
+      <h2>Woow Pay мерчант болсноор</h2>
+      <p>Худалдан авагч мөнгөө яг одоо бүрэн төлөх боломжгүй байсан ч хэрэгтэй зүйлээ авах нөхцөл бүрдэнэ. Ингэснээр таны дэлгүүрийн борлуулалт нэмэгдэх боломжтой.</p>
+    </div>
+    <div class="benefit-grid">
+      <div class="benefit-card">
+        <div class="benefit-icon">🛒</div>
+        <h3>Борлуулалт нэмэгдэх боломж</h3>
+        <p>Хэрэглэгч төлбөрөө богино хугацаанд хойшлуулж авах боломжтой тул худалдан авалт хийх шийдвэр хурдан гарна.</p>
+      </div>
+      <div class="benefit-card">
+        <div class="benefit-icon">💸</div>
+        <h3>Орлогоо шууд авна</h3>
+        <p>Худалдан авагч Woow Pay ашигласан ч мерчант та борлуулалтын орлогоо шууд хүлээн авна.</p>
+      </div>
+      <div class="benefit-card">
+        <div class="benefit-icon">🤝</div>
+        <h3>Илүү олон хэрэглэгч татна</h3>
+        <p>Woow Pay-ийн идэвхитэй 80,000+ хэрэглэгчид танай дэлгүүрээр үйлчлүүлэх шалтгаан нэмэгдэнэ.</p>
+      </div>
+      <div class="benefit-card">
+        <div class="benefit-icon">🎁</div>
+        <h3>Урилгын бонус</h3>
+        <p>Та мерчант байгууллага урьснаар 30,000 хүртэлх бонус авах боломжтой.</p>
+      </div>
+    </div>
+
+    <div class="ref-tools-grid">
+      <div class="bonus-table-box code-lookup-box" style="display:flex;align-items:center;gap:1rem;">
+        <div style="font-size:2rem;line-height:1;">📱</div>
+        <div>
+          <h3 style="margin:0 0 .3rem;">Таны урилгын код = Таны бүртгэлтэй утасны дугаар</h3>
+          <p style="margin:0;">Харилцагч/Мерчант та шинэ мерчант байгууллага урихдаа өөрийн Woow Pay-д бүртгэлтэй утасны дугаарыг "Урилгын код" хэсэгт оруулахыг зөвлөнө үү.</p>
+        </div>
+      </div>
+
+      <div class="bonus-table-box monthly-bonus-box">
+        <div>
+          <h3>Бонус онооны мэдээлэл</h3>
+          <p>Бонус онооны мэдээллийг 7 хоног бүр шинэчилнэ. Бүртгэлтэй утасны дугаараа оруулаад оноогоо шалгаарай.</p>
+        </div>
+        <div class="code-check-row" style="margin-top:.85rem;">
+          <input type="tel" id="bonus-phone" inputmode="numeric" maxlength="8" placeholder="Утасны дугаар" />
+          <button type="button" class="btn-check-code" id="check-bonus-btn">Бонус оноо шалгах</button>
+        </div>
+        <div class="lookup-result" id="bonus-result" style="display:none;margin-top:.75rem;padding:.75rem 1rem;background:#EBF8FC;border-radius:10px;border:1px solid #C4E8F5;">
+          <small style="color:#1A5068;display:block;margin-bottom:.2rem;">Таны хуримтлагдсан бонус оноо:</small>
+          <strong id="bonus-points-value" style="font-size:1.4rem;color:#29BDE0;"></strong>
+          <span style="color:#1A5068;font-size:.9rem;margin-left:.25rem;">оноо</span>
+        </div>
+        <div id="bonus-not-found" style="display:none;margin-top:.75rem;padding:.75rem 1rem;background:#FFF8E1;border-radius:10px;border:1px solid #F59E0B;">
+          <small style="color:#7C4A03;">Энэ дугаараар бонус оноо олдсонгүй. Дугаараа шалгаад дахин оролдоно уу.</small>
+        </div>
+        <div class="bonus-updated" style="margin-top:.6rem;">Сүүлд шинэчлэгдсэн: <strong>2026.06.09</strong></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section white-section">
+    <div class="section-title">
+      <div class="kicker">ХЭРХЭН АЖИЛЛАХ ВЭ?</div>
+      <h2>Бүртгэл маш энгийн</h2>
+      <p>Маягтаа бөглөөд илгээсний дараа Woow Pay-н ажилтан таны мэдээллийг шалгаж, цахим гэрээ байгуулна.</p>
+    </div>
+    <div class="process-grid">
+      <div class="process-card"><div class="process-num">1</div><h3>Маягт бөглөнө</h3><p>Хувийн болон дэлгүүрийн үндсэн мэдээллээ оруулна.</p></div>
+      <div class="process-card"><div class="process-num">2</div><h3>Мэдээлэл шалгана</h3><p>Манай ажилтан таны мэдээлэл, бичиг баримтыг шалгана.</p></div>
+      <div class="process-card"><div class="process-num">3</div><h3>Гэрээ баталгаажна</h3><p>Шаардлагатай нөхцөл, зааварчилгааг танилцуулж гэрээ байгуулна.</p></div>
+      <div class="process-card"><div class="process-num">4</div><h3>Ашиглаж эхэлнэ</h3><p>Танай дэлгүүр Woow Pay-р төлбөр авах боломжтой болно.</p></div>
+    </div>
+  </section>
+
+  <section id="who" class="section white-section">
+    <div class="section-title">
+      <div class="kicker">ХЭН БҮРТГҮҮЛЖ БОЛОХ ВЭ?</div>
+      <h2>Бараа, үйлчилгээ борлуулдаг байгууллага бүрт тохиромжтой</h2>
+      <p>Доорх төрлийн дэлгүүр, үйлчилгээний байгууллагууд Woow Pay мерчантаар бүртгүүлэх боломжтой.</p>
+    </div>
+    <div class="category-grid">
+      <div class="category-item"><span>🛒</span> Хүнсний дэлгүүр, Мини маркет, Супермаркет</div>
+      <div class="category-item"><span>🍽️</span> Ресторан, Хоол үйлдвэрлэл</div>
+      <div class="category-item"><span>☕</span> Кофе шоп</div>
+      <div class="category-item"><span>💊</span> Эмийн сан, эрүүл мэндийн бараа</div>
+      <div class="category-item"><span>📱</span> Гар утас худалдаа, дагалдах хэрэгсэл</div>
+      <div class="category-item"><span>👚</span> Хувцас угаалга</div>
+      <div class="category-item"><span>🚗</span> Автомашин угаалга, засвар, сэлбэг, тос, дугуй, аксессуар</div>
+      <div class="category-item"><span>👗</span> Бэлэн хувцас, гутал худалдаа</div>
+      <div class="category-item"><span>🏗️</span> Барилгын материал, засварын бараа</div>
+      <div class="category-item"><span>💄</span> Гоо сайхан, арьс арчилгаа, косметик</div>
+      <div class="category-item"><span>💎</span> Үнэт эдлэл</div>
+      <div class="category-item"><span>💻</span> Электрон бараа, жижиг цахилгаан хэрэгсэл</div>
+      <div class="category-item"><span>🛋️</span> Гэр ахуйн бараа, тавилга, гал тогооны хэрэгсэл</div>
+      <div class="category-item"><span>🛍️</span> Онлайн худалдаа, хүргэлттэй дэлгүүр</div>
+      <div class="category-item"><span>🏋️</span> Спорт тоглоом, фитнес, сургалт, үйлчилгээ</div>
+      <div class="category-item"><span>📚</span> Бэлэг дурсгал, бичиг хэрэг, ном</div>
+      <div class="category-item"><span>👓</span> Нүдний шил, шүд, гоо заслын үйлчилгээ</div>
+      <div class="category-item"><span>🧸</span> Хүүхдийн бараа, тоглоом, хичээлийн хэрэгсэл</div>
+      <div class="category-item"><span>⚖️</span> Бусад хууль ёсны бараа, үйлчилгээ</div>
+    </div>
+  </section>
+
+  <section id="register" class="form-wrapper">
+    <div class="form-card">
+      <div id="form-content">
+        <div class="form-top">
+          <div>
+            <h2>Мерчант бүртгэл</h2>
+            <p>Доорх мэдээллийг үнэн зөв бөглөж илгээнэ үү. Бүртгэл ирсний дараа манай ажилтан тантай холбогдоно.</p>
+          </div>
+          <div class="form-pill">1–2 ажлын өдөрт холбогдоно</div>
+        </div>
+
+        <form id="reg-form" novalidate>
+          <div class="section-header">
+            <div class="section-icon">👤</div>
+            <div>
+              <h2>Хувийн мэдээлэл</h2>
+              <p>Бүртгэл хариуцах хүний мэдээлэл</p>
+            </div>
+          </div>
+
+          <div class="form-grid three">
+            <div class="field">
+              <label>Ургийн овог <span class="req">*</span></label>
+              <input type="text" name="urg_ovog" placeholder="Ургийн овог" required />
+              <span class="err-msg">Шаардлагатай</span>
+            </div>
+            <div class="field">
+              <label>Овог <span class="req">*</span></label>
+              <input type="text" name="ovog" placeholder="Овог" required />
+              <span class="err-msg">Шаардлагатай</span>
+            </div>
+            <div class="field">
+              <label>Нэр <span class="req">*</span></label>
+              <input type="text" name="ner" placeholder="Нэр" required />
+              <span class="err-msg">Шаардлагатай</span>
+            </div>
+          </div>
+
+          <div class="form-grid">
+            <div class="field">
+              <label>Регистрийн дугаар <span class="req">*</span></label>
+              <input type="text" name="rd" placeholder="АА00000000" maxlength="10" required />
+              <span class="err-msg">РД зөв оруулна уу</span>
+            </div>
+            <div class="field">
+              <label>Утасны дугаар <span class="req">*</span></label>
+              <input type="tel" name="utas" placeholder="99XXXXXX" maxlength="8" inputmode="numeric" required />
+              <span class="err-msg">8 оронтой утасны дугаар оруулна уу</span>
+            </div>
+            <div class="field">
+              <label>Имэйл хаяг <span class="req">*</span></label>
+              <input type="email" name="email" placeholder="example@mail.com" required />
+              <span class="err-msg">Зөв имэйл оруулна уу</span>
+            </div>
+            <div class="field">
+              <label>Facebook хаяг</label>
+              <input type="text" name="facebook" placeholder="Facebook нэр эсвэл холбоос" />
+            </div>
+            <div class="field span-2">
+              <label>Оршин суух хаяг <span class="req">*</span></label>
+              <input type="text" name="hayag" placeholder="Дүүрэг, хороо, байр, тоот..." required />
+              <span class="err-msg">Шаардлагатай</span>
+            </div>
+          </div>
+
+          <div class="section-divider"></div>
+          <div class="section-header">
+            <div class="section-icon">🏪</div>
+            <div>
+              <h2>Дэлгүүрийн мэдээлэл</h2>
+              <p>Таны дэлгүүр, үйлчилгээний тухай</p>
+            </div>
+          </div>
+
+          <div class="form-grid">
+            <div class="field span-2">
+              <label>Бренд нэр / дэлгүүрийн нэр <span class="req">*</span></label>
+              <input type="text" name="brand" placeholder="Жишээ: Номин дэлгүүр, Beauty Shop гэх мэт" required />
+              <span class="err-msg">Шаардлагатай</span>
+            </div>
+            <div class="field">
+              <label>Худалдаа, үйлчилгээний төрөл <span class="req">*</span></label>
+              <select name="trade_type" id="trade_type_select" required onchange="toggleCustomTrade(this)">
+                <option value="">— Сонгоно уу —</option>
+                <option>🛒 Хүнсний дэлгүүр, Мини маркет, Супермаркет</option>
+                <option>🍽️ Ресторан, Хоол үйлдвэрлэл</option>
+                <option>☕ Кофе шоп</option>
+                <option>💊 Эмийн сан, эрүүл мэндийн бараа</option>
+                <option>📱 Гар утас худалдаа, дагалдах хэрэгсэл</option>
+                <option>👚 Хувцас угаалга</option>
+                <option>🚗 Автомашин угаалга, засвар, сэлбэг, тос, дугуй</option>
+                <option>👗 Бэлэн хувцас, гутал худалдаа</option>
+                <option>🏗️ Барилгын материал, засварын бараа</option>
+                <option>💄 Гоо сайхан, арьс арчилгаа, косметик</option>
+                <option>💎 Үнэт эдлэл</option>
+                <option>💻 Электрон бараа, жижиг цахилгаан хэрэгсэл</option>
+                <option>🛋️ Гэр ахуйн бараа, тавилга, гал тогооны хэрэгсэл</option>
+                <option>🛍️ Онлайн худалдаа, хүргэлттэй дэлгүүр</option>
+                <option>🏋️ Спорт тоглоом, фитнес, сургалт, үйлчилгээ</option>
+                <option>📚 Бэлэг дурсгал, бичиг хэрэг, ном</option>
+                <option>👓 Нүдний шил, шүд, гоо заслын үйлчилгээ</option>
+                <option>🧸 Хүүхдийн бараа, тоглоом, хичээлийн хэрэгсэл</option>
+                <option value="custom">✏️ Бусад (өөрөөр бичих...)</option>
+              </select>
+              <span class="err-msg">Шаардлагатай</span>
+              <input type="text" name="trade_type_custom" id="trade_type_custom"
+                     placeholder="Худалдааны төрлөө бичнэ үү..."
+                     style="display:none; margin-top:.5rem;" />
+            </div>
+            <div class="field span-2">
+              <label>Мерчантын байршил хаяг <span class="req">*</span></label>
+              <input type="text" name="merchant_hayag" placeholder="Дэлгүүрийн байршил, зах, төв, давхар, павильон..." required />
+              <span class="err-msg">Шаардлагатай</span>
+            </div>
+            <div class="field span-2">
+              <label>Мерчантын цахим хаяг <span style="font-size:.85em;font-weight:400;color:#6b7280;">(Facebook, Instagram, вэбсайт...)</span></label>
+              <input type="text" name="merchant_social" placeholder="https://facebook.com/таны-хуудас эсвэл Instagram, вэбсайт хаяг..." />
+            </div>
+            <div class="field">
+              <label>Салбарын тоо</label>
+              <select name="branch_count">
+                <option>1</option>
+                <option>2–3</option>
+                <option>4–5</option>
+                <option>6+</option>
+              </select>
+            </div>
+            <div class="field">
+              <label>Дундаж өдрийн борлуулалт</label>
+              <select name="daily_sales_range">
+                <option value="">— Сонгоно уу —</option>
+                <option>100,000₮ хүртэл</option>
+                <option>100,000₮ – 300,000₮</option>
+                <option>300,000₮ – 700,000₮</option>
+                <option>700,000₮ – 1,500,000₮</option>
+                <option>1,500,000₮+</option>
+                <option>Тодорхойгүй</option>
+              </select>
+            </div>
+            <div class="field">
+              <label>Банкны нэр <span class="req">*</span></label>
+              <select name="bank_name" required>
+                <option value="">— Сонгоно уу —</option>
+                <option>Хаан банк</option>
+                <option>Голомт банк</option>
+                <option>Хас банк</option>
+                <option>Төрийн банк</option>
+                <option>Худалдаа хөгжлийн банк</option>
+                <option>Капитрон банк</option>
+                <option>Богд банк</option>
+                <option>Бусад</option>
+              </select>
+              <span class="err-msg">Шаардлагатай</span>
+            </div>
+            <div class="field">
+              <label>Дансны дугаар <span class="req">*</span></label>
+              <input type="text" name="dans" placeholder="Дансны дугаар" inputmode="numeric" required />
+              <span class="err-msg">Шаардлагатай</span>
+              <span class="hint" style="color:#E8940A; font-weight:600;">⚠️ Дансны дугаар нь зөвхөн хүсэлт явуулж, гэрээ байгуулах иргэний нэр дээрх данс байх ёстой.</span>
+            </div>
+          </div>
+
+          <div class="section-divider"></div>
+          <div class="section-header">
+            <div class="section-icon">🎟️</div>
+            <div>
+              <h2>Урилгын код</h2>
+              <p>Хэрэв танд урилгын код байвал оруулна уу. Заавал биш</p>
+            </div>
+          </div>
+
+          <div class="form-grid">
+            <div class="field">
+              <label>Урилгын код <small>(8 оронтой утасны дугаар)</small></label>
+              <div class="invite-wrap">
+                <span class="ticket">🎟️</span>
+                <input type="tel" name="invite_code" placeholder="89100017" maxlength="8" inputmode="numeric" />
+              </div>
+              <span class="err-msg">Урилгын код 8 оронтой утасны дугаар байна</span>
+              <span class="hint">Таны урилгын код = Таны бүртгэлтэй утасны дугаар. Урьсан мерчантын утасны дугаарыг оруулна уу.</span>
+            </div>
+            <div class="field">
+              <label>Woow Pay-н талаар хаанаас мэдсэн бэ?</label>
+              <select name="source_type">
+                <option value="">— Сонгоно уу —</option>
+                <option>Woow Pay ажилтан</option>
+                <option>Найз / танил</option>
+                <option>Өөр мерчант</option>
+                <option>Facebook</option>
+                <option>TikTok</option>
+                <option>Зар сурталчилгаа</option>
+                <option>Худалдааны төв / зах</option>
+                <option>Бусад</option>
+              </select>
+            </div>
+            <div class="field span-2">
+              <label>Нэмэлт тайлбар</label>
+              <textarea name="notes" placeholder="Асуух зүйл, салбарын нэмэлт мэдээлэл, ажиллах цаг гэх мэт..."></textarea>
+            </div>
+          </div>
+
+          <div class="section-divider"></div>
+          <div class="section-header">
+            <div class="section-icon">📎</div>
+            <div>
+              <h2>Нэмэлт материал</h2>
+              <p>Файл хавсаргах эсвэл утасны камераар зураг авч оруулж болно</p>
+            </div>
+          </div>
+
+          <div class="upload-grid">
+            <label class="upload-card" id="card-id">
+              <input type="file" name="id_zurag" accept="image/*,.pdf" onchange="handleFile(this,'card-id','name-id')" />
+              <div class="upload-icon">🪪</div>
+              <h4>Иргэний үнэмлэх</h4>
+              <p>E-Mongolia-аас авсан зураг байж болно</p>
+              <div class="upload-actions">📁 Файл · 📷 Камер</div>
+              <div class="file-name" id="name-id"></div>
+            </label>
+
+            <label class="upload-card" id="card-burtgel">
+              <input type="file" name="uls_burtgel" accept="image/*,.pdf" onchange="handleFile(this,'card-burtgel','name-burtgel')" />
+              <div class="upload-icon">📜</div>
+              <h4>Улсын бүртгэлийн гэрчилгээ</h4>
+              <p>Байгууллага бол хавсаргана</p>
+              <div class="upload-actions">📁 Файл · 📷 Камер</div>
+              <div class="file-name" id="name-burtgel"></div>
+            </label>
+
+            <label class="upload-card" id="card-turees">
+              <input type="file" name="turees_geree" accept="image/*,.pdf" onchange="handleFile(this,'card-turees','name-turees')" />
+              <div class="upload-icon">🏢</div>
+              <h4>Түрээсийн гэрээ</h4>
+              <p>Обьект түрээслэж байгаа бол</p>
+              <div class="upload-actions">📁 Файл · 📷 Камер</div>
+              <div class="file-name" id="name-turees"></div>
+            </label>
+
+            <label class="upload-card" id="card-zovshoorol">
+              <input type="file" name="tus_zovshoorul" accept="image/*,.pdf" onchange="handleFile(this,'card-zovshoorol','name-zovshoorol')" />
+              <div class="upload-icon">📋</div>
+              <h4>Тусгай зөвшөөрөл</h4>
+              <p>Шаардлагатай худалдаанд хавсаргана</p>
+              <div class="upload-actions">📁 Файл · 📷 Камер</div>
+              <div class="file-name" id="name-zovshoorol"></div>
+            </label>
+          </div>
+
+          <div class="notice-box" style="background:#FFF8E1; border-color:#F59E0B; color:#7C4A03;">
+            🏢 <strong>Байгуулагаар гэрээ байгуулах хүсэлтэй бол</strong> та манай Мерчант менежертэй холбогдож биечлэн гэрээ байгуулана уу.
+          </div>
+          <div class="notice-box" style="background:#EBF8FC; border-color:#29BDE0; color:#0A5570; margin-top:.5rem;">
+            📞 <strong>Мерчант хүсэлттэй холбоотой асуудлаар холбоо барих:</strong>
+            &nbsp; <a href="tel:89100017" style="color:#1A9CBD; font-weight:700;">8910-0017</a>
+            &nbsp;·&nbsp; <a href="tel:88086719" style="color:#1A9CBD; font-weight:700;">8808-6719</a>
+            &nbsp;·&nbsp; <a href="tel:89003985" style="color:#1A9CBD; font-weight:700;">8900-3985</a>
+          </div>
+          <div class="notice-box" style="margin-top:.5rem;">
+            🔒 Таны илгээсэн мэдээллийг зөвхөн Woow Pay мерчант бүртгэл, баталгаажуулалт, гэрээ байгуулах болон үйлчилгээ идэвхжүүлэх зорилгоор ашиглана.
+          </div>
+
+          <div class="submit-area">
+            <label class="terms">
+              <input type="checkbox" id="agree" />
+              <span>Би <a href="#">нууцлалын бодлого</a> болон <a href="#">үйлчилгээний нөхцөл</a>-тэй танилцаж, зөвшөөрч байна.</span>
+            </label>
+            <button type="submit" class="btn-submit" id="submit-btn">🚀 Бүртгэлийн хүсэлт илгээх</button>
+          </div>
+        </form>
+
+        <div id="success-screen">
+          <div class="success-icon">✓</div>
+          <h2>Амжилттай илгээгдлээ!</h2>
+          <p>Таны мерчант бүртгэлийн хүсэлт хүлээн авлаа. Манай ажилтан <strong>ажлын 1–2 өдрийн</strong> дотор тантай холбогдоно.</p>
+          <div class="ref-box">Лавлах дугаар: <strong id="ref-number"></strong></div>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  © 2026 Woow Pay. Бүх эрх хуулиар хамгаалагдсан. &nbsp;|&nbsp; <a href="#">Нууцлалын бодлого</a>
+</footer>
+
+<script>
+  /*
+    ТОХИРГОО
+    1. Formspree URL — файл хавсралттай имэйлээр авах бол ашиглана.
+    2. Google Apps Script URL — текст мэдээллийг Google Sheets-д хадгална.
+  */
+  // All submissions → Google Apps Script (saves to Sheets + sends Gmail notification)
+  const GOOGLE_SHEET_URL = 'https://script.google.com/macros/s/AKfycbyJpfYon9EW8z-wV7t7kNj38sLWKWM6_ALoftX51Kw_rpiI7f6kCCQEsIjLd0MU5Dls/exec';
+
+  function handleFile(input, cardId, nameId) {
+    const card = document.getElementById(cardId);
+    const nameEl = document.getElementById(nameId);
+    if (input.files && input.files[0]) {
+      card.classList.add('has-file');
+      nameEl.textContent = '✓ ' + input.files[0].name;
+    } else {
+      card.classList.remove('has-file');
+      nameEl.textContent = '';
+    }
+  }
+
+  function makeRefNumber() {
+    return 'WP-' + Date.now().toString().slice(-6);
+  }
+
+  /* Show/hide custom trade type input */
+  function toggleCustomTrade(sel) {
+    const custom = document.getElementById('trade_type_custom');
+    if (sel.value === 'custom') {
+      custom.style.display = 'block';
+      custom.required = true;
+    } else {
+      custom.style.display = 'none';
+      custom.required = false;
+      custom.value = '';
+    }
+  }
+
+  /* Compress image via canvas (max 1200px, quality 0.82) before Base64 encoding.
+     This keeps each file well under Google Apps Script's ~4MB per-field limit. */
+  function compressImage(file, maxPx, quality) {
+    return new Promise(resolve => {
+      if (!file.type.startsWith('image/')) { resolve(file); return; }
+      const reader = new FileReader();
+      reader.onload = ev => {
+        const img = new Image();
+        img.onload = () => {
+          let w = img.width, h = img.height;
+          if (w > maxPx || h > maxPx) {
+            if (w > h) { h = Math.round(h * maxPx / w); w = maxPx; }
+            else       { w = Math.round(w * maxPx / h); h = maxPx; }
+          }
+          const canvas = document.createElement('canvas');
+          canvas.width = w; canvas.height = h;
+          canvas.getContext('2d').drawImage(img, 0, 0, w, h);
+          canvas.toBlob(blob => resolve(blob || file), 'image/jpeg', quality);
+        };
+        img.onerror = () => resolve(file);
+        img.src = ev.target.result;
+      };
+      reader.onerror = () => resolve(file);
+      reader.readAsDataURL(file);
+    });
+  }
+
+  /* Convert file/blob to Base64 */
+  function fileToBase64(fileOrBlob, originalName, originalType) {
+    return new Promise(resolve => {
+      const reader = new FileReader();
+      reader.onload  = () => resolve({
+        name: originalName || fileOrBlob.name,
+        type: originalType || fileOrBlob.type,
+        data: reader.result.split(',')[1]
+      });
+      reader.onerror = () => resolve(null);
+      reader.readAsDataURL(fileOrBlob);
+    });
+  }
+
+  /* Sends data to Google Apps Script (Sheets + Gmail + Drive).
+     Text data goes first in one POST.
+     Each file is sent as a separate POST to avoid payload size limits. */
+  async function sendToSheets(textData, form) {
+    // 1 — Send text data (no files)
+    try {
+      await fetch(GOOGLE_SHEET_URL, {
+        method: 'POST',
+        mode: 'no-cors',
+        body: JSON.stringify({ ...textData, files: {} })
+      });
+    } catch (e) { console.warn('Text POST error:', e); }
+
+    // 2 — Send each file as its own small POST
+    const fileFields = ['id_zurag','uls_burtgel','turees_geree','tus_zovshoorul'];
+    for (const name of fileFields) {
+      const input = form ? form.querySelector(`[name="${name}"]`) : null;
+      if (!input || !input.files[0]) continue;
+      try {
+        const original   = input.files[0];
+        const compressed = await compressImage(original, 1200, 0.82);
+        const encoded    = await fileToBase64(compressed, original.name, original.type);
+        if (!encoded) continue;
+        await fetch(GOOGLE_SHEET_URL, {
+          method: 'POST',
+          mode: 'no-cors',
+          body: JSON.stringify({
+            action:     'add_file',
+            ref_number: textData.ref_number,
+            field:      name,
+            file:       encoded
+          })
+        });
+      } catch (e) { console.warn('File POST error (' + name + '):', e); }
+    }
+  }
+
+  function setInvalid(el, invalid) {
+    if (!el) return;
+    el.classList.toggle('invalid', invalid);
+  }
+
+  document.getElementById('reg-form').addEventListener('submit', async function(e) {
+    e.preventDefault();
+
+    let valid = true;
+    const form = this;
+
+    form.querySelectorAll('[required]').forEach(el => {
+      const bad = !String(el.value || '').trim();
+      setInvalid(el, bad);
+      if (bad) valid = false;
+    });
+
+    const emailEl = form.querySelector('[name="email"]');
+    if (emailEl.value && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailEl.value)) {
+      setInvalid(emailEl, true);
+      valid = false;
+    }
+
+    const phoneEl = form.querySelector('[name="utas"]');
+    if (phoneEl.value && !/^\d{8}$/.test(phoneEl.value.trim())) {
+      setInvalid(phoneEl, true);
+      valid = false;
+    }
+
+    const rdEl = form.querySelector('[name="rd"]');
+    if (rdEl.value && !/^[А-ЯӨҮЁA-Z]{2}\d{8}$/i.test(rdEl.value.trim())) {
+      setInvalid(rdEl, true);
+      valid = false;
+    }
+
+    const inviteEl = form.querySelector('[name="invite_code"]');
+    if (inviteEl.value.trim() && !/^\d{8}$/.test(inviteEl.value.trim())) {
+      setInvalid(inviteEl, true);
+      valid = false;
+    }
+
+    if (!document.getElementById('agree').checked) {
+      alert('Үйлчилгээний нөхцөлтэй зөвшөөрнө үү.');
+      return;
+    }
+
+    if (!valid) {
+      form.querySelector('.invalid')?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      return;
+    }
+
+    const btn = document.getElementById('submit-btn');
+    btn.disabled = true;
+    btn.innerHTML = '⏳ Илгээж байна...';
+
+    const fd = new FormData(form);
+    const refNumber = makeRefNumber();
+
+    const textData = {
+      timestamp: new Date().toISOString(),
+      ref_number: refNumber,
+      status: 'Шинэ хүсэлт',
+      urg_ovog: fd.get('urg_ovog') || '',
+      ovog: fd.get('ovog') || '',
+      ner: fd.get('ner') || '',
+      rd: fd.get('rd') || '',
+      utas: fd.get('utas') || '',
+      email: fd.get('email') || '',
+      facebook: fd.get('facebook') || '',
+      hayag: fd.get('hayag') || '',
+      brand: fd.get('brand') || '',
+      trade_type: fd.get('trade_type') === 'custom' ? (fd.get('trade_type_custom') || 'Бусад') : (fd.get('trade_type') || ''),
+      merchant_hayag: fd.get('merchant_hayag') || '',
+      merchant_social: fd.get('merchant_social') || '',
+      branch_count: fd.get('branch_count') || '',
+      daily_sales_range: fd.get('daily_sales_range') || '',
+      bank_name: fd.get('bank_name') || '',
+      dans: fd.get('dans') || '',
+      invite_code: fd.get('invite_code') || '',
+      source_type: fd.get('source_type') || '',
+      notes: fd.get('notes') || ''
+    };
+
+    fd.append('ref_number', refNumber);
+    fd.append('status', 'Шинэ хүсэлт');
+
+    await sendToSheets(textData, form);
+
+    form.style.display = 'none';
+    const success = document.getElementById('success-screen');
+    success.style.display = 'flex';
+    document.getElementById('ref-number').textContent = refNumber;
+    success.scrollIntoView({ behavior: 'smooth' });
+  });
+
+
+  /* ── Bonus points lookup — update BONUS_DATA weekly ── */
+  const BONUS_DATA = {
+    '89100017': 100000
+  };
+
+  document.getElementById('check-bonus-btn')?.addEventListener('click', function() {
+    const input = document.getElementById('bonus-phone');
+    const resultEl = document.getElementById('bonus-result');
+    const notFoundEl = document.getElementById('bonus-not-found');
+    const pointsEl = document.getElementById('bonus-points-value');
+    const phone = (input.value || '').replace(/\D/g, '');
+    input.value = phone;
+
+    resultEl.style.display = 'none';
+    notFoundEl.style.display = 'none';
+
+    if (phone.length !== 8) {
+      alert('8 оронтой утасны дугаараа оруулна уу.');
+      input.focus();
+      return;
+    }
+
+    const points = BONUS_DATA[phone];
+    if (points !== undefined) {
+      pointsEl.textContent = points.toLocaleString();
+      resultEl.style.display = 'block';
+    } else {
+      notFoundEl.style.display = 'block';
+    }
+  });
+
+  document.getElementById('bonus-phone')?.addEventListener('keydown', function(e) {
+    if (e.key === 'Enter') document.getElementById('check-bonus-btn').click();
+  });
+
+  document.querySelectorAll('input, select, textarea').forEach(el => {
+    el.addEventListener('input', () => el.classList.remove('invalid'));
+    el.addEventListener('change', () => el.classList.remove('invalid'));
+  });
+</script>
+</body>
+</html>
