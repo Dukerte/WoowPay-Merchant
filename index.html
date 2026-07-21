@@ -1511,6 +1511,32 @@
               <label>Мерчантын цахим хаяг <span style="font-size:.85em;font-weight:400;color:#6b7280;">(Facebook, Instagram, вэбсайт...)</span></label>
               <input type="text" name="merchant_social" placeholder="https://facebook.com/таны-хуудас эсвэл Instagram, вэбсайт хаяг..." />
             </div>
+            <div class="field span-2">
+              <label>Үйлчилгээний байршил <span style="font-size:.85em;font-weight:400;color:#6b7280;">(Google Maps холбоос)</span></label>
+              <div style="display:flex;gap:.5rem;align-items:center;">
+                <input type="text" name="location_url" id="location_url" placeholder="https://maps.app.goo.gl/... холбоосоо энд буулгана уу" style="flex:1;" />
+                <button type="button" onclick="getMyLocation()" style="white-space:nowrap;padding:.55rem 1rem;border-radius:10px;border:1.5px solid #29BDE0;background:#EBF8FC;color:#0A5570;font-size:.85rem;font-weight:600;cursor:pointer;">📍 Одоогийн байршил</button>
+              </div>
+              <div id="location_preview" style="display:none;margin-top:.5rem;font-size:.82rem;color:#29BDE0;"></div>
+            </div>
+            <div class="field span-2">
+              <label>Ажиллах цагын хуваарь</label>
+              <div style="border:1.5px solid #e2e8f0;border-radius:12px;overflow:hidden;">
+                <table style="width:100%;border-collapse:collapse;font-size:.88rem;" id="hours-table">
+                  <thead>
+                    <tr style="background:#F0FAFD;">
+                      <th style="padding:8px 12px;text-align:left;font-weight:600;color:#0A5570;border-bottom:1px solid #e2e8f0;">Өдөр</th>
+                      <th style="padding:8px 12px;text-align:center;font-weight:600;color:#0A5570;border-bottom:1px solid #e2e8f0;">Ажиллах уу?</th>
+                      <th style="padding:8px 12px;text-align:center;font-weight:600;color:#0A5570;border-bottom:1px solid #e2e8f0;">Нээх</th>
+                      <th style="padding:8px 12px;text-align:center;font-weight:600;color:#0A5570;border-bottom:1px solid #e2e8f0;">Хаах</th>
+                    </tr>
+                  </thead>
+                  <tbody id="hours-body">
+                  </tbody>
+                </table>
+              </div>
+              <input type="hidden" name="work_hours" id="work_hours" />
+            </div>
             <div class="field">
               <label>Салбарын тоо</label>
               <select name="branch_count">
@@ -1639,6 +1665,15 @@
               <div class="upload-actions">📁 Файл · 📷 Камер</div>
               <div class="file-name" id="name-zovshoorol"></div>
             </label>
+
+            <label class="upload-card" id="card-gадна">
+              <input type="file" name="gadna_zurag" accept="image/*" onchange="handleFile(this,'card-gадна','name-gadna')" />
+              <div class="upload-icon">🏪</div>
+              <h4>Үйлчилгээний гадна зураг</h4>
+              <p>Дэлгүүрийн гадна талын зураг</p>
+              <div class="upload-actions">📁 Файл · 📷 Камер</div>
+              <div class="file-name" id="name-gadna"></div>
+            </label>
           </div>
 
           <div class="notice-box" style="background:#FFF8E1; border-color:#F59E0B; color:#7C4A03;">
@@ -1686,6 +1721,76 @@
   */
   // All submissions → Google Apps Script (saves to Sheets + sends Gmail notification)
   const GOOGLE_SHEET_URL = 'https://script.google.com/macros/s/AKfycbyJpfYon9EW8z-wV7t7kNj38sLWKWM6_ALoftX51Kw_rpiI7f6kCCQEsIjLd0MU5Dls/exec';
+
+  // ── Working hours table ──────────────────────────────────────
+  (function buildHoursTable() {
+    const days = ['Даваа','Мягмар','Лхагва','Пүрэв','Баасан','Бямба','Ням'];
+    const defaults = { open:'09:00', close:'18:00' };
+    const tbody = document.getElementById('hours-body');
+    if (!tbody) return;
+    days.forEach((day, i) => {
+      const isWeekend = i >= 5;
+      const tr = document.createElement('tr');
+      tr.style.borderBottom = '1px solid #f0f4f8';
+      tr.innerHTML = `
+        <td style="padding:7px 12px;font-weight:500;color:#1e293b;">${day}</td>
+        <td style="padding:7px 12px;text-align:center;">
+          <input type="checkbox" class="hours-check" data-idx="${i}" ${isWeekend ? '' : 'checked'}
+            onchange="toggleHoursRow(this)" style="width:16px;height:16px;accent-color:#29BDE0;cursor:pointer;" />
+        </td>
+        <td style="padding:7px 12px;text-align:center;">
+          <input type="time" class="hours-open" data-idx="${i}" value="${defaults.open}"
+            style="border:1px solid #cbd5e1;border-radius:7px;padding:4px 6px;font-size:.85rem;${isWeekend ? 'opacity:.35;pointer-events:none;' : ''}" />
+        </td>
+        <td style="padding:7px 12px;text-align:center;">
+          <input type="time" class="hours-close" data-idx="${i}" value="${defaults.close}"
+            style="border:1px solid #cbd5e1;border-radius:7px;padding:4px 6px;font-size:.85rem;${isWeekend ? 'opacity:.35;pointer-events:none;' : ''}" />
+        </td>`;
+      tbody.appendChild(tr);
+    });
+    updateWorkHours();
+    tbody.addEventListener('change', updateWorkHours);
+  })();
+
+  function toggleHoursRow(cb) {
+    const idx = cb.dataset.idx;
+    const open  = document.querySelector(`.hours-open[data-idx="${idx}"]`);
+    const close = document.querySelector(`.hours-close[data-idx="${idx}"]`);
+    const dis = !cb.checked;
+    [open, close].forEach(el => {
+      el.style.opacity = dis ? '.35' : '1';
+      el.style.pointerEvents = dis ? 'none' : '';
+    });
+    updateWorkHours();
+  }
+
+  function updateWorkHours() {
+    const days = ['Даваа','Мягмар','Лхагва','Пүрэв','Баасан','Бямба','Ням'];
+    const checks = document.querySelectorAll('.hours-check');
+    const parts = [];
+    checks.forEach((cb, i) => {
+      if (!cb.checked) { parts.push(`${days[i]}: Амарна`); return; }
+      const open  = document.querySelector(`.hours-open[data-idx="${i}"]`).value;
+      const close = document.querySelector(`.hours-close[data-idx="${i}"]`).value;
+      parts.push(`${days[i]}: ${open}–${close}`);
+    });
+    const el = document.getElementById('work_hours');
+    if (el) el.value = parts.join(', ');
+  }
+
+  // ── Geolocation ──────────────────────────────────────────────
+  function getMyLocation() {
+    if (!navigator.geolocation) { alert('Байршил тодорхойлох боломжгүй.'); return; }
+    navigator.geolocation.getCurrentPosition(pos => {
+      const lat = pos.coords.latitude.toFixed(6);
+      const lng = pos.coords.longitude.toFixed(6);
+      const url = `https://www.google.com/maps?q=${lat},${lng}`;
+      document.getElementById('location_url').value = url;
+      const prev = document.getElementById('location_preview');
+      prev.textContent = `📍 ${lat}, ${lng}`;
+      prev.style.display = 'block';
+    }, () => alert('Байршил авахад алдаа гарлаа. Зөвшөөрлөө шалгана уу.'));
+  }
 
   function handleFile(input, cardId, nameId) {
     const card = document.getElementById(cardId);
@@ -1771,7 +1876,7 @@
     } catch (e) { console.warn('Text POST error:', e); }
 
     // 2 — Send each file as its own small POST
-    const fileFields = ['id_zurag','uls_burtgel','turees_geree','tus_zovshoorul'];
+    const fileFields = ['id_zurag','uls_burtgel','turees_geree','tus_zovshoorul','gadna_zurag'];
     for (const name of fileFields) {
       const input = form ? form.querySelector(`[name="${name}"]`) : null;
       if (!input || !input.files[0]) continue;
@@ -1819,7 +1924,7 @@
 
     const phoneEl = form.querySelector('[name="utas"]');
     if (phoneEl.value && !/^\d{8}$/.test(phoneEl.value.trim())) {
-      setInvalid(phoneEl, true);
+ &    setInvalid(phoneEl, true);
       valid = false;
     }
 
@@ -1868,8 +1973,10 @@
       trade_type: fd.get('trade_type') === 'custom' ? (fd.get('trade_type_custom') || 'Бусад') : (fd.get('trade_type') || ''),
       merchant_hayag: fd.get('merchant_hayag') || '',
       merchant_social: fd.get('merchant_social') || '',
+      location_url: fd.get('location_url') || '',
+      work_hours: fd.get('work_hours') || '',
       branch_count: fd.get('branch_count') || '',
-      daily_sales_range: fd.get('daily_sales_range') || '',
+ &    daily_sales_range: fd.get('daily_sales_range') || '',
       bank_name: fd.get('bank_name') || '',
       dans: fd.get('dans') || '',
       invite_code: fd.get('invite_code') || '',
