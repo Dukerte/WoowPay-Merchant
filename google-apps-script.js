@@ -25,8 +25,8 @@ const HEADERS = [
   'Ургийн овог', 'Овог', 'Нэр', 'РД', 'Утас', 'Имэйл', 'Facebook',
   'Оршин суух хаяг', 'Бренд нэр', 'Худалдааны төрөл', 'Мерчант хаяг',
   'Салбарын тоо', 'Дундаж борлуулалт', 'Банкны нэр', 'Данс',
-  'Урилгын код', 'Хаанаас мэдсэн', 'Нэмэлт тайлбар', 'Цахим хаяг',
-  'Иргэний үнэмлэх 🔗', 'Улсын бүртгэл 🔗', 'Түрээсийн гэрээ 🔗', 'Тусгай зөвшөөрөл 🔗'
+  'Урилгын код', 'Хаанаас мэдсэн', 'Нэмэлт тайлбар', 'Цахим хаяг', 'Байршил (Maps)', 'Ажиллах цаг',
+  'Иргэний үнэмлэх 🔗', 'Улсын бүртгэл 🔗', 'Түрээсийн гэрээ 🔗', 'Тусгай зөвшөөрөл 🔗', 'Гадна зураг 🔗'
 ];
 
 // ── SHEET ────────────────────────────────────────────────────
@@ -85,7 +85,8 @@ function saveFilesToDrive(files, refNumber) {
     id_zurag:       'Иргэний_үнэмлэх',
     uls_burtgel:    'Улсын_бүртгэл',
     turees_geree:   'Түрээсийн_гэрээ',
-    tus_zovshoorul: 'Тусгай_зөвшөөрөл'
+    tus_zovshoorul: 'Тусгай_зөвшөөрөл',
+    gadna_zurag:    'Гадна_зураг'
   };
   const links = {};
 
@@ -119,12 +120,13 @@ function sendNotificationEmail(data, fileLinks) {
   const subject = '🦉 Woow Pay — Шинэ мерчант: ' + (data.brand || name);
 
   // File rows
-  const fileOrder = ['id_zurag', 'uls_burtgel', 'turees_geree', 'tus_zovshoorul'];
+  const fileOrder = ['id_zurag', 'uls_burtgel', 'turees_geree', 'tus_zovshoorul', 'gadna_zurag'];
   const fileLabels = {
     id_zurag:       'Иргэний үнэмлэх',
     uls_burtgel:    'Улсын бүртгэл',
     turees_geree:   'Түрээсийн гэрээ',
-    tus_zovshoorul: 'Тусгай зөвшөөрөл'
+    tus_zovshoorul: 'Тусгай зөвшөөрөл',
+    gadna_zurag:    'Гадна зураг'
   };
   const fileRows = fileOrder
     .filter(k => fileLinks && fileLinks[k])
@@ -170,6 +172,8 @@ function sendNotificationEmail(data, fileLinks) {
     + emailRow('Худалдааны төрөл', data.trade_type)
     + emailRow('Мерчант хаяг', data.merchant_hayag)
     + emailRow('Цахим хаяг', data.merchant_social)
+    + emailRow('Байршил (Maps)', data.location_url ? '<a href="' + data.location_url + '" style="color:#29BDE0;">📍 Газрын зураг харах</a>' : '—')
+    + emailRow('Ажиллах цаг', data.work_hours)
     + emailRow('Салбарын тоо', data.branch_count)
     + emailRow('Дундаж борлуулалт', data.daily_sales_range)
     + emailRow('Банк', data.bank_name)
@@ -205,9 +209,9 @@ function sendNotificationEmail(data, fileLinks) {
 
   // Plain text fallback
   const plain = [
-    'ШИНЭ МЕРЧАНТ БҮРТГЭЛ',
+    'ШИНЭ МЕРСХАНТ БҮРТГХЛ',
     'Лавлах: ' + (data.ref_number || '—'),
-    'Огноо:  ' + new Date().toLocaleString('mn-MN'),
+    'Огноп:  ' + new Date().toLocaleString('mn-MN'),
     '',
     '── ХУВИЙН ──',
     'Нэр:   ' + name,
@@ -216,9 +220,9 @@ function sendNotificationEmail(data, fileLinks) {
     'Имэйл: ' + (data.email || '—'),
     'Хаяг:  ' + (data.hayag || '—'),
     '',
-    '── ДЭЛГҮҮР ──',
+    '── ДЭAГҮҮР ──',
     'Бренд:        ' + (data.brand || '—'),
-    'Худалдааны:   ' + (data.trade_type || '—'),
+    'Худалдаану:   ' + (data.trade_type || '—'),
     'Мерчант хаяг: ' + (data.merchant_hayag || '—'),
     'Банк:         ' + (data.bank_name || '—'),
     'Данс:         ' + (data.dans || '—'),
@@ -250,10 +254,12 @@ function appendToSheet(data, fileLinks) {
     data.branch_count || '', data.daily_sales_range || '',
     data.bank_name || '', data.dans || '',
     data.invite_code || '', data.source_type || '', data.notes || '', data.merchant_social || '',
+    data.location_url || '', data.work_hours || '',
     (fileLinks && fileLinks.id_zurag)       || '',
     (fileLinks && fileLinks.uls_burtgel)    || '',
     (fileLinks && fileLinks.turees_geree)   || '',
-    (fileLinks && fileLinks.tus_zovshoorul) || ''
+    (fileLinks && fileLinks.tus_zovshoorul) || '',
+    (fileLinks && fileLinks.gadna_zurag)    || ''
   ]);
 
   // Highlight the Status cell yellow for new entries
@@ -282,12 +288,13 @@ function handleSubmission(payload) {
 }
 
 // ── FILE UPLOAD HANDLER ───────────────────────────────────────
-// Each file is sent as a separate POST with action:'add_file'.
+K/Each file is sent as a separate POST with action:'add_file'.
 const FILE_COLUMNS = {
-  id_zurag:       23,   // Column W — Иргэний үнэмлэх
-  uls_burtgel:    24,   // Column X — Улсын бүртгэл
-  turees_geree:   25,   // Column Y — Түрээсийн гэрээ
-  tus_zovshoorul: 26    // Column Z — Тусгай зөвшөөрөл
+  id_zurag:       25,   // Column Y — Иргэний үнэмлэх
+  uls_burtgel:    26,   // Column Z — Улсын бүртгэл
+  turees_geree:   27,   // Column AA — Түрээсийн гэрээ
+  tus_zovshoorul: 28,   // Column AB — Тусгай зөвшөөрөл
+  gadna_zurag:    29    // Column AC — Гадна зураг
 };
 
 function handleFileUpload(payload) {
@@ -303,7 +310,8 @@ function handleFileUpload(payload) {
     id_zurag:       'Иргэний_үнэмлэх',
     uls_burtgel:    'Улсын_бүртгэл',
     turees_geree:   'Түрээсийн_гэрээ',
-    tus_zovshoorul: 'Тусгай_зөвшөөрөл'
+    tus_zovshoorul: 'Тусгай_зөвшөөрөл',
+    gadna_zurag:    'Гадна_зураг'
   };
 
   try {
@@ -394,7 +402,7 @@ function SETUP_RUN_ONCE() {
     MailApp.sendEmail({
       to:      CONFIG.NOTIFY_EMAILS.join(', '),
       subject: '✅ Woow Pay — Тохиргоо амжилттай боллоо',
-      body:    'Gmail, Google Sheets болон Drive файл хадгалах систем идэвхжлээ.\n\nWoow Pay Merchant System',
+      body:    'Gmail, Google Sheets болон Drive файл хадгалахсистем идэвхжлээ.\n\nWoow Pay Merchant System',
       htmlBody: '<!DOCTYPE html><html><head><meta charset="UTF-8"></head><body style="margin:0;padding:0;background:#eef2f7;font-family:Arial,sans-serif;">'
         + '<div style="max-width:420px;margin:32px auto;background:#060C24;border-radius:20px;padding:36px;text-align:center;">'
         + '<div style="font-size:44px;margin-bottom:14px;">✅</div>'
@@ -421,11 +429,11 @@ function TEST_SUBMISSION() {
     rd: 'АА12345678', utas: '99001122',
     email: CONFIG.NOTIFY_EMAILS[0],
     facebook: 'test.merchant', hayag: 'Улаанбаатар, Сүхбаатар дүүрэг',
-    brand: 'Тест Дэлгүүр', trade_type: '🛒 Хүнсний дэлгүүр',
+    brand: 'Тест Дэлгүүр', trade_type: '🙒 Хүнсний дэлгүү�'{
     merchant_hayag: 'Санаа плаза, 2 давхар', branch_count: '1',
     daily_sales_range: '300,000₮ – 700,000₮', bank_name: 'Хаан банк',
     dans: '5012345678', invite_code: '116',
-    source_type: 'Найз / танил', notes: 'Туршилтын бүртгэл.',
+    source_type: 'Найз / танил', notes: 'Туршилтын бүртгэк,',
     files: {}
   });
   Logger.log('✅ Test done — check Sheets + email inbox!');
