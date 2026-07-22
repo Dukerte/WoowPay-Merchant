@@ -1945,7 +1945,7 @@
 
     const phoneEl = form.querySelector('[name="utas"]');
     if (phoneEl.value && !/^\d{8}$/.test(phoneEl.value.trim())) {
- &    setInvalid(phoneEl, true);
+       setInvalid(phoneEl, true);
       valid = false;
     }
 
@@ -1997,7 +1997,7 @@
       location_url: fd.get('location_url') || '',
       work_hours: fd.get('work_hours') || '',
       branch_count: fd.get('branch_count') || '',
- &    daily_sales_range: fd.get('daily_sales_range') || '',
+       daily_sales_range: fd.get('daily_sales_range') || '',
       bank_name: fd.get('bank_name') || '',
       dans: fd.get('dans') || '',
       invite_code: fd.get('invite_code') || '',
