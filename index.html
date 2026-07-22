@@ -1724,27 +1724,29 @@
 
   // ── Working hours table ──────────────────────────────────────
   (function buildHoursTable() {
-    const days = ['Даваа','Мягмар','Лхагва','Пүрэв','Баасан','Бямба','Ням'];
-    const defaults = { open:'09:00', close:'18:00' };
+    const groups = [
+      { label: 'Ажлын өдрүүд', checked: true  },
+      { label: 'Бямба',         checked: false },
+      { label: 'Ням',           checked: false },
+    ];
     const tbody = document.getElementById('hours-body');
     if (!tbody) return;
-    days.forEach((day, i) => {
-      const isWeekend = i >= 5;
+    groups.forEach((g, i) => {
       const tr = document.createElement('tr');
       tr.style.borderBottom = '1px solid #f0f4f8';
       tr.innerHTML = `
-        <td style="padding:7px 12px;font-weight:500;color:#1e293b;">${day}</td>
+        <td style="padding:7px 12px;font-weight:500;color:#1e293b;">${g.label}</td>
         <td style="padding:7px 12px;text-align:center;">
-          <input type="checkbox" class="hours-check" data-idx="${i}" ${isWeekend ? '' : 'checked'}
+          <input type="checkbox" class="hours-check" data-idx="${i}" ${g.checked ? 'checked' : ''}
             onchange="toggleHoursRow(this)" style="width:16px;height:16px;accent-color:#29BDE0;cursor:pointer;" />
         </td>
         <td style="padding:7px 12px;text-align:center;">
-          <input type="time" class="hours-open" data-idx="${i}" value="${defaults.open}"
-            style="border:1px solid #cbd5e1;border-radius:7px;padding:4px 6px;font-size:.85rem;${isWeekend ? 'opacity:.35;pointer-events:none;' : ''}" />
+          <input type="time" class="hours-open" data-idx="${i}" value="09:00"
+            style="border:1px solid #cbd5e1;border-radius:7px;padding:4px 6px;font-size:.85rem;${g.checked ? '' : 'opacity:.35;pointer-events:none;'}" />
         </td>
         <td style="padding:7px 12px;text-align:center;">
-          <input type="time" class="hours-close" data-idx="${i}" value="${defaults.close}"
-            style="border:1px solid #cbd5e1;border-radius:7px;padding:4px 6px;font-size:.85rem;${isWeekend ? 'opacity:.35;pointer-events:none;' : ''}" />
+          <input type="time" class="hours-close" data-idx="${i}" value="18:00"
+            style="border:1px solid #cbd5e1;border-radius:7px;padding:4px 6px;font-size:.85rem;${g.checked ? '' : 'opacity:.35;pointer-events:none;'}" />
         </td>`;
       tbody.appendChild(tr);
     });
@@ -1765,14 +1767,14 @@
   }
 
   function updateWorkHours() {
-    const days = ['Даваа','Мягмар','Лхагва','Пүрэв','Баасан','Бямба','Ням'];
+    const groups = ['Ажлын өдрүүд', 'Бямба', 'Ням'];
     const checks = document.querySelectorAll('.hours-check');
     const parts = [];
     checks.forEach((cb, i) => {
-      if (!cb.checked) { parts.push(`${days[i]}: Амарна`); return; }
+      if (!cb.checked) { parts.push(`${groups[i]}: Амарна`); return; }
       const open  = document.querySelector(`.hours-open[data-idx="${i}"]`).value;
       const close = document.querySelector(`.hours-close[data-idx="${i}"]`).value;
-      parts.push(`${days[i]}: ${open}–${close}`);
+      parts.push(`${groups[i]}: ${open}–${close}`);
     });
     const el = document.getElementById('work_hours');
     if (el) el.value = parts.join(', ');
