@@ -1,0 +1,521 @@
+<!DOCTYPE html>
+<html lang="mn">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Woow Pay — Мерчант хянах самбар</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;500;600;700;800;900&family=Manrope:wght@600;700;800;900&display=swap');
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+  :root{
+    --primary:#29BDE0; --primary-dark:#1A9CBD; --accent:#5CD4EE; --accent-soft:#A8E9F7;
+    --dark:#060C24; --dark-2:#0A1840; --text:#0F1C3F; --muted:#7C93AC;
+    --card:#FFFFFF;
+    --success:#10B981; --warning:#F59E0B; --error:#EF4444;
+    --gold:#F0B429; --gold-soft:#FCD34D;
+    --radius:20px; --shadow:0 24px 80px rgba(6,12,36,.45);
+  }
+  body{
+    font-family:'Noto Sans',system-ui,-apple-system,BlinkMacSystemFont,sans-serif;
+    min-height:100vh; color:var(--text);
+    background:
+      radial-gradient(circle at top left, rgba(41,189,224,.24), transparent 38%),
+      radial-gradient(circle at 85% 5%, rgba(240,180,41,.10), transparent 32%),
+      radial-gradient(circle at 82% 0%, rgba(92,212,238,.12), transparent 30%),
+      linear-gradient(135deg, var(--dark) 0%, var(--dark-2) 52%, var(--dark) 100%);
+  }
+  h1,h2,h3,.btn-primary{font-family:'Manrope','Noto Sans',system-ui,sans-serif;}
+  a{color:inherit;}
+
+  /* ── Login screen ── */
+  #login-screen{ min-height:100vh; display:flex; align-items:center; justify-content:center; padding:20px; }
+  .login-card{
+    width:100%; max-width:400px; background:rgba(255,255,255,.045);
+    border:1px solid rgba(255,255,255,.10); border-radius:var(--radius);
+    box-shadow:var(--shadow); padding:36px 28px; backdrop-filter:blur(20px);
+  }
+  .login-logo{ text-align:center; margin-bottom:8px; font-size:1.4rem; font-weight:800; color:#fff; }
+  .login-sub{ text-align:center; color:var(--accent-soft); font-size:.85rem; margin-bottom:28px; }
+  .field{ margin-bottom:16px; }
+  .field label{ display:block; font-size:.8rem; color:var(--accent-soft); margin-bottom:6px; }
+  .field input{
+    width:100%; padding:12px 14px; background:rgba(255,255,255,.07);
+    border:1px solid rgba(255,255,255,.15); border-radius:10px; color:#fff; font-size:1rem; outline:none;
+  }
+  .field input:focus{ border-color:var(--primary); }
+  .login-btn{
+    width:100%; padding:13px; margin-top:8px; background:linear-gradient(135deg,var(--primary),var(--primary-dark));
+    color:#fff; border:none; border-radius:12px; font-weight:700; font-size:1rem; cursor:pointer;
+  }
+  .login-btn:disabled{ opacity:.6; cursor:not-allowed; }
+  .login-err{ color:#FCA5A5; font-size:.82rem; margin-top:10px; text-align:center; min-height:18px; }
+  .login-help{ text-align:center; margin-top:20px; font-size:.78rem; color:var(--muted); line-height:1.5; }
+  .back-link{ display:block; text-align:center; margin-top:18px; color:var(--accent-soft); font-size:.82rem; text-decoration:underline; }
+
+  /* ── Dashboard shell ── */
+  #app{ display:none; max-width:1240px; margin:0 auto; padding:28px 20px 70px; }
+  .dash-header{
+    display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:16px;
+    margin-bottom:28px; padding-bottom:20px; border-bottom:1px solid rgba(255,255,255,.10);
+  }
+  .dash-header-left{ display:flex; align-items:center; gap:16px; }
+
+  .tier-block{ display:flex; flex-direction:column; align-items:center; gap:6px; flex-shrink:0; }
+  .tier-caption{
+    font-size:.68rem; font-weight:700; letter-spacing:.06em; text-transform:uppercase;
+    color:var(--accent-soft); opacity:.85;
+  }
+  .tier-badge{
+    width:92px; height:92px; border-radius:24px; display:flex; align-items:center; justify-content:center;
+    font-family:'Manrope',sans-serif; font-weight:900; font-size:3rem; color:#fff; flex-shrink:0;
+    box-shadow:0 12px 32px rgba(0,0,0,.4); position:relative; overflow:hidden; line-height:1;
+  }
+  .tier-badge::after{
+    content:''; position:absolute; inset:0; background:linear-gradient(135deg, rgba(255,255,255,.35), transparent 55%);
+  }
+  .tier-badge .tier-sub{
+    position:absolute; bottom:6px; left:0; right:0; text-align:center; font-size:.6rem; font-weight:700;
+    letter-spacing:.06em; text-transform:uppercase; color:rgba(255,255,255,.9);
+  }
+  .tier-A{ background:linear-gradient(135deg,#F0B429,#DD9E1F); box-shadow:0 12px 36px rgba(240,180,41,.45); }
+  .tier-B{ background:linear-gradient(135deg,#29BDE0,#1A9CBD); box-shadow:0 12px 36px rgba(41,189,224,.4); }
+  .tier-C{ background:linear-gradient(135deg,#7C93AC,#4E617A); }
+  .tier-unrated{ background:rgba(255,255,255,.08); border:1px dashed rgba(255,255,255,.25); }
+
+  .dash-header h1{ color:#fff; font-size:1.45rem; }
+  .dash-header .sub{ color:var(--accent-soft); font-size:.85rem; margin-top:4px; }
+  .logout-btn{
+    background:rgba(255,255,255,.08); border:1px solid rgba(255,255,255,.15); color:#fff;
+    padding:9px 18px; border-radius:10px; cursor:pointer; font-size:.85rem; transition:background .15s;
+  }
+  .logout-btn:hover{ background:rgba(255,255,255,.14); }
+
+  .grid-cards{ display:grid; grid-template-columns:repeat(auto-fit,minmax(210px,1fr)); gap:14px; margin-bottom:28px; }
+  .card{
+    background:rgba(255,255,255,.05); border:1px solid rgba(255,255,255,.10); border-radius:16px;
+    padding:20px; transition:transform .15s, border-color .15s;
+  }
+  .card:hover{ transform:translateY(-2px); border-color:rgba(92,212,238,.35); }
+  .card .label{ color:var(--muted); font-size:.78rem; margin-bottom:8px; }
+  .card .value{ color:#fff; font-size:1.55rem; font-weight:800; letter-spacing:-.01em; }
+  .card .delta{ font-size:.78rem; margin-top:8px; font-weight:600; }
+  .delta.up{ color:var(--success); }
+  .delta.down{ color:var(--error); }
+
+  .section-title{ color:#fff; font-size:1.05rem; margin-bottom:14px; display:flex; align-items:center; gap:8px; font-weight:700; }
+
+  /* ── Two-column main grid ── */
+  .main-grid{ display:grid; grid-template-columns:1fr 1fr; gap:22px; align-items:start; }
+  @media (max-width: 880px){ .main-grid{ grid-template-columns:1fr; } }
+
+  .panel{
+    background:rgba(255,255,255,.05); border:1px solid rgba(255,255,255,.10); border-radius:18px;
+    padding:22px;
+  }
+  .chart-wrap{ position:relative; height:280px; }
+
+  /* ── Cashback: exciting reward styling ── */
+  .cashback-panel{
+    background:
+      radial-gradient(circle at 15% 0%, rgba(240,180,41,.28), transparent 55%),
+      radial-gradient(circle at 90% 100%, rgba(41,189,224,.22), transparent 55%),
+      linear-gradient(150deg, rgba(255,255,255,.07), rgba(255,255,255,.02));
+    border:1px solid rgba(240,180,41,.35);
+    border-radius:18px; padding:0; overflow:hidden; position:relative;
+  }
+  .cashback-hero{
+    padding:26px 24px 20px; position:relative; text-align:center;
+  }
+  .cashback-hero .gift-icon{
+    font-size:2.4rem; margin-bottom:6px; display:inline-block;
+    filter:drop-shadow(0 4px 14px rgba(240,180,41,.5));
+    animation:float 3s ease-in-out infinite;
+  }
+  @keyframes float{
+    0%,100%{ transform:translateY(0) rotate(-3deg); }
+    50%{ transform:translateY(-6px) rotate(3deg); }
+  }
+  .cashback-hero .label{
+    color:var(--gold-soft); font-size:.85rem; font-weight:700; letter-spacing:.03em;
+    text-transform:uppercase; margin-bottom:8px;
+  }
+  .cashback-hero .amount{
+    color:#fff; font-size:2.6rem; font-weight:900; letter-spacing:-.02em;
+    text-shadow:0 0 30px rgba(240,180,41,.4);
+    background:linear-gradient(135deg,#fff,var(--gold-soft));
+    -webkit-background-clip:text; background-clip:text; -webkit-text-fill-color:transparent;
+  }
+  .cashback-hero .note{
+    color:var(--accent-soft); font-size:.8rem; margin-top:14px; max-width:360px;
+    margin-left:auto; margin-right:auto; line-height:1.55; opacity:.85;
+  }
+  .cashback-hero .sparkle{
+    position:absolute; font-size:1rem; opacity:.6; animation:twinkle 2.4s ease-in-out infinite;
+  }
+  .sparkle-1{ top:18px; left:24px; animation-delay:0s; }
+  .sparkle-2{ top:32px; right:30px; animation-delay:.6s; }
+  .sparkle-3{ bottom:10px; left:40px; animation-delay:1.2s; }
+  @keyframes twinkle{ 0%,100%{ opacity:.2; transform:scale(.8); } 50%{ opacity:.9; transform:scale(1.15); } }
+
+  .cashback-history{
+    background:rgba(6,12,36,.35); border-top:1px solid rgba(255,255,255,.08); padding:18px 22px 20px;
+  }
+  .cashback-history .hist-title{
+    color:var(--accent-soft); font-size:.75rem; font-weight:700; text-transform:uppercase;
+    letter-spacing:.04em; margin-bottom:10px;
+  }
+
+  table{ width:100%; border-collapse:collapse; font-size:.85rem; }
+  th,td{ text-align:left; padding:9px 6px; border-bottom:1px solid rgba(255,255,255,.08); color:#fff; }
+  th{ color:var(--accent-soft); font-weight:600; font-size:.72rem; text-transform:uppercase; letter-spacing:.03em; }
+  td.muted{ color:var(--muted); }
+  td.gold{ color:var(--gold-soft); font-weight:700; }
+  .empty-note{ color:var(--muted); font-size:.85rem; padding:24px 0; text-align:center; }
+</style>
+</head>
+<body>
+
+<!-- ══════════ LOGIN ══════════ -->
+<div id="login-screen">
+  <div class="login-card">
+    <div class="login-logo">Woow Pay</div>
+    <div class="login-sub">Мерчант хянах самбар</div>
+
+    <div class="field">
+      <label>Утасны дугаар</label>
+      <input type="tel" id="f-phone" placeholder="99001122" inputmode="numeric" maxlength="8" />
+    </div>
+    <div class="field">
+      <label>Нэвтрэх код</label>
+      <input type="password" id="f-passcode" placeholder="••••" inputmode="numeric" maxlength="6" />
+    </div>
+    <button class="login-btn" id="btn-login" onclick="login()">Нэвтрэх</button>
+    <div class="login-err" id="login-err"></div>
+
+    <div class="login-help">
+      Нэвтрэх кодоо мартсан бол хэрэглэгчийн үйлчилгээнд хандана уу.
+    </div>
+    <a class="back-link" href="index.html">← Нүүр хуудас руу буцах</a>
+  </div>
+</div>
+
+<!-- ══════════ DASHBOARD ══════════ -->
+<div id="app">
+  <div class="dash-header">
+    <div class="dash-header-left">
+      <div class="tier-block">
+        <div class="tier-caption">Ангилал</div>
+        <div class="tier-badge tier-unrated" id="tier-badge">
+          <span id="tier-letter">—</span>
+        </div>
+      </div>
+      <div>
+        <h1 id="d-brand">—</h1>
+        <div class="sub" id="d-meta">—</div>
+      </div>
+    </div>
+    <button class="logout-btn" onclick="logout()">Гарах</button>
+  </div>
+
+  <div class="grid-cards">
+    <div class="card">
+      <div class="label">Нийт борлуулалт (өссөн дүн)</div>
+      <div class="value" id="k-total-sales">—</div>
+    </div>
+    <div class="card">
+      <div class="label">Сүүлийн сарын борлуулалт</div>
+      <div class="value" id="k-month-sales">—</div>
+      <div class="delta" id="k-month-delta"></div>
+    </div>
+    <div class="card">
+      <div class="label">Нийт гүйлгээ</div>
+      <div class="value" id="k-total-tx">—</div>
+    </div>
+    <div class="card">
+      <div class="label">Өдрийн дундаж борлуулалт</div>
+      <div class="value" id="k-daily-avg">—</div>
+    </div>
+  </div>
+
+  <div class="main-grid">
+    <div>
+      <div class="section-title">📈 Сар бүрийн борлуулалт</div>
+      <div class="panel">
+        <div class="chart-wrap"><canvas id="salesChart"></canvas></div>
+      </div>
+    </div>
+
+    <div>
+      <div class="section-title">🎁 Cashback / Буцаан олголт</div>
+      <div class="cashback-panel">
+        <div class="cashback-hero">
+          <span class="sparkle sparkle-1">✨</span>
+          <span class="sparkle sparkle-2">✨</span>
+          <span class="sparkle sparkle-3">✨</span>
+          <div class="gift-icon">🎁</div>
+          <div class="label">Одоогийн үлдэгдэл</div>
+          <div class="amount" id="cb-balance">0₮</div>
+          <div class="note">Бонус оноо тун удахгүй "Cashback буцаан олголт" болж шинэчлэгдэнэ. Борлуулалтаа нэмэгдүүлэх тусам таны шагнал өснө! 🚀</div>
+        </div>
+        <div class="cashback-history">
+          <div class="hist-title">Түүх</div>
+          <table id="cb-table">
+            <thead><tr><th>Огноо</th><th>Дүн</th><th>Тайлбар</th></tr></thead>
+            <tbody id="cb-tbody"></tbody>
+          </table>
+          <div class="empty-note" id="cb-empty" style="display:none;">Cashback түүх одоогоор алга байна.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+// ══════════════════════════════════════════════════════════════
+//  CONFIG
+// ══════════════════════════════════════════════════════════════
+const SUPA_URL = 'https://bvpgitunxtdrrmugylkt.supabase.co';
+const SUPA_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJ2cGdpdHVueHRkcnJtdWd5bGt0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODc1OTM2NjIsImV4cCI6MjEwMzE2OTY2Mn0._pRDgrCj3eElGiJFH_AJ5F7Z8gfCglGR-KRTlXOh-bg';
+const LS_KEY = 'wp_merchant_session';
+
+function headers() {
+  return { 'apikey': SUPA_KEY, 'Authorization': `Bearer ${SUPA_KEY}`, 'Content-Type': 'application/json' };
+}
+async function rpc(fn, args) {
+  const res = await fetch(`${SUPA_URL}/rest/v1/rpc/${fn}`, {
+    method: 'POST', headers: headers(), body: JSON.stringify(args)
+  });
+  if (!res.ok) throw new Error('rpc_failed');
+  return res.json();
+}
+function fmt(n) {
+  n = Number(n || 0);
+  return n.toLocaleString('mn-MN') + '₮';
+}
+
+// ══════════════════════════════════════════════════════════════
+//  LOGIN
+// ══════════════════════════════════════════════════════════════
+async function login() {
+  const phone = document.getElementById('f-phone').value.trim();
+  const passcode = document.getElementById('f-passcode').value.trim();
+  const errEl = document.getElementById('login-err');
+  const btn = document.getElementById('btn-login');
+  errEl.textContent = '';
+
+  if (!phone || !passcode) {
+    errEl.textContent = 'Утасны дугаар болон кодоо оруулна уу.';
+    return;
+  }
+
+  btn.disabled = true; btn.textContent = 'Нэвтэрч байна...';
+  try {
+    const rows = await rpc('merchant_login', { p_phone: phone, p_passcode: passcode });
+    if (!rows || rows.length === 0) {
+      errEl.textContent = 'Утасны дугаар эсвэл код буруу байна.';
+      btn.disabled = false; btn.textContent = 'Нэвтрэх';
+      return;
+    }
+    const merchant = rows[0];
+    try { sessionStorage.setItem(LS_KEY, JSON.stringify(merchant)); } catch(e) {}
+    showDashboard(merchant);
+  } catch (e) {
+    errEl.textContent = 'Сүлжээний алдаа гарлаа. Дахин оролдоно уу.';
+    btn.disabled = false; btn.textContent = 'Нэвтрэх';
+  }
+}
+
+function logout() {
+  try { sessionStorage.removeItem(LS_KEY); } catch(e) {}
+  document.getElementById('app').style.display = 'none';
+  document.getElementById('login-screen').style.display = 'flex';
+  document.getElementById('f-phone').value = '';
+  document.getElementById('f-passcode').value = '';
+}
+
+// ══════════════════════════════════════════════════════════════
+//  DASHBOARD
+// ══════════════════════════════════════════════════════════════
+let chartInstance = null;
+
+async function showDashboard(merchant) {
+  document.getElementById('login-screen').style.display = 'none';
+  document.getElementById('app').style.display = 'block';
+
+  document.getElementById('d-brand').textContent = merchant.brand_name || 'Мерчант';
+  document.getElementById('d-meta').textContent = merchant.contact_name || '';
+  renderTier(merchant.category);
+
+  const [sales, cashback] = await Promise.all([
+    rpc('get_merchant_sales', { p_merchant_id: merchant.id }).catch(() => []),
+    rpc('get_merchant_cashback', { p_merchant_id: merchant.id }).catch(() => [])
+  ]);
+
+  renderSales(sales);
+  renderCashback(cashback);
+}
+
+function renderTier(rawCategory) {
+  const badge = document.getElementById('tier-badge');
+  const letterEl = document.getElementById('tier-letter');
+  // Normalize: Cyrillic С -> Latin C, trim, uppercase
+  let cat = (rawCategory || '').toString().trim().toUpperCase().replace('С', 'C');
+  badge.className = 'tier-badge';
+  let subLabel = '';
+  if (cat === 'A') { badge.classList.add('tier-A'); subLabel = 'TOP'; }
+  else if (cat === 'B') { badge.classList.add('tier-B'); subLabel = ''; }
+  else if (cat === 'C') { badge.classList.add('tier-C'); subLabel = ''; }
+  else { badge.classList.add('tier-unrated'); cat = '—'; }
+  letterEl.textContent = cat;
+  const existingSub = badge.querySelector('.tier-sub');
+  if (existingSub) existingSub.remove();
+  if (subLabel) {
+    const sub = document.createElement('span');
+    sub.className = 'tier-sub';
+    sub.textContent = subLabel;
+    badge.appendChild(sub);
+  }
+}
+
+// Build a fixed 6-month window ending at the latest month present in the
+// data (falling back to the current calendar month if there's no data at
+// all), so the chart always reads chronologically left-to-right and never
+// shows a lone future/empty month stranded at the start.
+function last6MonthKeys(sales) {
+  let anchor = new Date();
+  if (sales && sales.length) {
+    const latest = sales.reduce((max, r) => {
+      const d = new Date(r.month);
+      return d > max ? d : max;
+    }, new Date(sales[0].month));
+    anchor = latest;
+  }
+  const keys = [];
+  for (let i = 5; i >= 0; i--) {
+    const d = new Date(anchor.getFullYear(), anchor.getMonth() - i, 1);
+    keys.push({ key: `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}`, month: d.getMonth() + 1 });
+  }
+  return keys;
+}
+
+function renderSales(sales) {
+  sales = sales || [];
+  const totalSales = sales.reduce((s, r) => s + Number(r.sales_amount), 0);
+  const totalTx = sales.reduce((s, r) => s + Number(r.transaction_count), 0);
+
+  document.getElementById('k-total-sales').textContent = fmt(totalSales);
+  document.getElementById('k-total-tx').textContent = totalTx.toLocaleString('mn-MN');
+
+  const byMonth = {};
+  sales.forEach(r => {
+    const d = new Date(r.month);
+    const key = `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}`;
+    byMonth[key] = r;
+  });
+
+  const window6 = last6MonthKeys(sales);
+  const labels = window6.map(w => w.month + '-р сар');
+  const data = window6.map(w => byMonth[w.key] ? Number(byMonth[w.key].sales_amount) : 0);
+
+  // "Latest month" stat cards use the most recent real data point, not
+  // necessarily the last slot in the 6-month window (which may be 0/empty).
+  if (sales.length > 0) {
+    const sorted = sales.slice().sort((a,b) => new Date(a.month) - new Date(b.month));
+    const last = sorted[sorted.length - 1];
+    const prev = sorted.length > 1 ? sorted[sorted.length - 2] : null;
+    document.getElementById('k-month-sales').textContent = fmt(last.sales_amount);
+    if (prev && Number(prev.sales_amount) > 0) {
+      const pct = ((Number(last.sales_amount) - Number(prev.sales_amount)) / Number(prev.sales_amount)) * 100;
+      const el = document.getElementById('k-month-delta');
+      el.textContent = (pct >= 0 ? '▲ ' : '▼ ') + Math.abs(pct).toFixed(1) + '% өмнөх сараас';
+      el.className = 'delta ' + (pct >= 0 ? 'up' : 'down');
+    }
+    document.getElementById('k-daily-avg').textContent = fmt(totalSales / Math.max(sales.length * 30, 1));
+  } else {
+    document.getElementById('k-month-sales').textContent = fmt(0);
+    document.getElementById('k-daily-avg').textContent = fmt(0);
+  }
+
+  const ctx = document.getElementById('salesChart').getContext('2d');
+  if (chartInstance) chartInstance.destroy();
+  chartInstance = new Chart(ctx, {
+    type: 'line',
+    data: {
+      labels,
+      datasets: [{
+        label: 'Борлуулалт',
+        data,
+        borderColor: '#29BDE0',
+        backgroundColor: 'rgba(41,189,224,.15)',
+        fill: true,
+        tension: 0.35,
+        pointBackgroundColor: '#5CD4EE',
+        pointRadius: 4
+      }]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: { legend: { display: false } },
+      scales: {
+        x: { ticks: { color: '#A8E9F7' }, grid: { color: 'rgba(255,255,255,.06)' } },
+        y: {
+          beginAtZero: true,
+          ticks: {
+            color: '#A8E9F7',
+            callback: v => v >= 1000000 ? (v/1000000).toFixed(1) + 'сая' : v.toLocaleString('mn-MN')
+          },
+          grid: { color: 'rgba(255,255,255,.06)' }
+        }
+      }
+    }
+  });
+}
+
+function renderCashback(entries) {
+  entries = entries || [];
+  const tbody = document.getElementById('cb-tbody');
+  const emptyEl = document.getElementById('cb-empty');
+  tbody.innerHTML = '';
+
+  if (entries.length === 0) {
+    document.getElementById('cb-balance').textContent = fmt(0);
+    document.getElementById('cb-table').style.display = 'none';
+    emptyEl.style.display = 'block';
+    return;
+  }
+
+  document.getElementById('cb-table').style.display = 'table';
+  emptyEl.style.display = 'none';
+
+  const latest = entries[entries.length - 1];
+  document.getElementById('cb-balance').textContent = fmt(latest.amount);
+
+  entries.slice().reverse().forEach(e => {
+    const tr = document.createElement('tr');
+    const date = e.as_of_date || (e.created_at || '').slice(0, 10);
+    const noteMap = { snapshot: 'Тайлан үлдэгдэл', earned: 'Цуглуулсан', redeemed: 'Ашигласан', adjustment: 'Тохируулга' };
+    tr.innerHTML = `<td class="muted">${date}</td><td class="gold">${fmt(e.amount)}</td><td class="muted">${noteMap[e.entry_type] || e.entry_type}</td>`;
+    tbody.appendChild(tr);
+  });
+}
+
+// ══════════════════════════════════════════════════════════════
+//  INIT — restore session if present
+// ══════════════════════════════════════════════════════════════
+(function init() {
+  try {
+    const saved = sessionStorage.getItem(LS_KEY);
+    if (saved) {
+      const merchant = JSON.parse(saved);
+      showDashboard(merchant);
+    }
+  } catch (e) {}
+})();
+
+document.getElementById('f-passcode').addEventListener('keydown', e => {
+  if (e.key === 'Enter') login();
+});
+</script>
+</body>
+</html>
