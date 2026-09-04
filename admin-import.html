@@ -1,657 +1,1446 @@
 <!DOCTYPE html>
+
 <html lang="mn">
+
 <head>
+
 <meta charset="UTF-8" />
+
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
 <title>Woow Pay — Мерчант дата импорт</title>
+
 <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+
 <style>
+
   @import url('https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;500;600;700;800;900&family=Manrope:wght@600;700;800&display=swap');
+
   *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+
   :root{
+
     --primary:#29BDE0; --primary-dark:#1A9CBD; --accent:#5CD4EE; --accent-soft:#A8E9F7;
+
     --dark:#060C24; --dark-2:#0A1840; --text:#0F1C3F; --muted:#5A7A8A;
+
     --card:#FFFFFF; --success:#10B981; --warning:#F59E0B; --error:#EF4444;
+
     --radius:16px; --shadow:0 20px 70px rgba(6,12,36,.40);
+
   }
+
   body{
+
     font-family:'Noto Sans',system-ui,-apple-system,BlinkMacSystemFont,sans-serif;
+
     min-height:100vh; color:var(--text);
+
     background:
+
       radial-gradient(circle at top left, rgba(41,189,224,.22), transparent 36%),
+
       radial-gradient(circle at 82% 0%, rgba(92,212,238,.12), transparent 30%),
+
       linear-gradient(135deg, var(--dark) 0%, var(--dark-2) 52%, var(--dark) 100%);
+
     padding-bottom:60px;
+
   }
+
   h1,h2,h3,button{font-family:'Manrope','Noto Sans',system-ui,sans-serif;}
+
   a{color:inherit;}
 
   /* ── Login ── */
+
   #login-screen{ min-height:100vh; display:flex; align-items:center; justify-content:center; padding:20px; }
+
   .login-card{
+
     width:100%; max-width:400px; background:rgba(255,255,255,.04);
+
     border:1px solid rgba(255,255,255,.10); border-radius:var(--radius);
+
     box-shadow:var(--shadow); padding:36px 28px; backdrop-filter:blur(18px);
+
   }
+
   .login-logo{ text-align:center; margin-bottom:8px; font-size:1.4rem; font-weight:800; color:#fff; }
+
   .login-sub{ text-align:center; color:var(--accent-soft); font-size:.85rem; margin-bottom:28px; }
+
   .field{ margin-bottom:16px; }
+
   .field label{ display:block; font-size:.8rem; color:var(--accent-soft); margin-bottom:6px; }
+
   .field input, .field select{
+
     width:100%; padding:11px 14px; background:rgba(255,255,255,.07);
+
     border:1px solid rgba(255,255,255,.15); border-radius:10px; color:#fff; font-size:.95rem; outline:none;
+
   }
+
   .field input:focus, .field select:focus{ border-color:var(--primary); }
+
   .btn{
+
     padding:12px 20px; background:linear-gradient(135deg,var(--primary),var(--primary-dark));
+
     color:#fff; border:none; border-radius:10px; font-weight:700; font-size:.9rem; cursor:pointer;
+
   }
+
   .btn:disabled{ opacity:.5; cursor:not-allowed; }
+
   .btn-full{ width:100%; }
+
   .btn-secondary{ background:rgba(255,255,255,.08); border:1px solid rgba(255,255,255,.15); }
+
   .err{ color:#FCA5A5; font-size:.82rem; margin-top:10px; text-align:center; min-height:18px; }
 
   /* ── App ── */
+
   #app{ display:none; max-width:1200px; margin:0 auto; padding:24px 16px; }
+
   .app-header{
+
     display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px;
+
     margin-bottom:24px; padding-bottom:18px; border-bottom:1px solid rgba(255,255,255,.10);
+
   }
+
   .app-header h1{ color:#fff; font-size:1.3rem; }
+
   .app-header .sub{ color:var(--accent-soft); font-size:.82rem; margin-top:4px; }
 
   .step{
+
     background:rgba(255,255,255,.05); border:1px solid rgba(255,255,255,.10); border-radius:16px;
+
     padding:22px; margin-bottom:20px;
+
   }
+
   .step h2{ color:#fff; font-size:1rem; margin-bottom:14px; display:flex; align-items:center; gap:8px; }
+
   .step h2 .num{
+
     display:inline-flex; align-items:center; justify-content:center; width:24px; height:24px;
+
     border-radius:50%; background:var(--primary); color:#fff; font-size:.8rem;
+
   }
+
   .drop-zone{
+
     border:2px dashed rgba(255,255,255,.25); border-radius:12px; padding:36px; text-align:center;
+
     color:var(--muted); cursor:pointer; transition:border-color .15s;
+
   }
+
   .drop-zone:hover, .drop-zone.drag{ border-color:var(--primary); color:var(--accent-soft); }
+
   .drop-zone input{ display:none; }
 
   table.map-table{ width:100%; border-collapse:collapse; font-size:.82rem; }
+
   table.map-table th, table.map-table td{ text-align:left; padding:8px 10px; border-bottom:1px solid rgba(255,255,255,.08); color:#fff; }
+
   table.map-table th{ color:var(--accent-soft); font-weight:600; font-size:.75rem; text-transform:uppercase; }
+
   table.map-table select{
+
     width:100%; padding:6px 8px; background:rgba(255,255,255,.08); border:1px solid rgba(255,255,255,.15);
+
     border-radius:6px; color:#fff; font-size:.8rem;
+
   }
+
   table.map-table input[type="month"]{
+
     padding:5px 6px; background:rgba(255,255,255,.08); border:1px solid rgba(255,255,255,.15);
+
     border-radius:6px; color:#fff; font-size:.78rem; margin-top:4px; width:100%;
+
   }
+
   .col-header{ color:var(--muted); font-size:.72rem; }
 
   .inline-fields{ display:flex; gap:16px; flex-wrap:wrap; margin-bottom:16px; }
+
   .inline-fields .field{ flex:1; min-width:180px; margin-bottom:0; }
 
   .preview-wrap{ overflow-x:auto; max-height:260px; overflow-y:auto; border:1px solid rgba(255,255,255,.08); border-radius:10px; }
+
   table.preview-table{ width:100%; border-collapse:collapse; font-size:.78rem; white-space:nowrap; }
+
   table.preview-table th, table.preview-table td{ padding:6px 10px; border-bottom:1px solid rgba(255,255,255,.06); color:#fff; }
+
   table.preview-table th{ background:rgba(255,255,255,.05); color:var(--accent-soft); position:sticky; top:0; }
 
   .log-box{
+
     background:rgba(0,0,0,.25); border-radius:10px; padding:14px; font-size:.8rem; color:var(--accent-soft);
+
     max-height:220px; overflow-y:auto; font-family:ui-monospace,monospace; white-space:pre-wrap;
+
   }
+
   .log-box .ok{ color:var(--success); }
+
   .log-box .bad{ color:#FCA5A5; }
 
   .stat-row{ display:flex; gap:14px; flex-wrap:wrap; margin-bottom:14px; }
+
   .stat-chip{
+
     background:rgba(41,189,224,.12); border:1px solid rgba(92,212,238,.25); border-radius:10px;
+
     padding:8px 14px; color:#fff; font-size:.82rem;
+
   }
+
   .stat-chip b{ color:var(--accent); }
 
   .row-hidden{ display:none; }
+
+  /* ── Merchant credentials lookup ── */
+
+  .cred-search-row{ display:flex; gap:10px; flex-wrap:wrap; margin-bottom:16px; }
+
+  .cred-search-row input{
+
+    flex:1; min-width:220px; padding:11px 14px; background:rgba(255,255,255,.07);
+
+    border:1px solid rgba(255,255,255,.15); border-radius:10px; color:#fff; font-size:.9rem; outline:none;
+
+  }
+
+  .cred-search-row input:focus{ border-color:var(--primary); }
+
+  .cred-results{ display:flex; flex-direction:column; gap:12px; }
+
+  .cred-card{
+
+    background:rgba(255,255,255,.04); border:1px solid rgba(255,255,255,.10); border-radius:12px;
+
+    padding:16px 18px; display:flex; flex-wrap:wrap; gap:16px; align-items:center; justify-content:space-between;
+
+  }
+
+  .cred-card .cred-info{ display:flex; flex-direction:column; gap:3px; min-width:180px; }
+
+  .cred-card .cred-brand{ color:#fff; font-weight:700; font-size:.95rem; }
+
+  .cred-card .cred-meta{ color:var(--muted); font-size:.78rem; }
+
+  .cred-card .cred-current{ display:flex; align-items:center; gap:8px; }
+
+  .cred-card .cred-current-label{ color:var(--accent-soft); font-size:.72rem; text-transform:uppercase; letter-spacing:.04em; }
+
+  .cred-code{
+
+    font-family:ui-monospace,monospace; font-size:1.15rem; font-weight:700; letter-spacing:.08em;
+
+    color:var(--accent); background:rgba(41,189,224,.14); border:1px solid rgba(92,212,238,.3);
+
+    border-radius:8px; padding:6px 12px;
+
+  }
+
+  .cred-edit{ display:flex; align-items:center; gap:8px; flex-wrap:wrap; }
+
+  .cred-edit input{
+
+    width:110px; padding:9px 10px; background:rgba(255,255,255,.07); border:1px solid rgba(255,255,255,.15);
+
+    border-radius:8px; color:#fff; font-size:.9rem; font-family:ui-monospace,monospace; letter-spacing:.06em; outline:none;
+
+  }
+
+  .cred-edit input:focus{ border-color:var(--primary); }
+
+  .cred-btn-small{
+
+    padding:9px 14px; font-size:.8rem; border-radius:8px;
+
+  }
+
+  .cred-saved{ color:var(--success); font-size:.78rem; }
+
+  .cred-empty{ color:var(--muted); font-size:.85rem; padding:6px 0; }
+
 </style>
+
 </head>
+
 <body>
 
 <!-- ══════════ LOGIN ══════════ -->
+
 <div id="login-screen">
+
   <div class="login-card">
+
     <div class="login-logo">Woow Pay</div>
+
     <div class="login-sub">Мерчант дата импорт (Staff only)</div>
+
     <div class="field">
+
       <label>Имэйл</label>
+
       <input type="email" id="f-email" placeholder="staff@woowpay.mn" />
+
     </div>
+
     <div class="field">
+
       <label>Нууц үг</label>
+
       <input type="password" id="f-pass" />
+
     </div>
+
     <button class="btn btn-full" id="btn-login" onclick="login()">Нэвтрэх</button>
+
     <div class="err" id="login-err"></div>
+
     <a href="index.html" style="display:block;text-align:center;margin-top:18px;color:var(--accent-soft);font-size:.82rem;text-decoration:underline;">← Нүүр хуудас</a>
+
   </div>
+
 </div>
 
 <!-- ══════════ APP ══════════ -->
+
 <div id="app">
+
   <div class="app-header">
+
     <div>
+
       <h1>Мерчант дата импорт</h1>
+
       <div class="sub">Сар бүрийн Excel/CSV тайланг ачаалж, багана бүрийг чиглэлээр нь тохируулж импортлоно</div>
+
     </div>
+
     <button class="btn btn-secondary" onclick="logout()">Гарах</button>
+
+  </div>
+
+  <!-- MERCHANT CREDENTIALS LOOKUP -->
+
+  <div class="step">
+
+    <h2>🔑 Мерчант нэвтрэх мэдээлэл (утас / нэвтрэх код)</h2>
+
+    <div class="cred-search-row">
+
+      <input type="text" id="cred-search" placeholder="Утасны дугаар эсвэл байгууллагын нэрээр хайх..." onkeydown="if(event.key==='Enter') searchMerchants()" />
+
+      <button class="btn" onclick="searchMerchants()">Хайх</button>
+
+    </div>
+
+    <div class="cred-results" id="cred-results"></div>
+
   </div>
 
   <!-- STEP 1: Upload -->
+
   <div class="step">
+
     <h2><span class="num">1</span> Файл сонгох</h2>
+
     <div class="drop-zone" id="drop-zone" onclick="document.getElementById('file-input').click()">
+
       <div id="drop-label">.xlsx эсвэл .csv файлаа энд чирж оруулах, эсвэл дарж сонгоно уу</div>
+
       <input type="file" id="file-input" accept=".xlsx,.xls,.csv" />
+
     </div>
+
   </div>
 
   <!-- STEP 2: Header row + sheet -->
+
   <div class="step row-hidden" id="step2">
+
     <h2><span class="num">2</span> Толгой мөр (header) сонгох</h2>
+
     <div class="inline-fields">
+
       <div class="field">
+
         <label>Sheet</label>
+
         <select id="sheet-select" onchange="onSheetChange()"></select>
+
       </div>
+
       <div class="field">
+
         <label>Толгой мөрийн дугаар (1-ээс эхэлнэ)</label>
+
         <input type="number" id="header-row" min="1" value="2" onchange="rebuildMapping()" />
+
       </div>
+
       <div class="field">
+
         <label>Тайлангийн огноо (as-of date)</label>
+
         <input type="date" id="as-of-date" />
+
       </div>
+
     </div>
+
   </div>
 
   <!-- STEP 3: Column mapping -->
+
   <div class="step row-hidden" id="step3">
+
     <h2><span class="num">3</span> Багана тохируулах</h2>
+
     <div class="preview-wrap" style="margin-bottom:14px;">
+
       <table class="map-table" id="map-table"></table>
+
     </div>
+
   </div>
 
   <!-- STEP 4: Preview -->
+
   <div class="step row-hidden" id="step4">
+
     <h2><span class="num">4</span> Урьдчилан харах (эхний 5 мөр)</h2>
+
     <div class="preview-wrap">
+
       <table class="preview-table" id="preview-table"></table>
+
     </div>
+
   </div>
 
   <!-- STEP 5: Import -->
+
   <div class="step row-hidden" id="step5">
+
     <h2><span class="num">5</span> Импортлох</h2>
+
     <div class="stat-row" id="stat-row"></div>
+
     <button class="btn" id="btn-import" onclick="runImport()">Импортлож эхлэх</button>
+
     <div style="height:14px;"></div>
+
     <div class="log-box" id="log-box" style="display:none;"></div>
+
   </div>
+
 </div>
 
 <script>
+
 // ══════════════════════════════════════════════════════════════
+
 //  CONFIG
+
 // ══════════════════════════════════════════════════════════════
+
 const SUPA_URL = 'https://bvpgitunxtdrrmugylkt.supabase.co';
+
 const ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJ2cGdpdHVueHRkcnJtdWd5bGt0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODc1OTM2NjIsImV4cCI6MjEwMzE2OTY2Mn0._pRDgrCj3eElGiJFH_AJ5F7Z8gfCglGR-KRTlXOh-bg';
+
 let userJwt = null;
 
 function authHeaders() {
+
   return {
+
     'apikey': ANON_KEY,
+
     'Authorization': `Bearer ${userJwt || ANON_KEY}`,
+
     'Content-Type': 'application/json'
+
   };
+
 }
 
 // ══════════════════════════════════════════════════════════════
+
 //  LOGIN (Supabase Auth password grant)
+
 // ══════════════════════════════════════════════════════════════
+
 async function login() {
+
   const email = document.getElementById('f-email').value.trim();
+
   const pass = document.getElementById('f-pass').value;
+
   const errEl = document.getElementById('login-err');
+
   const btn = document.getElementById('btn-login');
+
   errEl.textContent = '';
+
   if (!email || !pass) { errEl.textContent = 'Имэйл болон нууц үгээ оруулна уу.'; return; }
 
   btn.disabled = true; btn.textContent = 'Нэвтэрч байна...';
+
   try {
+
     const res = await fetch(`${SUPA_URL}/auth/v1/token?grant_type=password`, {
+
       method: 'POST',
+
       headers: { 'apikey': ANON_KEY, 'Content-Type': 'application/json' },
+
       body: JSON.stringify({ email, password: pass })
+
     });
+
     const data = await res.json();
+
     if (!res.ok || !data.access_token) {
+
       errEl.textContent = 'Имэйл эсвэл нууц үг буруу байна.';
+
       btn.disabled = false; btn.textContent = 'Нэвтрэх';
+
       return;
+
     }
+
     userJwt = data.access_token;
+
     try { sessionStorage.setItem('wp_staff_jwt', userJwt); } catch(e) {}
+
     showApp();
+
   } catch (e) {
+
     errEl.textContent = 'Сүлжээний алдаа. Дахин оролдоно уу.';
+
     btn.disabled = false; btn.textContent = 'Нэвтрэх';
+
   }
+
 }
 
 function logout() {
+
   userJwt = null;
+
   try { sessionStorage.removeItem('wp_staff_jwt'); } catch(e) {}
+
   document.getElementById('app').style.display = 'none';
+
   document.getElementById('login-screen').style.display = 'flex';
+
 }
 
 function showApp() {
+
   document.getElementById('login-screen').style.display = 'none';
+
   document.getElementById('app').style.display = 'block';
+
 }
 
 (function initSession() {
+
   try {
+
     const saved = sessionStorage.getItem('wp_staff_jwt');
+
     if (saved) { userJwt = saved; showApp(); }
+
   } catch (e) {}
+
 })();
 
 // ══════════════════════════════════════════════════════════════
+
 //  FILE PARSING
+
 // ══════════════════════════════════════════════════════════════
+
 let workbook = null;
+
 let sheetRows = [];      // raw AOA for selected sheet
+
 let headerRowIdx = 1;    // 0-indexed
+
 let headers = [];        // header cell values
+
 let dataRows = [];       // rows after header
 
 const ERROR_STRINGS = ['#DIV/0!','#N/A','#VALUE!','#REF!','#NAME?','#NULL!','#NUM!'];
 
 function cleanCell(v) {
+
   if (v === undefined) return null;
+
   if (typeof v === 'string' && ERROR_STRINGS.includes(v.trim())) return null;
+
   if (typeof v === 'string' && v.trim() === '') return null;
+
   return v;
+
 }
 
 const dropZone = document.getElementById('drop-zone');
+
 const fileInput = document.getElementById('file-input');
+
 dropZone.addEventListener('dragover', e => { e.preventDefault(); dropZone.classList.add('drag'); });
+
 dropZone.addEventListener('dragleave', () => dropZone.classList.remove('drag'));
+
 dropZone.addEventListener('drop', e => {
+
   e.preventDefault(); dropZone.classList.remove('drag');
+
   if (e.dataTransfer.files.length) handleFile(e.dataTransfer.files[0]);
+
 });
+
 fileInput.addEventListener('change', e => { if (e.target.files.length) handleFile(e.target.files[0]); });
 
 function handleFile(file) {
+
   document.getElementById('drop-label').textContent = `Сонгосон: ${file.name}`;
+
   const reader = new FileReader();
+
   reader.onload = e => {
+
     const data = new Uint8Array(e.target.result);
+
     workbook = XLSX.read(data, { type: 'array', cellDates: true });
+
     const sheetSelect = document.getElementById('sheet-select');
+
     sheetSelect.innerHTML = workbook.SheetNames.map(n => `<option value="${n}">${n}</option>`).join('');
+
     document.getElementById('step2').classList.remove('row-hidden');
+
     document.getElementById('as-of-date').valueAsDate = new Date();
+
     onSheetChange();
+
   };
+
   reader.readAsArrayBuffer(file);
+
 }
 
 function onSheetChange() {
+
   const name = document.getElementById('sheet-select').value;
+
   const ws = workbook.Sheets[name];
+
   sheetRows = XLSX.utils.sheet_to_json(ws, { header: 1, defval: null, raw: true });
+
   rebuildMapping();
+
 }
 
 // ══════════════════════════════════════════════════════════════
+
 //  COLUMN ROLE OPTIONS + AUTO-GUESS
+
 // ══════════════════════════════════════════════════════════════
+
 const ROLES = [
+
   ['ignore', '— Алгасах —'],
+
   ['phone', 'Утас (Phone) *'],
+
   ['brand_name', 'Brand Name *'],
+
   ['contact_name', 'Contact / ID name'],
+
   ['category', 'Ангилал (A/B/C)'],
+
   ['fee_percent', '%'],
+
   ['days_active', 'Ашигласан өдөр'],
+
   ['month_sales', 'Сарын борлуулалт (month picker)'],
+
   ['month_count', 'Сарын тоо (month picker)'],
+
   ['total_sales', 'Нийт борлуулалт'],
+
   ['total_transactions', 'Нийт тоо'],
+
   ['daily_avg_sales', 'Өдрийн дундаж борлуулалт'],
+
   ['fee_income', 'Шимтгэл орлого'],
+
   ['cashback', 'Бонус оноо / Cashback'],
+
   ['sales_target_completion', 'Зорилтын биелэлт'],
+
   ['sales_growth', 'Борлуулалтын өсөлт'],
+
   ['woowpay_usage_activity', 'WoowPay ашиглалт идэвх'],
+
   ['new_customers', 'Шинэ хэрэглэгч'],
+
   ['service_quality', 'Үйлчилгээний чанар'],
+
   ['collaboration_activity', 'Хамтын ажиллагаа'],
+
   ['total_score', 'Нийт оноо'],
+
 ];
 
 function guessRole(headerText) {
+
   const h = (headerText || '').toString().toLowerCase();
+
   if (!h) return 'ignore';
+
   if (h.includes('утас') || h.includes('phone')) return 'phone';
+
   if (h.includes('brand')) return 'brand_name';
+
   if (h.includes('id name') || h.includes('contact')) return 'contact_name';
+
   if (h.includes('ангилал')) return 'category';
+
   if (h === '%') return 'fee_percent';
+
   if (h.includes('ашигласан өдөр')) return 'days_active';
+
   if (h.includes('нийт борлуулалт')) return 'total_sales';
+
   if (h.includes('нийт тоо')) return 'total_transactions';
+
   if (h.includes('дундаж борлуулалт')) return 'daily_avg_sales';
+
   if (h.includes('шимтгэл')) return 'fee_income';
+
   if (h.includes('бонус')) return 'cashback';
+
   if (h.includes('зорилтын биелэлт')) return 'sales_target_completion';
+
   if (h.includes('өсөлт')) return 'sales_growth';
+
   if (h.includes('ашиглуулах идэвх')) return 'woowpay_usage_activity';
+
   if (h.includes('шинэ хэрэглэгч')) return 'new_customers';
+
   if (h.includes('үйлчилгээний чанар')) return 'service_quality';
+
   if (h.includes('хамтын ажиллагаа')) return 'collaboration_activity';
+
   if (h.includes('нийт оноо')) return 'total_score';
+
   if (h.includes('борлуулалт')) return 'month_sales';
+
   if (h === 'тоо') return 'month_count';
+
   return 'ignore';
+
 }
 
 let colRoles = [];   // role per column index
+
 let colMonths = [];  // 'YYYY-MM' per column index (for month_sales / month_count)
 
 function rebuildMapping() {
+
   headerRowIdx = Math.max(1, parseInt(document.getElementById('header-row').value || '2', 10)) - 1;
+
   headers = (sheetRows[headerRowIdx] || []).map(h => h === null || h === undefined ? '' : String(h).trim());
+
   dataRows = sheetRows.slice(headerRowIdx + 1).filter(r => r && r.some(c => c !== null && c !== undefined && c !== ''));
 
   colRoles = headers.map(h => guessRole(h));
+
   colMonths = headers.map(() => '');
 
   renderMapTable();
+
   renderPreview();
+
   document.getElementById('step3').classList.remove('row-hidden');
+
   document.getElementById('step4').classList.remove('row-hidden');
+
   document.getElementById('step5').classList.remove('row-hidden');
+
   updateStats();
+
 }
 
 function renderMapTable() {
+
   const table = document.getElementById('map-table');
+
   let html = '<tr><th>#</th><th>Header (эх файл)</th><th>Чиглэл</th><th>Сар (шаардлагатай бол)</th></tr>';
+
   headers.forEach((h, i) => {
+
     if (!h && dataRows.every(r => cleanCell(r[i]) === null)) return; // skip fully empty col
+
     const roleOpts = ROLES.map(([v, label]) =>
+
       `<option value="${v}" ${colRoles[i] === v ? 'selected' : ''}>${label}</option>`).join('');
+
     const showMonth = colRoles[i] === 'month_sales' || colRoles[i] === 'month_count';
+
     html += `<tr>
+
       <td class="col-header">${i + 1}</td>
+
       <td>${h || '<span class="col-header">(нэргүй)</span>'}</td>
+
       <td><select data-col="${i}" onchange="onRoleChange(${i}, this.value)">${roleOpts}</select></td>
+
       <td>${showMonth
+
         ? `<input type="month" data-monthcol="${i}" value="${colMonths[i]}" onchange="colMonths[${i}]=this.value; updateStats();" />`
+
         : ''}</td>
+
     </tr>`;
+
   });
+
   table.innerHTML = html;
+
 }
 
 function onRoleChange(i, val) {
+
   colRoles[i] = val;
+
   renderMapTable();
+
   updateStats();
+
 }
 
 function renderPreview() {
+
   const table = document.getElementById('preview-table');
+
   let html = '<tr>' + headers.map(h => `<th>${h || '—'}</th>`).join('') + '</tr>';
+
   dataRows.slice(0, 5).forEach(r => {
+
     html += '<tr>' + headers.map((h, i) => `<td>${cleanCell(r[i]) ?? ''}</td>`).join('') + '</tr>';
+
   });
+
   table.innerHTML = html;
+
 }
 
 function updateStats() {
+
   const phoneCol = colRoles.indexOf('phone');
+
   const brandCol = colRoles.indexOf('brand_name');
+
   const monthSalesCols = colRoles.map((r, i) => r === 'month_sales' ? i : -1).filter(i => i >= 0);
+
   const monthCountCols = colRoles.map((r, i) => r === 'month_count' ? i : -1).filter(i => i >= 0);
+
   const cashbackCol = colRoles.indexOf('cashback');
+
   const kpiCols = colRoles.filter(r => ['total_sales','total_transactions','daily_avg_sales','fee_income',
+
     'sales_target_completion','sales_growth','woowpay_usage_activity','new_customers',
+
     'service_quality','collaboration_activity','total_score'].includes(r)).length;
 
   const validRows = dataRows.filter(r => phoneCol >= 0 && cleanCell(r[phoneCol]) !== null).length;
 
   document.getElementById('stat-row').innerHTML = `
+
     <div class="stat-chip">Мөр: <b>${validRows}</b> / ${dataRows.length}</div>
+
     <div class="stat-chip">Утас: <b>${phoneCol >= 0 ? 'OK' : 'дутуу!'}</b></div>
+
     <div class="stat-chip">Brand: <b>${brandCol >= 0 ? 'OK' : 'дутуу!'}</b></div>
+
     <div class="stat-chip">Сарын багана: <b>${monthSalesCols.length}</b> борлуулалт, <b>${monthCountCols.length}</b> тоо</div>
+
     <div class="stat-chip">Cashback багана: <b>${cashbackCol >= 0 ? 'тийм' : 'үгүй'}</b></div>
+
     <div class="stat-chip">KPI багана: <b>${kpiCols}</b></div>
+
   `;
+
   document.getElementById('btn-import').disabled = !(phoneCol >= 0 && brandCol >= 0 && validRows > 0);
+
 }
 
 // ══════════════════════════════════════════════════════════════
+
 //  IMPORT
+
 // ══════════════════════════════════════════════════════════════
+
 function log(msg, cls) {
+
   const box = document.getElementById('log-box');
+
   box.style.display = 'block';
+
   const line = document.createElement('div');
+
   if (cls) line.className = cls;
+
   line.textContent = msg;
+
   box.appendChild(line);
+
   box.scrollTop = box.scrollHeight;
+
 }
 
 function chunk(arr, size) {
+
   const out = [];
+
   for (let i = 0; i < arr.length; i += size) out.push(arr.slice(i, i + size));
+
   return out;
+
 }
 
 function randomPasscode() {
+
   return String(Math.floor(1000 + Math.random() * 9000));
+
+}
+
+// ══════════════════════════════════════════════════════════════
+
+//  MERCHANT CREDENTIALS LOOKUP (view current passcode / change on request)
+
+// ══════════════════════════════════════════════════════════════
+
+function escapeHtml(s) {
+
+  return String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+
+}
+
+async function searchMerchants() {
+
+  const q = document.getElementById('cred-search').value.trim();
+
+  const el = document.getElementById('cred-results');
+
+  if (!q) { el.innerHTML = '<div class="cred-empty">Утасны дугаар эсвэл нэр оруулна уу.</div>'; return; }
+
+  el.innerHTML = '<div class="cred-empty">Хайж байна...</div>';
+
+  const isPhone = /^\d+$/.test(q);
+
+  const filter = isPhone
+
+    ? `phone=ilike.*${encodeURIComponent(q)}*`
+
+    : `brand_name=ilike.*${encodeURIComponent(q)}*`;
+
+  try {
+
+    const res = await fetch(`${SUPA_URL}/rest/v1/merchants?select=id,phone,brand_name,contact_name,passcode,enabled&${filter}&order=brand_name&limit=25`, {
+
+      headers: authHeaders()
+
+    });
+
+    if (!res.ok) { el.innerHTML = '<div class="cred-empty">Хайлтад алдаа гарлаа.</div>'; return; }
+
+    const rows = await res.json();
+
+    renderCredResults(rows);
+
+  } catch (e) {
+
+    el.innerHTML = '<div class="cred-empty">Сүлжээний алдаа гарлаа.</div>';
+
+  }
+
+}
+
+function renderCredResults(rows) {
+
+  const el = document.getElementById('cred-results');
+
+  if (!rows.length) { el.innerHTML = '<div class="cred-empty">Мерчант олдсонгүй.</div>'; return; }
+
+  el.innerHTML = rows.map(m => `
+
+    <div class="cred-card" id="cred-card-${m.id}">
+
+      <div class="cred-info">
+
+        <div class="cred-brand">${escapeHtml(m.brand_name)}${m.enabled === false ? ' <span style="color:var(--warning);font-size:.75rem;">(идэвхгүй)</span>' : ''}</div>
+
+        <div class="cred-meta">${escapeHtml(m.contact_name || '')}${m.contact_name ? ' · ' : ''}${escapeHtml(m.phone)}</div>
+
+      </div>
+
+      <div class="cred-current">
+
+        <span class="cred-current-label">Одоогийн код</span>
+
+        <span class="cred-code" id="cred-code-${m.id}">${escapeHtml(m.passcode)}</span>
+
+      </div>
+
+      <div class="cred-edit">
+
+        <input type="text" inputmode="numeric" maxlength="6" placeholder="Шинэ код" id="cred-new-${m.id}" />
+
+        <button class="btn btn-secondary cred-btn-small" onclick="fillRandomPasscode(${m.id})">Санамсаргүй</button>
+
+        <button class="btn cred-btn-small" onclick="savePasscode(${m.id})">Хадгалах</button>
+
+        <span class="cred-saved" id="cred-saved-${m.id}"></span>
+
+      </div>
+
+    </div>
+
+  `).join('');
+
+}
+
+function fillRandomPasscode(id) {
+
+  document.getElementById(`cred-new-${id}`).value = randomPasscode();
+
+}
+
+async function savePasscode(id) {
+
+  const input = document.getElementById(`cred-new-${id}`);
+
+  const savedEl = document.getElementById(`cred-saved-${id}`);
+
+  const newCode = input.value.trim();
+
+  savedEl.textContent = '';
+
+  savedEl.style.color = '';
+
+  if (!/^\d{4,6}$/.test(newCode)) {
+
+    savedEl.style.color = '#FCA5A5';
+
+    savedEl.textContent = 'Код 4-6 оронтой тоо байх ёстой.';
+
+    return;
+
+  }
+
+  try {
+
+    const res = await fetch(`${SUPA_URL}/rest/v1/merchants?id=eq.${id}`, {
+
+      method: 'PATCH',
+
+      headers: { ...authHeaders(), 'Prefer': 'return=representation' },
+
+      body: JSON.stringify({ passcode: newCode })
+
+    });
+
+    if (!res.ok) {
+
+      savedEl.style.color = '#FCA5A5';
+
+      savedEl.textContent = 'Алдаа гарлаа.';
+
+      return;
+
+    }
+
+    document.getElementById(`cred-code-${id}`).textContent = newCode;
+
+    input.value = '';
+
+    savedEl.textContent = '✓ Шинэчлэгдлээ';
+
+  } catch (e) {
+
+    savedEl.style.color = '#FCA5A5';
+
+    savedEl.textContent = 'Сүлжээний алдаа.';
+
+  }
+
 }
 
 async function runImport() {
+
   const btn = document.getElementById('btn-import');
+
   btn.disabled = true;
+
   document.getElementById('log-box').innerHTML = '';
+
   log('Импорт эхэллээ...');
 
   const phoneCol = colRoles.indexOf('phone');
+
   const brandCol = colRoles.indexOf('brand_name');
+
   const contactCol = colRoles.indexOf('contact_name');
+
   const categoryCol = colRoles.indexOf('category');
+
   const feeCol = colRoles.indexOf('fee_percent');
+
   const daysCol = colRoles.indexOf('days_active');
+
   const cashbackCol = colRoles.indexOf('cashback');
+
   const asOfDate = document.getElementById('as-of-date').value || new Date().toISOString().slice(0,10);
 
   const monthSalesCols = colRoles.map((r, i) => r === 'month_sales' ? i : -1).filter(i => i >= 0);
+
   const monthCountCols = colRoles.map((r, i) => r === 'month_count' ? i : -1).filter(i => i >= 0);
 
   const kpiFieldCols = {
+
     total_sales: colRoles.indexOf('total_sales'),
+
     total_transactions: colRoles.indexOf('total_transactions'),
+
     daily_avg_sales: colRoles.indexOf('daily_avg_sales'),
+
     fee_income: colRoles.indexOf('fee_income'),
+
     sales_target_completion: colRoles.indexOf('sales_target_completion'),
+
     sales_growth: colRoles.indexOf('sales_growth'),
+
     woowpay_usage_activity: colRoles.indexOf('woowpay_usage_activity'),
+
     new_customers: colRoles.indexOf('new_customers'),
+
     service_quality: colRoles.indexOf('service_quality'),
+
     collaboration_activity: colRoles.indexOf('collaboration_activity'),
+
     total_score: colRoles.indexOf('total_score'),
+
   };
+
   const hasKpiData = Object.values(kpiFieldCols).some(c => c >= 0);
 
   // Build merchant rows keyed by phone
+
   const merchantRows = [];
+
   const validRows = [];
+
   for (const r of dataRows) {
+
     const phoneRaw = cleanCell(r[phoneCol]);
+
     if (phoneRaw === null) continue;
+
     const phone = String(typeof phoneRaw === 'number' ? Math.trunc(phoneRaw) : phoneRaw).trim();
+
     if (!phone) continue;
+
     const brand = cleanCell(r[brandCol]);
+
     if (!brand) continue;
+
     validRows.push({ r, phone });
+
     merchantRows.push({
+
       phone,
+
       brand_name: String(brand),
+
       contact_name: contactCol >= 0 ? cleanCell(r[contactCol]) : null,
+
       category: categoryCol >= 0 ? cleanCell(r[categoryCol]) : null,
+
       fee_percent: feeCol >= 0 ? cleanCell(r[feeCol]) : null,
+
       days_active: daysCol >= 0 ? cleanCell(r[daysCol]) : null,
+
     });
+
   }
+
   log(`${merchantRows.length} мерчант мөр олдлоо.`);
 
   // 1. Find which phones already exist
+
   const allPhones = [...new Set(merchantRows.map(m => m.phone))];
+
   const existingMap = {}; // phone -> id
+
   for (const batch of chunk(allPhones, 80)) {
+
     const filter = `phone=in.(${batch.map(p => `"${p}"`).join(',')})`;
+
     const res = await fetch(`${SUPA_URL}/rest/v1/merchants?select=id,phone&${filter}`, { headers: authHeaders() });
+
     if (!res.ok) { log('Мерчант шалгахад алдаа гарлаа: ' + res.status, 'bad'); btn.disabled = false; return; }
+
     const rows = await res.json();
+
     rows.forEach(row => { existingMap[row.phone] = row.id; });
+
   }
+
   log(`Одоо байгаа: ${Object.keys(existingMap).length}, шинэ: ${allPhones.length - Object.keys(existingMap).length}`);
 
   // 2. Insert new merchants
+
   const newMerchants = merchantRows.filter(m => !existingMap[m.phone])
+
     .filter((m, i, arr) => arr.findIndex(x => x.phone === m.phone) === i)
+
     .map(m => ({ ...m, passcode: randomPasscode(), enabled: true }));
 
   for (const batch of chunk(newMerchants, 50)) {
+
     if (batch.length === 0) continue;
+
     const res = await fetch(`${SUPA_URL}/rest/v1/merchants`, {
+
       method: 'POST', headers: { ...authHeaders(), 'Prefer': 'return=representation' },
+
       body: JSON.stringify(batch)
+
     });
+
     if (!res.ok) { log('Шинэ мерчант insert алдаа: ' + await res.text(), 'bad'); continue; }
+
     const inserted = await res.json();
+
     inserted.forEach(row => { existingMap[row.phone] = row.id; });
+
     log(`+${inserted.length} шинэ мерчант нэмэгдлээ.`, 'ok');
+
   }
 
   // 3. Update existing merchants (not touching passcode)
+
   const updates = merchantRows.filter(m => existingMap[m.phone])
+
     .filter((m, i, arr) => arr.findIndex(x => x.phone === m.phone) === i);
+
   for (const m of updates) {
+
     const payload = {};
+
     if (m.brand_name) payload.brand_name = m.brand_name;
+
     if (m.contact_name) payload.contact_name = m.contact_name;
+
     if (m.category !== null && m.category !== undefined) payload.category = m.category;
+
     if (m.fee_percent !== null) payload.fee_percent = m.fee_percent;
+
     if (m.days_active !== null) payload.days_active = m.days_active;
+
     if (Object.keys(payload).length === 0) continue;
+
     await fetch(`${SUPA_URL}/rest/v1/merchants?phone=eq.${encodeURIComponent(m.phone)}`, {
+
       method: 'PATCH', headers: authHeaders(), body: JSON.stringify(payload)
+
     });
+
   }
+
   log(`${updates.length} одоо байгаа мерчантын мэдээлэл шинэчлэгдлээ.`, 'ok');
 
   // 4. Monthly sales upsert
+
   let salesUpsertRows = [];
+
   for (const { r, phone } of validRows) {
+
     const merchantId = existingMap[phone];
+
     if (!merchantId) continue;
+
     monthSalesCols.forEach(sIdx => {
+
       const month = colMonths[sIdx];
+
       if (!month) return;
+
       const cIdx = monthCountCols.find(ci => colMonths[ci] === month);
+
       const salesVal = cleanCell(r[sIdx]);
+
       const countVal = cIdx !== undefined ? cleanCell(r[cIdx]) : null;
+
       if (salesVal === null && countVal === null) return;
+
       salesUpsertRows.push({
+
         merchant_id: merchantId,
+
         month: month + '-01',
+
         sales_amount: salesVal || 0,
+
         transaction_count: countVal || 0
+
       });
+
     });
+
   }
+
   for (const batch of chunk(salesUpsertRows, 200)) {
+
     if (batch.length === 0) continue;
+
     const res = await fetch(`${SUPA_URL}/rest/v1/sales_monthly?on_conflict=merchant_id,month`, {
+
       method: 'POST', headers: { ...authHeaders(), 'Prefer': 'resolution=merge-duplicates' },
+
       body: JSON.stringify(batch)
+
     });
+
     if (!res.ok) log('Сарын борлуулалт upsert алдаа: ' + await res.text(), 'bad');
+
   }
+
   log(`${salesUpsertRows.length} сарын борлуулалтын мөр бичигдлээ.`, 'ok');
 
   // 5. Cashback ledger inserts
+
   if (cashbackCol >= 0) {
+
     let cbRows = [];
+
     for (const { r, phone } of validRows) {
+
       const merchantId = existingMap[phone];
+
       if (!merchantId) continue;
+
       const amount = cleanCell(r[cashbackCol]);
+
       if (amount === null) continue;
+
       cbRows.push({ merchant_id: merchantId, entry_type: 'snapshot', amount, source: 'staff_import', as_of_date: asOfDate });
+
     }
+
     for (const batch of chunk(cbRows, 200)) {
+
       if (batch.length === 0) continue;
+
       const res = await fetch(`${SUPA_URL}/rest/v1/cashback_ledger`, {
+
         method: 'POST', headers: authHeaders(), body: JSON.stringify(batch)
+
       });
+
       if (!res.ok) log('Cashback insert алдаа: ' + await res.text(), 'bad');
+
     }
+
     log(`${cbRows.length} cashback snapshot бичигдлээ.`, 'ok');
+
   }
 
   // 6. KPI snapshot upsert
+
   if (hasKpiData) {
+
     let kpiRows = [];
+
     for (const { r, phone } of validRows) {
+
       const merchantId = existingMap[phone];
+
       if (!merchantId) continue;
+
       const row = { merchant_id: merchantId, as_of_date: asOfDate };
+
       let any = false;
+
       for (const [field, idx] of Object.entries(kpiFieldCols)) {
+
         if (idx < 0) continue;
+
         const v = cleanCell(r[idx]);
+
         row[field] = v;
+
         if (v !== null) any = true;
+
       }
+
       if (categoryCol >= 0) row.category = cleanCell(r[categoryCol]);
+
       if (any) kpiRows.push(row);
+
     }
+
     for (const batch of chunk(kpiRows, 200)) {
+
       if (batch.length === 0) continue;
+
       const res = await fetch(`${SUPA_URL}/rest/v1/merchant_kpi_snapshot?on_conflict=merchant_id,as_of_date`, {
+
         method: 'POST', headers: { ...authHeaders(), 'Prefer': 'resolution=merge-duplicates' },
+
         body: JSON.stringify(batch)
+
       });
+
       if (!res.ok) log('KPI snapshot upsert алдаа: ' + await res.text(), 'bad');
+
     }
+
     log(`${kpiRows.length} KPI snapshot мөр бичигдлээ.`, 'ok');
+
   }
 
   log('✅ Импорт дууслаа.', 'ok');
+
   btn.disabled = false;
+
 }
+
 </script>
+
 </body>
+
 </html>
+
