@@ -216,10 +216,10 @@
   }
   .fold.open .fold-head .chevron{ transform:rotate(180deg); }
   .fold-wrap{
-    display:grid; grid-template-rows:0fr; min-height:0; transition:grid-template-rows .3s ease;
+    max-height:0; overflow:hidden; transition:max-height .35s ease;
   }
-  .fold.open .fold-wrap{ grid-template-rows:1fr; }
-  .fold-inner{ overflow:hidden; min-height:0; padding:0 22px 20px; }
+  .fold.open .fold-wrap{ max-height:600px; }
+  .fold-inner{ padding:0 22px 20px; }
 
   .cb-benefit-list{ display:flex; flex-direction:column; gap:8px; }
   .cb-benefit-item{
