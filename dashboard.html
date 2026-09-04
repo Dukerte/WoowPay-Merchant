@@ -1,698 +1,1286 @@
 <!DOCTYPE html>
+
 <html lang="mn">
+
 <head>
+
 <meta charset="UTF-8" />
+
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
 <title>Woow Pay — Мерчант хянах самбар</title>
+
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+
 <style>
+
   @import url('https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;500;600;700;800;900&family=Manrope:wght@600;700;800;900&display=swap');
+
   *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+
   :root{
+
     --primary:#29BDE0; --primary-dark:#1A9CBD; --accent:#5CD4EE; --accent-soft:#A8E9F7;
+
     --dark:#060C24; --dark-2:#0A1840; --text:#0F1C3F; --muted:#7C93AC;
+
     --card:#FFFFFF;
+
     --success:#10B981; --warning:#F59E0B; --error:#EF4444;
+
     --gold:#F0B429; --gold-soft:#FCD34D;
+
     --radius:20px; --shadow:0 24px 80px rgba(6,12,36,.45);
+
   }
+
   body{
+
     font-family:'Noto Sans',system-ui,-apple-system,BlinkMacSystemFont,sans-serif;
+
     min-height:100vh; color:var(--text);
+
     background:
+
       radial-gradient(circle at top left, rgba(41,189,224,.24), transparent 38%),
+
       radial-gradient(circle at 85% 5%, rgba(240,180,41,.10), transparent 32%),
+
       radial-gradient(circle at 82% 0%, rgba(92,212,238,.12), transparent 30%),
+
       linear-gradient(135deg, var(--dark) 0%, var(--dark-2) 52%, var(--dark) 100%);
+
   }
+
   h1,h2,h3,.btn-primary{font-family:'Manrope','Noto Sans',system-ui,sans-serif;}
+
   a{color:inherit;}
 
   /* ── Login screen ── */
+
   #login-screen{ min-height:100vh; display:flex; align-items:center; justify-content:center; padding:20px; }
+
   .login-card{
+
     width:100%; max-width:400px; background:rgba(255,255,255,.045);
+
     border:1px solid rgba(255,255,255,.10); border-radius:var(--radius);
+
     box-shadow:var(--shadow); padding:36px 28px; backdrop-filter:blur(20px);
+
   }
+
   .login-logo{ text-align:center; margin-bottom:8px; font-size:1.4rem; font-weight:800; color:#fff; }
+
   .login-sub{ text-align:center; color:var(--accent-soft); font-size:.85rem; margin-bottom:28px; }
+
   .field{ margin-bottom:16px; }
+
   .field label{ display:block; font-size:.8rem; color:var(--accent-soft); margin-bottom:6px; }
+
   .field input{
+
     width:100%; padding:12px 14px; background:rgba(255,255,255,.07);
+
     border:1px solid rgba(255,255,255,.15); border-radius:10px; color:#fff; font-size:1rem; outline:none;
+
   }
+
   .field input:focus{ border-color:var(--primary); }
+
   .login-btn{
+
     width:100%; padding:13px; margin-top:8px; background:linear-gradient(135deg,var(--primary),var(--primary-dark));
+
     color:#fff; border:none; border-radius:12px; font-weight:700; font-size:1rem; cursor:pointer;
+
   }
+
   .login-btn:disabled{ opacity:.6; cursor:not-allowed; }
+
   .login-err{ color:#FCA5A5; font-size:.82rem; margin-top:10px; text-align:center; min-height:18px; }
+
   .login-help{ text-align:center; margin-top:20px; font-size:.78rem; color:var(--muted); line-height:1.5; }
+
   .back-link{ display:block; text-align:center; margin-top:18px; color:var(--accent-soft); font-size:.82rem; text-decoration:underline; }
 
   /* ── Dashboard shell ── */
+
   #app{ display:none; max-width:1240px; margin:0 auto; padding:28px 20px 70px; }
+
   .dash-header{
+
     display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:16px;
+
     margin-bottom:28px; padding-bottom:20px; border-bottom:1px solid rgba(255,255,255,.10);
+
   }
+
   .dash-header-left{ display:flex; align-items:center; gap:16px; }
 
   .avatar-circle{
+
     width:56px; height:56px; border-radius:16px; flex-shrink:0; display:flex; align-items:center; justify-content:center;
+
     font-family:'Manrope',sans-serif; font-weight:800; font-size:1.4rem; color:#fff;
+
     background:linear-gradient(135deg,var(--primary),var(--primary-dark));
+
     box-shadow:0 10px 26px rgba(41,189,224,.35);
+
   }
+
   .greeting{ color:var(--accent-soft); font-size:.82rem; font-weight:600; margin-bottom:2px; }
+
   .dash-header h1{ color:#fff; font-size:1.4rem; line-height:1.2; }
+
   .dash-header .sub{ color:var(--muted); font-size:.8rem; margin-top:4px; }
 
   .dash-header-right{ display:flex; align-items:center; gap:14px; }
 
   .tier-pill{
+
     display:flex; align-items:center; gap:10px; padding:11px 20px 11px 12px; border-radius:100px;
+
     background:rgba(255,255,255,.05); border:1px solid rgba(255,255,255,.12);
+
     position:relative; cursor:pointer; transition:transform .15s, border-color .15s, background .15s;
+
   }
+
   .tier-pill:hover{ transform:translateY(-2px); border-color:rgba(92,212,238,.4); background:rgba(255,255,255,.09); }
+
   .tier-pill:active{ transform:translateY(0); }
+
   .tier-tooltip{
+
     position:absolute; top:calc(100% + 10px); right:0; width:220px;
+
     background:#0E1B42; border:1px solid rgba(92,212,238,.35); border-radius:12px;
+
     padding:12px 14px; font-size:.76rem; line-height:1.5; color:#E8F6FC; font-weight:500;
+
     box-shadow:0 18px 40px rgba(0,0,0,.45);
+
     opacity:0; visibility:hidden; transform:translateY(-6px) scale(.97); transform-origin:top right;
+
     transition:opacity .18s ease, transform .18s ease, visibility .18s;
+
     z-index:20; text-transform:none; letter-spacing:0;
+
   }
+
   .tier-tooltip::before{
+
     content:''; position:absolute; top:-6px; right:18px; width:11px; height:11px;
+
     background:#0E1B42; border-left:1px solid rgba(92,212,238,.35); border-top:1px solid rgba(92,212,238,.35);
+
     transform:rotate(45deg);
+
   }
+
   .tier-pill.tt-open .tier-tooltip{ opacity:1; visibility:visible; transform:translateY(0) scale(1); }
+
   .tier-pill .tier-dot{
+
     width:36px; height:36px; border-radius:10px; display:flex; align-items:center; justify-content:center;
+
     font-family:'Manrope',sans-serif; font-weight:900; font-size:1.1rem; color:#fff; flex-shrink:0;
+
   }
+
   .tier-pill .tier-label{ font-size:.85rem; color:var(--accent-soft); font-weight:700; }
+
   .tier-A .tier-dot{ background:linear-gradient(135deg,#F0B429,#DD9E1F); }
+
   .tier-B .tier-dot{ background:linear-gradient(135deg,#29BDE0,#1A9CBD); }
+
   .tier-C .tier-dot{ background:linear-gradient(135deg,#7C93AC,#4E617A); }
+
   .tier-unrated .tier-dot{ background:rgba(255,255,255,.1); border:1px dashed rgba(255,255,255,.3); }
 
   .logout-btn{
+
     display:flex; align-items:center; gap:8px;
+
     background:rgba(255,255,255,.08); border:1px solid rgba(255,255,255,.15); color:#fff;
+
     padding:10px 18px; border-radius:100px; cursor:pointer; font-size:.85rem; font-weight:600; transition:background .15s;
+
   }
+
   .logout-btn:hover{ background:rgba(255,255,255,.14); }
+
   .logout-btn svg{ width:16px; height:16px; }
 
   .grid-cards{ display:grid; grid-template-columns:repeat(auto-fit,minmax(210px,1fr)); gap:14px; margin-bottom:28px; }
+
   .card{
+
     background:rgba(255,255,255,.05); border:1px solid rgba(255,255,255,.10); border-radius:16px;
+
     padding:20px; transition:transform .15s, border-color .15s;
+
   }
+
   .card:hover{ transform:translateY(-2px); border-color:rgba(92,212,238,.35); }
+
   .card-icon{
+
     width:44px; height:44px; border-radius:12px; display:flex; align-items:center; justify-content:center;
+
     margin-bottom:16px; transition:transform .2s ease;
+
   }
+
   .card:hover .card-icon{ transform:scale(1.1) rotate(-4deg); }
+
   .card-icon svg{ width:22px; height:22px; }
+
   .icon-blue{ background:rgba(41,189,224,.16); color:#5CD4EE; }
+
   .icon-purple{ background:rgba(167,139,250,.16); color:#C4B5FD; }
+
   .icon-green{ background:rgba(16,185,129,.16); color:#6EE7B7; }
+
   .icon-gold{ background:rgba(240,180,41,.16); color:var(--gold-soft); }
+
   .card .label{ color:var(--muted); font-size:.78rem; margin-bottom:8px; }
+
   .card .value{ color:#fff; font-size:1.55rem; font-weight:800; letter-spacing:-.01em; }
+
   .card .delta{ font-size:.78rem; margin-top:8px; font-weight:600; }
+
   .delta.up{ color:var(--success); }
+
   .delta.down{ color:var(--error); }
 
   .section-title{ color:#fff; font-size:1.05rem; margin-bottom:14px; display:flex; align-items:center; gap:9px; font-weight:700; }
+
   .section-title svg{ width:19px; height:19px; color:var(--accent); flex-shrink:0; }
 
   /* ── Two-column main grid ── */
+
   .main-grid{ display:grid; grid-template-columns:1fr 1fr; gap:22px; align-items:start; }
+
   @media (max-width: 880px){ .main-grid{ grid-template-columns:1fr; } }
 
   .panel{
+
     background:rgba(255,255,255,.05); border:1px solid rgba(255,255,255,.10); border-radius:18px;
+
     padding:22px;
+
   }
+
   .chart-wrap{ position:relative; height:280px; }
 
   /* ── Cashback: exciting reward styling ── */
+
   .cashback-panel{
+
     background:
+
       radial-gradient(circle at 15% 0%, rgba(240,180,41,.28), transparent 55%),
+
       radial-gradient(circle at 90% 100%, rgba(41,189,224,.22), transparent 55%),
+
       linear-gradient(150deg, rgba(255,255,255,.07), rgba(255,255,255,.02));
+
     border:1px solid rgba(240,180,41,.35);
+
     border-radius:18px; padding:0; overflow:hidden; position:relative;
+
   }
+
   .cashback-hero{
+
     padding:24px 22px 18px; position:relative; display:flex; align-items:center; gap:18px;
+
   }
+
   .cashback-hero .mascot{ flex-shrink:0; }
+
   .cashback-hero .mascot img{
+
     height:84px; width:auto; filter:drop-shadow(0 10px 22px rgba(0,0,0,.35));
+
     animation:float 3.4s ease-in-out infinite; transition:transform .2s ease;
+
   }
+
   .cashback-hero .mascot img:hover{ transform:scale(1.08) rotate(-3deg); }
+
   @keyframes float{
+
     0%,100%{ transform:translateY(0); }
+
     50%{ transform:translateY(-6px); }
+
   }
+
   .cashback-hero .body{ flex:1 1 auto; min-width:0; }
+
   .cashback-hero .label{
+
     display:flex; align-items:center; gap:6px;
+
     color:var(--gold-soft); font-size:.8rem; font-weight:700; letter-spacing:.03em;
+
     text-transform:uppercase; margin-bottom:8px;
+
   }
+
   .cashback-hero .label svg{ width:15px; height:15px; }
+
   .cashback-hero .amount{
+
     color:#fff; font-size:3.1rem; font-weight:900; letter-spacing:-.02em;
+
     text-shadow:0 0 34px rgba(240,180,41,.45);
+
     background:linear-gradient(135deg,#fff,var(--gold-soft));
+
     -webkit-background-clip:text; background-clip:text; -webkit-text-fill-color:transparent;
+
     animation:amount-glow 3s ease-in-out infinite;
+
   }
+
   @keyframes amount-glow{
+
     0%,100%{ filter:drop-shadow(0 0 0 rgba(240,180,41,0)); }
+
     50%{ filter:drop-shadow(0 0 14px rgba(240,180,41,.35)); }
+
   }
+
   @media (max-width: 480px){
+
     .cashback-hero{ flex-direction:column; text-align:center; }
+
   }
 
   .cb-withdraw-note{
+
     margin:0 22px 20px; background:rgba(240,180,41,.12); border:1px solid rgba(240,180,41,.32);
+
     border-radius:12px; padding:11px 13px; font-size:.8rem; color:#FDE4A8; line-height:1.55;
+
     display:flex; align-items:center; gap:8px; transition:border-color .15s, background .15s, transform .15s;
+
   }
+
   .cb-withdraw-note:hover{ border-color:rgba(240,180,41,.55); background:rgba(240,180,41,.17); transform:translateY(-1px); }
+
   .cb-withdraw-note svg{ width:16px; height:16px; color:var(--gold-soft); flex-shrink:0; }
 
   /* ── Foldable sections (history / benefits) ── */
+
   .fold{ border-top:1px solid rgba(255,255,255,.08); }
+
   .fold-head{
+
     display:flex; align-items:center; justify-content:space-between; gap:10px;
+
     padding:16px 22px; cursor:pointer; user-select:none; transition:background .15s;
+
   }
+
   .fold-head:hover{ background:rgba(255,255,255,.035); }
+
   .fold-head .hist-title{
+
     color:var(--accent-soft); font-size:.75rem; font-weight:700; text-transform:uppercase;
+
     letter-spacing:.04em; margin-bottom:0; display:flex; align-items:center; gap:6px;
+
   }
+
   .fold-head .chevron{
+
     width:15px; height:15px; color:var(--accent-soft); flex-shrink:0; transition:transform .25s ease;
+
   }
+
   .fold.open .fold-head .chevron{ transform:rotate(180deg); }
+
   .fold-wrap{
+
     max-height:0; overflow:hidden; transition:max-height .35s ease;
+
   }
+
   .fold.open .fold-wrap{ max-height:600px; }
+
   .fold-inner{ padding:0 22px 20px; }
 
   .cb-benefit-list{ display:flex; flex-direction:column; gap:8px; }
+
   .cb-benefit-item{
-    display:flex; align-items:center; gap:10px; font-size:.83rem; color:#fff; line-height:1.5;
+
+    display:flex; align-items:flex-start; gap:10px; font-size:.83rem; color:#fff; line-height:1.5;
+
     padding:8px 10px; border-radius:10px; border:1px solid transparent;
+
     transition:background .15s, border-color .15s, transform .15s;
+
   }
+
   .cb-benefit-item:hover{
+
     background:rgba(255,255,255,.06); border-color:rgba(92,212,238,.25); transform:translateX(3px);
+
   }
-  .cb-benefit-item .emoji{ font-size:1.05rem; flex-shrink:0; line-height:1; }
+
+  .cb-benefit-item .emoji{ font-size:1.05rem; flex-shrink:0; line-height:1; margin-top:2px; }
+
   .cb-benefit-item svg{
-    width:16px; height:16px; color:var(--success); flex-shrink:0;
+
+    width:16px; height:16px; color:var(--success); flex-shrink:0; margin-top:3px;
+
   }
 
   .cb-help{
-    margin:0 22px 22px; padding:16px 18px; border-radius:14px;
+
+    margin-top:22px; padding:16px 18px; border-radius:14px;
+
     background:rgba(41,189,224,.08); border:1px solid rgba(92,212,238,.25);
+
     display:flex; align-items:center; justify-content:space-between; gap:14px; flex-wrap:wrap;
+
     transition:border-color .15s, background .15s, transform .15s;
+
   }
+
   .cb-help:hover{ border-color:rgba(92,212,238,.45); background:rgba(41,189,224,.13); transform:translateY(-1px); }
+
   .cb-help .cb-help-text{ display:flex; flex-direction:column; gap:2px; }
+
   .cb-help .cb-help-title{ color:#fff; font-size:.86rem; font-weight:700; }
+
   .cb-help .cb-help-sub{ color:var(--accent-soft); font-size:.76rem; }
+
   .cb-help-actions{ display:flex; gap:8px; flex-wrap:wrap; }
+
   .cb-help-btn{
+
     display:inline-flex; align-items:center; gap:6px; padding:9px 16px; border-radius:100px;
+
     background:linear-gradient(135deg,var(--primary),var(--primary-dark)); color:#fff; font-size:.8rem; font-weight:700;
+
     text-decoration:none; transition:transform .15s, box-shadow .15s;
+
   }
+
   .cb-help-btn:hover{ transform:translateY(-2px); box-shadow:0 10px 22px rgba(41,189,224,.35); }
+
   .cb-help-btn svg{ width:14px; height:14px; }
 
   table{ width:100%; border-collapse:collapse; font-size:.85rem; }
+
   th,td{ text-align:left; padding:9px 6px; border-bottom:1px solid rgba(255,255,255,.08); color:#fff; }
+
   th{ color:var(--accent-soft); font-weight:600; font-size:.72rem; text-transform:uppercase; letter-spacing:.03em; }
+
   td.muted{ color:var(--muted); }
+
   td.gold{ color:var(--gold-soft); font-weight:700; }
+
   .empty-note{ color:var(--muted); font-size:.85rem; padding:24px 0; text-align:center; }
+
 </style>
+
 </head>
+
 <body>
 
 <!-- ══════════ LOGIN ══════════ -->
+
 <div id="login-screen">
+
   <div class="login-card">
+
     <div class="login-logo">Woow Pay</div>
+
     <div class="login-sub">Мерчант хянах самбар</div>
 
     <div class="field">
+
       <label>Утасны дугаар</label>
+
       <input type="tel" id="f-phone" placeholder="99001122" inputmode="numeric" maxlength="8" />
+
     </div>
+
     <div class="field">
+
       <label>Нэвтрэх код</label>
+
       <input type="password" id="f-passcode" placeholder="••••" inputmode="numeric" maxlength="6" />
+
     </div>
+
     <button class="login-btn" id="btn-login" onclick="login()">Нэвтрэх</button>
+
     <div class="login-err" id="login-err"></div>
 
     <div class="login-help">
+
       Нэвтрэх кодоо мартсан бол хэрэглэгчийн үйлчилгээнд хандана уу.
+
     </div>
+
     <a class="back-link" href="index.html">← Нүүр хуудас руу буцах</a>
+
   </div>
+
 </div>
 
 <!-- ══════════ DASHBOARD ══════════ -->
+
 <div id="app">
+
   <div class="dash-header">
+
     <div class="dash-header-left">
+
       <div class="avatar-circle" id="d-avatar">—</div>
+
       <div>
+
         <div class="greeting" id="d-greeting">Сайн байна уу,</div>
+
         <h1 id="d-brand">—</h1>
+
         <div class="sub" id="d-meta">—</div>
+
       </div>
+
     </div>
+
     <div class="dash-header-right">
+
       <div class="tier-pill tier-unrated" id="tier-badge" onclick="toggleTierTip(event)">
+
         <span class="tier-dot" id="tier-letter">—</span>
+
         <span class="tier-label">Зэрэглэл</span>
+
         <div class="tier-tooltip">🏆 6 сар тутамд зэрэглэл нэмэгдэнэ</div>
+
       </div>
+
       <button class="logout-btn" onclick="logout()">
+
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" x2="9" y1="12" y2="12"/></svg>
+
         Гарах
+
       </button>
+
     </div>
+
   </div>
 
   <div class="grid-cards">
+
     <div class="card">
+
       <div class="card-icon icon-blue">
+
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" x2="22" y1="10" y2="10"/></svg>
+
       </div>
+
       <div class="label">Нийт борлуулалт (өссөн дүн)</div>
+
       <div class="value" id="k-total-sales">—</div>
+
     </div>
+
     <div class="card">
+
       <div class="card-icon icon-purple">
+
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z"/><path d="M3 6h18"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+
       </div>
+
       <div class="label">Сүүлийн сарын борлуулалт</div>
+
       <div class="value" id="k-month-sales">—</div>
+
       <div class="delta" id="k-month-delta"></div>
+
     </div>
+
     <div class="card">
+
       <div class="card-icon icon-green">
+
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+
       </div>
+
       <div class="label">Нийт гүйлгээ</div>
+
       <div class="value" id="k-total-tx">—</div>
+
     </div>
+
     <div class="card">
+
       <div class="card-icon icon-gold">
+
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8"/><path d="M12 8v8"/><path d="m9 11 3-3 3 3"/></svg>
+
       </div>
+
       <div class="label">Өдрийн дундаж борлуулалт</div>
+
       <div class="value" id="k-daily-avg">—</div>
+
     </div>
+
   </div>
 
   <div class="main-grid">
+
     <div>
+
       <div class="section-title">
+
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><path d="m19 9-5 5-4-4-3 3"/></svg>
+
         Сар бүрийн борлуулалт
+
       </div>
+
       <div class="panel">
+
         <div class="chart-wrap"><canvas id="salesChart"></canvas></div>
+
       </div>
+
     </div>
 
     <div>
+
       <div class="section-title">
+
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="8" width="18" height="4" rx="1"/><path d="M12 8v13"/><path d="M19 12v7a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2v-7"/><path d="M7.5 8a2.5 2.5 0 0 1 0-5C11 3 12 8 12 8s1-5 4.5-5a2.5 2.5 0 0 1 0 5"/></svg>
+
         Cashback / Буцаан олголт
+
       </div>
+
       <div class="cashback-panel">
+
         <div class="cashback-hero">
+
           <div class="mascot">
+
             <img src="data:image/png;base64,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" alt="" onerror="this.parentElement.style.display='none'" />
+
           </div>
+
           <div class="body">
+
             <div class="label">
+
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="8" width="18" height="4" rx="1"/><path d="M12 8v13"/><path d="M19 12v7a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2v-7"/><path d="M7.5 8a2.5 2.5 0 0 1 0-5C11 3 12 8 12 8s1-5 4.5-5a2.5 2.5 0 0 1 0 5"/></svg>
+
               Одоогийн үлдэгдэл
+
             </div>
+
             <div class="amount" id="cb-balance">0₮</div>
+
           </div>
+
         </div>
 
         <div class="cb-withdraw-note">
+
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg>
+
           <span>Дансандаа татаж авах боломжтой хамгийн бага дүн = <strong>100,000₮</strong></span>
+
         </div>
 
         <div class="fold" id="fold-history">
+
           <div class="fold-head" onclick="toggleFold('fold-history')">
+
             <div class="hist-title">Түүх</div>
+
             <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
+
           </div>
+
           <div class="fold-wrap"><div class="fold-inner">
+
             <table id="cb-table">
+
               <thead><tr><th>Огноо</th><th>Дүн</th><th>Тайлбар</th></tr></thead>
+
               <tbody id="cb-tbody"></tbody>
+
             </table>
+
             <div class="empty-note" id="cb-empty" style="display:none;">Cashback түүх одоогоор алга байна.</div>
+
           </div></div>
+
         </div>
 
         <div class="fold" id="fold-benefits">
+
           <div class="fold-head" onclick="toggleFold('fold-benefits')">
+
             <div class="hist-title">Cashback оноо цуглуулах</div>
+
             <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
+
           </div>
+
           <div class="fold-wrap"><div class="fold-inner">
+
             <div class="cb-benefit-list">
+
               <div class="cb-benefit-item">
+
                 <span class="emoji">🎁</span>
-                Харилцагч уриад <strong>+1,000₮</strong>cashback 🎁. Таны урилгын код = Таны утасны дугаар
+
+                <span>Харилцагч уриад <strong>+1,000₮</strong> cashback 🎁. Таны урилгын код = Таны утасны дугаар</span>
+
               </div>
+
               <div class="cb-benefit-item">
+
                 <span class="emoji">🎁</span>
-                Мерчант байгууллага уриад <strong>+20,000₮</strong>cashback 🎁. Таны урилгын код = Таны утасны дугаар
+
+                <span>Мерчант байгууллага уриад <strong>+20,000₮</strong> cashback 🎁. Таны урилгын код = Таны утасны дугаар</span>
+
               </div>
+
               <div class="cb-benefit-item">
+
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
-                Борлуулалтын орлогоос cashback буцаан олгогдоно
+
+                <span>Борлуулалтын орлогоос cashback буцаан олгогдоно</span>
+
               </div>
+
               <div class="cb-benefit-item">
+
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
-                Борлуулалтын орлогын <strong>5%</strong> хүртэл зээлийн эрх нээгдэнэ
+
+                <span>Борлуулалтын орлогын <strong>5%</strong> хүртэл зээлийн эрх нээгдэнэ</span>
+
               </div>
+
             </div>
+
           </div></div>
+
         </div>
 
-        <div class="cb-help">
-          <div class="cb-help-text">
-            <div class="cb-help-title">Тусламж хэрэгтэй байна уу?</div>
-            <div class="cb-help-sub">Бидэнтэй холбогдоорой, тусламж үзүүлье</div>
-          </div>
-          <div class="cb-help-actions">
-            <a class="cb-help-btn" href="tel:89100017">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
-              8910-0017
-            </a>
-            <a class="cb-help-btn" href="tel:88086719">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
-              8808-6719
-            </a>
-          </div>
-        </div>
       </div>
+
     </div>
+
   </div>
+
+  <div class="cb-help">
+
+    <div class="cb-help-text">
+
+      <div class="cb-help-title">Тусламж хэрэгтэй байна уу?</div>
+
+      <div class="cb-help-sub">Бидэнтэй холбогдоорой, тусламж үзүүлье</div>
+
+    </div>
+
+    <div class="cb-help-actions">
+
+      <a class="cb-help-btn" href="tel:89100017">
+
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+
+        8910-0017
+
+      </a>
+
+      <a class="cb-help-btn" href="tel:88086719">
+
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+
+        8808-6719
+
+      </a>
+
+    </div>
+
+  </div>
+
 </div>
 
 <script>
+
 // ══════════════════════════════════════════════════════════════
+
 //  CONFIG
+
 // ══════════════════════════════════════════════════════════════
+
 const SUPA_URL = 'https://bvpgitunxtdrrmugylkt.supabase.co';
+
 const SUPA_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJ2cGdpdHVueHRkcnJtdWd5bGt0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODc1OTM2NjIsImV4cCI6MjEwMzE2OTY2Mn0._pRDgrCj3eElGiJFH_AJ5F7Z8gfCglGR-KRTlXOh-bg';
+
 const LS_KEY = 'wp_merchant_session';
 
 function headers() {
+
   return { 'apikey': SUPA_KEY, 'Authorization': `Bearer ${SUPA_KEY}`, 'Content-Type': 'application/json' };
+
 }
+
 async function rpc(fn, args) {
+
   const res = await fetch(`${SUPA_URL}/rest/v1/rpc/${fn}`, {
+
     method: 'POST', headers: headers(), body: JSON.stringify(args)
+
   });
+
   if (!res.ok) throw new Error('rpc_failed');
+
   return res.json();
+
 }
+
 function fmt(n) {
+
   n = Number(n || 0);
+
   return n.toLocaleString('mn-MN') + '₮';
+
 }
 
 // ══════════════════════════════════════════════════════════════
+
 //  LOGIN
+
 // ══════════════════════════════════════════════════════════════
+
 async function login() {
+
   const phone = document.getElementById('f-phone').value.trim();
+
   const passcode = document.getElementById('f-passcode').value.trim();
+
   const errEl = document.getElementById('login-err');
+
   const btn = document.getElementById('btn-login');
+
   errEl.textContent = '';
 
   if (!phone || !passcode) {
+
     errEl.textContent = 'Утасны дугаар болон кодоо оруулна уу.';
+
     return;
+
   }
 
   btn.disabled = true; btn.textContent = 'Нэвтэрч байна...';
+
   try {
+
     const rows = await rpc('merchant_login', { p_phone: phone, p_passcode: passcode });
+
     if (!rows || rows.length === 0) {
+
       errEl.textContent = 'Утасны дугаар эсвэл код буруу байна.';
+
       btn.disabled = false; btn.textContent = 'Нэвтрэх';
+
       return;
+
     }
+
     const merchant = rows[0];
+
     try { sessionStorage.setItem(LS_KEY, JSON.stringify(merchant)); } catch(e) {}
+
     showDashboard(merchant);
+
   } catch (e) {
+
     errEl.textContent = 'Сүлжээний алдаа гарлаа. Дахин оролдоно уу.';
+
     btn.disabled = false; btn.textContent = 'Нэвтрэх';
+
   }
+
 }
 
 function toggleFold(id) {
+
   document.getElementById(id).classList.toggle('open');
+
 }
 
 function toggleTierTip(e) {
+
   e.stopPropagation();
+
   document.getElementById('tier-badge').classList.toggle('tt-open');
+
 }
+
 document.addEventListener('click', () => {
+
   const tb = document.getElementById('tier-badge');
+
   if (tb) tb.classList.remove('tt-open');
+
 });
 
 function logout() {
+
   try { sessionStorage.removeItem(LS_KEY); } catch(e) {}
+
   document.getElementById('app').style.display = 'none';
+
   document.getElementById('login-screen').style.display = 'flex';
+
   document.getElementById('f-phone').value = '';
+
   document.getElementById('f-passcode').value = '';
+
 }
 
 // ══════════════════════════════════════════════════════════════
+
 //  DASHBOARD
+
 // ══════════════════════════════════════════════════════════════
+
 let chartInstance = null;
 
 async function showDashboard(merchant) {
+
   document.getElementById('login-screen').style.display = 'none';
+
   document.getElementById('app').style.display = 'block';
 
   const brandName = merchant.brand_name || 'Мерчант';
+
   document.getElementById('d-brand').textContent = brandName;
+
   const todayStr = new Date().toLocaleDateString('mn-MN', { year: 'numeric', month: '2-digit', day: '2-digit', weekday: 'long' });
+
   document.getElementById('d-meta').textContent = [merchant.contact_name, todayStr].filter(Boolean).join(' · ');
+
   document.getElementById('d-avatar').textContent = brandName.trim().charAt(0).toUpperCase() || 'M';
+
   renderTier(merchant.category);
 
   const [sales, cashback] = await Promise.all([
+
     rpc('get_merchant_sales', { p_merchant_id: merchant.id }).catch(() => []),
+
     rpc('get_merchant_cashback', { p_merchant_id: merchant.id }).catch(() => [])
+
   ]);
 
   renderSales(sales);
+
   renderCashback(cashback);
+
 }
 
 function renderTier(rawCategory) {
+
   const badge = document.getElementById('tier-badge');
+
   const letterEl = document.getElementById('tier-letter');
+
   // Normalize: Cyrillic С -> Latin C, trim, uppercase
+
   let cat = (rawCategory || '').toString().trim().toUpperCase().replace('С', 'C');
+
   badge.className = 'tier-pill';
+
   if (cat === 'A') badge.classList.add('tier-A');
+
   else if (cat === 'B') badge.classList.add('tier-B');
+
   else if (cat === 'C') badge.classList.add('tier-C');
+
   else { badge.classList.add('tier-unrated'); cat = '—'; }
+
   letterEl.textContent = cat;
+
 }
 
 // Build a fixed 6-month window ending at the latest month present in the
+
 // data (falling back to the current calendar month if there's no data at
+
 // all), so the chart always reads chronologically left-to-right and never
+
 // shows a lone future/empty month stranded at the start.
+
 function last6MonthKeys(sales) {
+
   let anchor = new Date();
+
   if (sales && sales.length) {
+
     const latest = sales.reduce((max, r) => {
+
       const d = new Date(r.month);
+
       return d > max ? d : max;
+
     }, new Date(sales[0].month));
+
     anchor = latest;
+
   }
+
   const keys = [];
+
   for (let i = 5; i >= 0; i--) {
+
     const d = new Date(anchor.getFullYear(), anchor.getMonth() - i, 1);
+
     keys.push({ key: `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}`, month: d.getMonth() + 1 });
+
   }
+
   return keys;
+
 }
 
 function renderSales(sales) {
+
   sales = sales || [];
+
   const totalSales = sales.reduce((s, r) => s + Number(r.sales_amount), 0);
+
   const totalTx = sales.reduce((s, r) => s + Number(r.transaction_count), 0);
 
   document.getElementById('k-total-sales').textContent = fmt(totalSales);
+
   document.getElementById('k-total-tx').textContent = totalTx.toLocaleString('mn-MN');
 
   const byMonth = {};
+
   sales.forEach(r => {
+
     const d = new Date(r.month);
+
     const key = `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}`;
+
     byMonth[key] = r;
+
   });
 
   const window6 = last6MonthKeys(sales);
+
   const labels = window6.map(w => w.month + '-р сар');
+
   const data = window6.map(w => byMonth[w.key] ? Number(byMonth[w.key].sales_amount) : 0);
 
   // "Latest month" stat cards use the most recent real data point, not
+
   // necessarily the last slot in the 6-month window (which may be 0/empty).
+
   if (sales.length > 0) {
+
     const sorted = sales.slice().sort((a,b) => new Date(a.month) - new Date(b.month));
+
     const last = sorted[sorted.length - 1];
+
     const prev = sorted.length > 1 ? sorted[sorted.length - 2] : null;
+
     document.getElementById('k-month-sales').textContent = fmt(last.sales_amount);
+
     if (prev && Number(prev.sales_amount) > 0) {
+
       const pct = ((Number(last.sales_amount) - Number(prev.sales_amount)) / Number(prev.sales_amount)) * 100;
+
       const el = document.getElementById('k-month-delta');
+
       el.textContent = (pct >= 0 ? '▲ ' : '▼ ') + Math.abs(pct).toFixed(1) + '% өмнөх сараас';
+
       el.className = 'delta ' + (pct >= 0 ? 'up' : 'down');
+
     }
+
     document.getElementById('k-daily-avg').textContent = fmt(totalSales / Math.max(sales.length * 30, 1));
+
   } else {
+
     document.getElementById('k-month-sales').textContent = fmt(0);
+
     document.getElementById('k-daily-avg').textContent = fmt(0);
+
   }
 
   const ctx = document.getElementById('salesChart').getContext('2d');
+
   if (chartInstance) chartInstance.destroy();
+
   chartInstance = new Chart(ctx, {
+
     type: 'line',
+
     data: {
+
       labels,
+
       datasets: [{
+
         label: 'Борлуулалт',
+
         data,
+
         borderColor: '#29BDE0',
+
         backgroundColor: 'rgba(41,189,224,.15)',
+
         fill: true,
+
         tension: 0.35,
+
         pointBackgroundColor: '#5CD4EE',
+
         pointRadius: 4
+
       }]
+
     },
+
     options: {
+
       responsive: true, maintainAspectRatio: false,
+
       plugins: { legend: { display: false } },
+
       scales: {
+
         x: { ticks: { color: '#A8E9F7' }, grid: { color: 'rgba(255,255,255,.06)' } },
+
         y: {
+
           beginAtZero: true,
+
           ticks: {
+
             color: '#A8E9F7',
+
             callback: v => v >= 1000000 ? (v/1000000).toFixed(1) + 'сая' : v.toLocaleString('mn-MN')
+
           },
+
           grid: { color: 'rgba(255,255,255,.06)' }
+
         }
+
       }
+
     }
+
   });
+
 }
 
 function renderCashback(entries) {
+
   entries = entries || [];
+
   const tbody = document.getElementById('cb-tbody');
+
   const emptyEl = document.getElementById('cb-empty');
+
   tbody.innerHTML = '';
 
   if (entries.length === 0) {
+
     document.getElementById('cb-balance').textContent = fmt(0);
+
     document.getElementById('cb-table').style.display = 'none';
+
     emptyEl.style.display = 'block';
+
     return;
+
   }
 
   document.getElementById('cb-table').style.display = 'table';
+
   emptyEl.style.display = 'none';
 
   const latest = entries[entries.length - 1];
+
   document.getElementById('cb-balance').textContent = fmt(latest.amount);
 
   entries.slice().reverse().forEach(e => {
+
     const tr = document.createElement('tr');
+
     const date = e.as_of_date || (e.created_at || '').slice(0, 10);
+
     const noteMap = { snapshot: 'Тайлан үлдэгдэл', earned: 'Цуглуулсан', redeemed: 'Ашигласан', adjustment: 'Тохируулга' };
+
     tr.innerHTML = `<td class="muted">${date}</td><td class="gold">${fmt(e.amount)}</td><td class="muted">${noteMap[e.entry_type] || e.entry_type}</td>`;
+
     tbody.appendChild(tr);
+
   });
+
 }
 
 // ══════════════════════════════════════════════════════════════
+
 //  INIT — restore session if present
+
 // ══════════════════════════════════════════════════════════════
+
 (function init() {
+
   try {
+
     const saved = sessionStorage.getItem(LS_KEY);
+
     if (saved) {
+
       const merchant = JSON.parse(saved);
+
       showDashboard(merchant);
+
     }
+
   } catch (e) {}
+
 })();
 
 document.getElementById('f-passcode').addEventListener('keydown', e => {
+
   if (e.key === 'Enter') login();
+
 });
+
 </script>
+
 </body>
+
 </html>
+
