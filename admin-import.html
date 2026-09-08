@@ -392,6 +392,15 @@ function cleanCell(v) {
   return v;
 }
 
+  // Safe numeric coercion: never returns NaN (which JSON.stringify silently
+  // turns into `null`, and Supabase then rejects with a not-null violation,
+  // killing the entire batch insert). Non-numeric cells fall back to 0.
+  function toNum(v, fallback) {
+      if (fallback === undefined) fallback = 0;
+      const n = Number(v);
+      return Number.isFinite(n) ? n : fallback;
+  }
+
 const dropZone = document.getElementById('drop-zone');
 const fileInput = document.getElementById('file-input');
 dropZone.addEventListener('dragover', e => { e.preventDefault(); dropZone.classList.add('drag'); });
@@ -946,17 +955,17 @@ async function runImport() {
       if (!merchantId) continue;
 
       const category = categoryCol >= 0 ? normalizeCategory(cleanCell(r[categoryCol])) : null;
-      const salesAmount = totalSalesColForCashback >= 0 ? Number(cleanCell(r[totalSalesColForCashback]) || 0) : 0;
-      const rate = category ? CASHBACK_RATES[category] : 0;
-      const base = category ? CASHBACK_BASE[category] : 0;
+            const salesAmount = totalSalesColForCashback >= 0 ? toNum(cleanCell(r[totalSalesColForCashback])) : 0;
+            const rate = category ? (CASHBACK_RATES[category] || 0) : 0;
+            const base = category ? (CASHBACK_BASE[category] || 0) : 0;
       const qualified = !!(category && salesAmount >= base);
       const salesCashback = qualified ? salesAmount * rate : 0;
 
-      const refCustomers = referredCustomersCol >= 0 ? Number(cleanCell(r[referredCustomersCol]) || 0) : 0;
+            const refCustomers = referredCustomersCol >= 0 ? toNum(cleanCell(r[referredCustomersCol])) : 0;
       const refCustomersCashback = refCustomers * REFERRAL_CUSTOMER_RATE;
 
-      const refSupermarkets = referredSupermarketsCol >= 0 ? Number(cleanCell(r[referredSupermarketsCol]) || 0) : 0;
-      const refOther = referredOtherCol >= 0 ? Number(cleanCell(r[referredOtherCol]) || 0) : 0;
+            const refSupermarkets = referredSupermarketsCol >= 0 ? toNum(cleanCell(r[referredSupermarketsCol])) : 0;
+            const refOther = referredOtherCol >= 0 ? toNum(cleanCell(r[referredOtherCol])) : 0;
       const refMerchantsCashback = refSupermarkets * REFERRAL_SUPERMARKET_RATE + refOther * REFERRAL_OTHER_RATE;
 
       const totalCashback = salesCashback + refCustomersCashback + refMerchantsCashback;
@@ -993,23 +1002,31 @@ async function runImport() {
       }
     }
 
-    for (const batch of chunk(cbRows, 200)) {
-      if (batch.length === 0) continue;
-      const res = await fetch(`${SUPA_URL}/rest/v1/cashback_components?on_conflict=merchant_id,as_of_date`, {
-        method: 'POST', headers: { ...authHeaders(), 'Prefer': 'resolution=merge-duplicates' },
-        body: JSON.stringify(batch)
-      });
-      if (!res.ok) log('Cashback тооцоолол upsert алдаа: ' + await res.text(), 'bad');
-    }
-    for (const batch of chunk(cbLedgerRows, 200)) {
-      if (batch.length === 0) continue;
-      const res = await fetch(`${SUPA_URL}/rest/v1/cashback_ledger`, {
-        method: 'POST', headers: authHeaders(), body: JSON.stringify(batch)
-      });
-      if (!res.ok) log('Cashback ledger insert алдаа: ' + await res.text(), 'bad');
-    }
-    const totalDistributed = cbRows.reduce((s, r) => s + r.total_cashback, 0);
-    log(`${cbRows.length} мерчантын cashback тооцоолол бичигдлээ (нийт ${fmtNum(totalDistributed)}₮).`, 'ok');
+        let cbComponentsFailed = false;
+        for (const batch of chunk(cbRows, 200)) {
+                if (batch.length === 0) continue;
+                const res = await fetch(`${SUPA_URL}/rest/v1/cashback_components?on_conflict=merchant_id,as_of_date`, {
+                          method: 'POST', headers: { ...authHeaders(), 'Prefer': 'resolution=merge-duplicates' },
+                          body: JSON.stringify(batch)
+                });
+                if (!res.ok) { cbComponentsFailed = true; log('Cashback тооцоолол upsert алдаа: ' + await res.text(), 'bad'); }
+        }
+        let cbLedgerFailed = false;
+        for (const batch of chunk(cbLedgerRows, 200)) {
+                if (batch.length === 0) continue;
+                const res = await fetch(`${SUPA_URL}/rest/v1/cashback_ledger`, {
+                          method: 'POST', headers: authHeaders(), body: JSON.stringify(batch)
+                });
+                if (!res.ok) { cbLedgerFailed = true; log('Cashback ledger insert алдаа: ' + await res.text(), 'bad'); }
+        }
+        if (!cbComponentsFailed) {
+                const totalDistributed = cbRows.reduce((s, r) => s + r.total_cashback, 0);
+                log(`${cbRows.length} мерчантын cashback тооцоолол бичигдлээ (нийт ${fmtNum(totalDistributed)}₮).`, 'ok');
+        } else {
+                log('Cashback тооцоолол бичигдсэнгүй — дээрх алдааг засаад дахин оруулна уу.', 'bad');
+        }
+        if (cbLedgerFailed) log('Cashback ledger бичигдсэнгүй.', 'bad');
+  }
   }
 
   log('✅ Импорт дууслаа.', 'ok');
