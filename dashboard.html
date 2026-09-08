@@ -9,7 +9,7 @@
   @import url('https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;500;600;700;800;900&family=Manrope:wght@600;700;800;900&display=swap');
   *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
   :root{
-    --primary:#29BDE0; --primary-dark:#1A9CBD; --accent:#5CD4EE; --accent-soft:#A8E9F7;
+        --primary:#29BDE0; --primary-dark:#1A9CBD; --accent:#5CD4EE; --accent-soft:#A8E9F7;
     --dark:#060C24; --dark-2:#0A1840; --text:#0F1C3F; --muted:#7C93AC;
     --card:#FFFFFF;
     --success:#10B981; --warning:#F59E0B; --error:#EF4444;
@@ -279,6 +279,38 @@
   td.muted{ color:var(--muted); }
   td.gold{ color:var(--gold-soft); font-weight:700; }
   .empty-note{ color:var(--muted); font-size:.85rem; padding:24px 0; text-align:center; }
+
+    /* -- Mobile -- */
+    @media (max-width: 620px){
+          #app{ padding:20px 14px 56px; }
+          .dash-header{ flex-direction:column; align-items:flex-start; gap:14px; }
+          .dash-header-right{ width:100%; justify-content:space-between; }
+          .tier-tooltip{ width:190px; right:-10px; }
+          .dash-header h1{ font-size:1.2rem; }
+          .avatar-circle{ width:48px; height:48px; font-size:1.2rem; }
+          .grid-cards{ grid-template-columns:1fr 1fr; gap:10px; }
+          .card{ padding:14px; }
+          .card .value{ font-size:1.25rem; }
+          .panel{ padding:16px; }
+          .chart-wrap{ height:220px; }
+          .cashback-hero{ padding:18px 16px 14px; gap:12px; }
+          .cashback-hero .mascot img{ height:60px; }
+          .cashback-hero .amount{ font-size:2.1rem; }
+          .fold-inner{ padding:0 14px 16px; }
+          .fold-head{ padding:14px 16px; }
+          table{ font-size:.78rem; }
+          th,td{ padding:7px 4px; }
+          #cb-table{ display:block; overflow-x:auto; white-space:nowrap; }
+          .cb-help{ flex-direction:column; align-items:flex-start; padding:14px; }
+          .cb-help-actions{ width:100%; }
+          .cb-help-btn{ flex:1 1 auto; justify-content:center; }
+          .login-card{ padding:28px 20px; }
+    }
+    @media (max-width: 380px){
+          .grid-cards{ grid-template-columns:1fr; }
+          .cashback-hero .amount{ font-size:1.8rem; }
+          .dash-header h1{ font-size:1.05rem; }
+    }
 </style>
 </head>
 <body>
