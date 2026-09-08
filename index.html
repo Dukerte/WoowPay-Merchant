@@ -1253,13 +1253,21 @@
       50%     { box-shadow:0 0 0 1px rgba(92,212,238,.7), 0 0 42px 10px rgba(41,189,224,.75), 0 14px 34px rgba(41,189,224,.5); }
     }
     @media (max-width: 760px) {
-      .gate-wrap{ flex-direction:column; gap:.6rem; text-align:center; }
-      .gate-mascot img{ height:200px; }
-      .gate-content{ max-width:400px; }
-      .gate-logo{ justify-content:center; }
-      .gate-content h1{ text-align:center; }
-      .gate-link{ text-align:center; }
+            .gate-screen{ padding:32px 20px; }
+            .gate-wrap{ flex-direction:column; gap:.6rem; text-align:center; }
+            .gate-mascot img{ height:200px; }
+            .gate-content{ max-width:400px; width:100%; }
+            .gate-logo{ justify-content:center; }
+            .gate-content h1{ text-align:center; }
+            .gate-btn{ min-height:52px; }
+            .gate-link{ text-align:center; }
     }
+        @media (max-width: 380px) {
+                .gate-screen{ padding:24px 14px; }
+                .gate-mascot img{ height:150px; }
+                .gate-content h1{ font-size:1.42rem; margin-bottom:1.6rem; }
+                .gate-btn{ padding:1rem 1.1rem; font-size:.95rem; }
+        }
   </style>
 </head>
 <body>
