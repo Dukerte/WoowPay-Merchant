@@ -258,6 +258,7 @@
 const SUPA_URL = 'https://bvpgitunxtdrrmugylkt.supabase.co';
 const ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJ2cGdpdHVueHRkcnJtdWd5bGt0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODc1OTM2NjIsImV4cCI6MjEwMzE2OTY2Mn0._pRDgrCj3eElGiJFH_AJ5F7Z8gfCglGR-KRTlXOh-bg';
 let userJwt = null;
+  let userRefreshToken = null;
 
 function authHeaders() {
   return {
@@ -266,6 +267,51 @@ function authHeaders() {
     'Content-Type': 'application/json'
   };
 }
+
+    async function refreshSession() {
+          if (!userRefreshToken) return false;
+          try {
+                  const res = await fetch(`${SUPA_URL}/auth/v1/token?grant_type=refresh_token`, {
+                            method: 'POST',
+                            headers: { 'apikey': ANON_KEY, 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ refresh_token: userRefreshToken })
+                  });
+                  const data = await res.json();
+                  if (!res.ok || !data.access_token) return false;
+                  userJwt = data.access_token;
+                  userRefreshToken = data.refresh_token || userRefreshToken;
+                  try {
+                            sessionStorage.setItem('wp_staff_jwt', userJwt);
+                            sessionStorage.setItem('wp_staff_refresh', userRefreshToken);
+                  } catch (e) {}
+                  return true;
+          } catch (e) {
+                  return false;
+          }
+    }
+
+    (function patchFetchForAuthRetry() {
+          const origFetch = window.fetch.bind(window);
+          window.fetch = async function(url, opts) {
+                  const isTokenEndpoint = typeof url === 'string' && url.indexOf('/auth/v1/token') !== -1;
+                  let res = await origFetch(url, opts);
+                  if (!isTokenEndpoint && res.status === 401 && userRefreshToken) {
+                            const refreshed = await refreshSession();
+                            if (refreshed) {
+                                        const retryOpts = Object.assign({}, opts || {});
+                                        if (retryOpts.headers) {
+                                                      retryOpts.headers = Object.assign({}, retryOpts.headers, { Authorization: `Bearer ${userJwt}` });
+                                        }
+                                        res = await origFetch(url, retryOpts);
+                            }
+                            if (res.status === 401) {
+                                        logout();
+                                        alert('Таны сесс дууссан байна. Дахин нэвтэрнэ үү.');
+                            }
+                  }
+                  return res;
+          };
+    })();
 
 // ══════════════════════════════════════════════════════════════
 //  LOGIN (Supabase Auth password grant)
@@ -292,33 +338,42 @@ async function login() {
       return;
     }
     userJwt = data.access_token;
-    try { sessionStorage.setItem('wp_staff_jwt', userJwt); } catch(e) {}
-    showApp();
+          userRefreshToken = data.refresh_token || null;
+          try {
+                    sessionStorage.setItem('wp_staff_jwt', userJwt);
+                    if (userRefreshToken) sessionStorage.setItem('wp_staff_refresh', userRefreshToken);
+          } catch(e) {}
+          showApp();
   } catch (e) {
-    errEl.textContent = 'Сүлжээний алдаа. Дахин оролдоно уу.';
-    btn.disabled = false; btn.textContent = 'Нэвтрэх';
+          errEl.textContent = 'Сүлжээний алдаа. Дахин оролдоно уу.';
+          btn.disabled = false; btn.textContent = 'Нэвтрэх';
   }
 }
 
-function logout() {
-  userJwt = null;
-  try { sessionStorage.removeItem('wp_staff_jwt'); } catch(e) {}
-  document.getElementById('app').style.display = 'none';
-  document.getElementById('login-screen').style.display = 'flex';
-}
+    function logout() {
+          userJwt = null;
+          userRefreshToken = null;
+          try {
+                  sessionStorage.removeItem('wp_staff_jwt');
+                  sessionStorage.removeItem('wp_staff_refresh');
+          } catch(e) {}
+          document.getElementById('app').style.display = 'none';
+          document.getElementById('login-screen').style.display = 'flex';
+    }
 
-function showApp() {
-  document.getElementById('login-screen').style.display = 'none';
-  document.getElementById('app').style.display = 'block';
-}
+    function showApp() {
+          document.getElementById('login-screen').style.display = 'none';
+          document.getElementById('app').style.display = 'block';
+    }
 
-(function initSession() {
-  try {
-    const saved = sessionStorage.getItem('wp_staff_jwt');
-    if (saved) { userJwt = saved; showApp(); }
-  } catch (e) {}
-})();
-
+    (function initSession() {
+          try {
+                  const saved = sessionStorage.getItem('wp_staff_jwt');
+                  const savedRefresh = sessionStorage.getItem('wp_staff_refresh');
+                  if (savedRefresh) userRefreshToken = savedRefresh;
+                  if (saved) { userJwt = saved; showApp(); }
+          } catch (e) {}
+    })();
 // ══════════════════════════════════════════════════════════════
 //  FILE PARSING
 // ══════════════════════════════════════════════════════════════
