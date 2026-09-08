@@ -146,6 +146,11 @@
   }
   .cred-saved{ color:var(--success); font-size:.78rem; }
   .cred-empty{ color:var(--muted); font-size:.85rem; padding:6px 0; }
+
+    .referral-note{
+          background:rgba(245,158,11,.10); border:1px solid rgba(245,158,11,.35); border-radius:10px;
+          padding:10px 14px; font-size:.8rem; color:#FDE4A8; line-height:1.55; margin-bottom:14px;
+    }
 </style>
 </head>
 <body>
@@ -220,6 +225,9 @@
   <!-- STEP 3: Column mapping -->
   <div class="step row-hidden" id="step3">
     <h2><span class="num">3</span> Багана тохируулах</h2>
+        <div class="referral-note">
+                ⚠️ Санамж: "Урьсан мерчант" тоог оруулахдаа зөвхөн тухайн сардаа <strong>идэвхтэй борлуулалт хийсэн</strong> мерчантуудыг тоолно уу. Уригдсан мерчант идэвхгүй (борлуулалтгүй) байсан бол тухайн мерчантад Cashback тооцогдохгүй тул тоонд оруулахгүй байхыг анхаарна уу.
+        </div>
     <div class="preview-wrap" style="margin-bottom:14px;">
       <table class="map-table" id="map-table"></table>
     </div>
