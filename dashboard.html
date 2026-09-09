@@ -263,11 +263,13 @@
     padding:6px 8px; border-radius:8px; background:rgba(255,255,255,.03); font-size:.76rem;
   }
   .cb-sales-month-label{ color:var(--accent-soft); flex:0 0 auto; }
-  .cb-sales-month-amount{ color:#fff; flex:1 1 auto; text-align:right; padding-right:8px; }
-  .cb-sales-month-tag{ flex:0 0 auto; font-weight:700; min-width:70px; text-align:right; }
-  .cb-sales-month-tag.ok{ color:var(--success); }
-  .cb-sales-month-tag.no{ color:var(--muted); }
+  .cb-sales-month-amount{ color:#fff; flex:1 1 auto; text-align:right; }
   .cb-sales-month-empty{ color:var(--muted); padding:6px 0; }
+  .cb-sales-formula{
+    margin-top:10px; padding-top:10px; border-top:1px solid rgba(255,255,255,.08);
+    line-height:1.6;
+  }
+  .cb-sales-formula b{ color:var(--gold-soft); }
 
   .cb-help{
     margin-top:22px; padding:16px 18px; border-radius:14px;
@@ -766,16 +768,20 @@ function renderCashbackBreakdown(b, salesRows, rawCategory) {
   const tierBase = tier ? CASHBACK_BASE[tier] : 0;
   const tierRate = tier ? CASHBACK_RATES[tier] : 0;
 
+  // Cashback is calculated ONCE on the merchant's all-time total sales (not
+  // per month) — same figure as the "Нийт борлуулалт" card above. The month
+  // rows below are just a breakdown of what makes up that total, so they
+  // must sum to it exactly; showing a separate per-month cashback split
+  // here would not add up to the real total and would be misleading.
   const monthRows = (salesRows || [])
     .slice()
     .sort((a, b2) => new Date(b2.month) - new Date(a.month))
     .map(r => {
       const d = new Date(r.month);
-      const amount = Number(r.sales_amount || 0);
-      const qualified = tier && amount >= tierBase;
-      const monthCb = qualified ? amount * tierRate : 0;
-      return { label: `${d.getMonth() + 1}-р сар, ${d.getFullYear()}`, amount, qualified, monthCb };
+      return { label: `${d.getMonth() + 1}-р сар, ${d.getFullYear()}`, amount: Number(r.sales_amount || 0) };
     });
+  const totalSales = monthRows.reduce((s, m) => s + m.amount, 0);
+  const ratePct = (tierRate * 100).toLocaleString('mn-MN', { maximumFractionDigits: 2 });
 
   const salesDetail = `
     <div class="cb-sales-info">
@@ -787,9 +793,12 @@ function renderCashbackBreakdown(b, salesRows, rawCategory) {
         <div class="cb-sales-month-row">
           <span class="cb-sales-month-label">${m.label}</span>
           <span class="cb-sales-month-amount">${fmt(m.amount)}</span>
-          <span class="cb-sales-month-tag ${m.qualified ? 'ok' : 'no'}">${m.qualified ? '✓ ' + fmt(m.monthCb) : '—'}</span>
         </div>
       `).join('')}
+    </div>
+    <div class="cb-sales-formula">
+      Нийт борлуулалт (бүх цаг үе): <b>${fmt(totalSales)}</b><br>
+      ${fmt(totalSales)} × ${ratePct}% = <b>${fmt(salesCb)}</b>
     </div>
   `;
 
