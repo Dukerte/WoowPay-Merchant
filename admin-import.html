@@ -151,6 +151,7 @@
           background:rgba(245,158,11,.10); border:1px solid rgba(245,158,11,.35); border-radius:10px;
           padding:10px 14px; font-size:.8rem; color:#FDE4A8; line-height:1.55; margin-bottom:14px;
     }
+.auto-match-banner{ display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap; }
 </style>
 </head>
 <body>
@@ -222,7 +223,12 @@
     </div>
   </div>
 
-  <!-- STEP 3: Column mapping -->
+  <div class="step row-hidden auto-match-banner" id="mapping-auto-banner">
+  <div style="color:var(--accent-soft);font-size:.85rem;">✓ Багана тохиргоо өмнөх файлтай ижил тул автоматаар давхар тохируулгагүй үргэлжил байна.</div>
+  <button class="btn btn-secondary cred-btn-small" onclick="showMappingStep()">Тохиргоог харах / засах</button>
+</div>
+
+<!-- STEP 3: Column mapping -->
   <div class="step row-hidden" id="step3">
     <h2><span class="num">3</span> Багана тохируулах</h2>
         <div class="referral-note">
@@ -495,6 +501,34 @@ function guessRole(headerText) {
 let colRoles = [];   // role per column index
 let colMonths = [];  // 'YYYY-MM' per column index (for month_sales / month_count)
 
+const MAPPING_STORAGE_KEY = 'wp_import_last_mapping_v1';
+
+function arraysEqual(a, b) {
+  if (!Array.isArray(a) || !Array.isArray(b) || a.length !== b.length) return false;
+  for (let i = 0; i < a.length; i++) if (a[i] !== b[i]) return false;
+  return true;
+}
+
+function saveMapping() {
+  try {
+    localStorage.setItem(MAPPING_STORAGE_KEY, JSON.stringify({ headers, roles: colRoles, months: colMonths }));
+  } catch (e) {}
+}
+
+function loadSavedMapping() {
+  try {
+    const raw = localStorage.getItem(MAPPING_STORAGE_KEY);
+    return raw ? JSON.parse(raw) : null;
+  } catch (e) {
+    return null;
+  }
+}
+
+function showMappingStep() {
+  document.getElementById('mapping-auto-banner').classList.add('row-hidden');
+  document.getElementById('step3').classList.remove('row-hidden');
+}
+
 function rebuildMapping() {
   headerRowIdx = Math.max(1, parseInt(document.getElementById('header-row').value || '2', 10)) - 1;
   headers = (sheetRows[headerRowIdx] || []).map(h => h === null || h === undefined ? '' : String(h).trim());
@@ -503,9 +537,25 @@ function rebuildMapping() {
   colRoles = headers.map(h => guessRole(h));
   colMonths = headers.map(() => '');
 
+  const saved = loadSavedMapping();
+  const autoMatched = !!(saved && arraysEqual(saved.headers, headers));
+  if (autoMatched) {
+    colRoles = saved.roles.slice();
+    colMonths = saved.months.slice();
+  }
+
   renderMapTable();
   renderPreview();
-  document.getElementById('step3').classList.remove('row-hidden');
+
+  const banner = document.getElementById('mapping-auto-banner');
+  const step3El = document.getElementById('step3');
+  if (autoMatched) {
+    banner.classList.remove('row-hidden');
+    step3El.classList.add('row-hidden');
+  } else {
+    banner.classList.add('row-hidden');
+    step3El.classList.remove('row-hidden');
+  }
   document.getElementById('step4').classList.remove('row-hidden');
   document.getElementById('step5').classList.remove('row-hidden');
   updateStats();
@@ -524,7 +574,7 @@ function renderMapTable() {
       <td>${h || '<span class="col-header">(нэргүй)</span>'}</td>
       <td><select data-col="${i}" onchange="onRoleChange(${i}, this.value)">${roleOpts}</select></td>
       <td>${showMonth
-        ? `<input type="month" data-monthcol="${i}" value="${colMonths[i]}" onchange="colMonths[${i}]=this.value; updateStats();" />`
+        ? `<input type="month" data-monthcol="${i}" value="${colMonths[i]}" onchange="colMonths[${i}]=this.value; updateStats(); saveMapping();" />`
         : ''}</td>
     </tr>`;
   });
@@ -535,6 +585,7 @@ function onRoleChange(i, val) {
   colRoles[i] = val;
   renderMapTable();
   updateStats();
+  saveMapping();
 }
 
 function renderPreview() {
@@ -764,6 +815,7 @@ async function runImport() {
   const btn = document.getElementById('btn-import');
   btn.disabled = true;
   document.getElementById('log-box').innerHTML = '';
+  saveMapping();
   log('Импорт эхэллээ...');
 
   const phoneCol = colRoles.indexOf('phone');
