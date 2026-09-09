@@ -152,6 +152,27 @@
           padding:10px 14px; font-size:.8rem; color:#FDE4A8; line-height:1.55; margin-bottom:14px;
     }
 .auto-match-banner:not(.row-hidden){ display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap; }
+
+.cred-toolbar{ display:flex; align-items:center; gap:12px; flex-wrap:wrap; margin-bottom:14px; }
+.cred-toolbar input{
+  flex:1; min-width:220px; padding:10px 14px; background:rgba(255,255,255,.07);
+  border:1px solid rgba(255,255,255,.15); border-radius:10px; color:#fff; font-size:.9rem; outline:none;
+}
+.cred-toolbar input:focus{ border-color:var(--primary); }
+.cred-count{ color:var(--muted); font-size:.8rem; white-space:nowrap; }
+.new-merchant-form{
+  background:rgba(41,189,224,.06); border:1px solid rgba(92,212,238,.2); border-radius:12px;
+  padding:16px 18px; margin-bottom:16px;
+}
+table.cred-table{ width:100%; border-collapse:collapse; font-size:.82rem; white-space:nowrap; }
+table.cred-table th, table.cred-table td{ padding:8px 10px; border-bottom:1px solid rgba(255,255,255,.07); color:#fff; vertical-align:middle; }
+table.cred-table th{ background:rgba(255,255,255,.05); color:var(--accent-soft); position:sticky; top:0; font-size:.72rem; text-transform:uppercase; }
+table.cred-table tr.merchant-disabled td{ opacity:.5; }
+table.cred-table .cred-edit{ display:flex; align-items:center; gap:6px; flex-wrap:nowrap; }
+table.cred-table .cred-edit input{
+  width:90px; padding:7px 8px; background:rgba(255,255,255,.07); border:1px solid rgba(255,255,255,.15);
+  border-radius:6px; color:#fff; font-size:.82rem; font-family:ui-monospace,monospace; letter-spacing:.05em; outline:none;
+}
 </style>
 </head>
 <body>
@@ -188,11 +209,43 @@
   <!-- MERCHANT CREDENTIALS LOOKUP -->
   <div class="step">
     <h2>🔑 Мерчант нэвтрэх мэдээлэл (утас / нэвтрэх код)</h2>
-    <div class="cred-search-row">
-      <input type="text" id="cred-search" placeholder="Утасны дугаар эсвэл байгууллагын нэрээр хайх..." onkeydown="if(event.key==='Enter') searchMerchants()" />
-      <button class="btn" onclick="searchMerchants()">Хайх</button>
+
+    <div class="cred-toolbar">
+      <input type="text" id="cred-filter" placeholder="Утас эсвэл нэрээр шүүх..." oninput="filterMerchantList()" />
+      <span class="cred-count" id="cred-count"></span>
+      <button class="btn btn-secondary cred-btn-small" onclick="toggleNewMerchantForm()">+ Шинэ мерчант</button>
     </div>
-    <div class="cred-results" id="cred-results"></div>
+
+    <div class="new-merchant-form row-hidden" id="new-merchant-form">
+      <div class="inline-fields">
+        <div class="field"><label>Утасны дугаар *</label><input type="text" id="nm-phone" inputmode="numeric" placeholder="99001122" /></div>
+        <div class="field"><label>Байгууллагын нэр *</label><input type="text" id="nm-brand" placeholder="ХХК нэр" /></div>
+        <div class="field"><label>Харилцагчийн нэр</label><input type="text" id="nm-contact" placeholder="Хувь хүний нэр" /></div>
+        <div class="field"><label>Ангилал</label>
+          <select id="nm-category"><option value="">—</option><option value="A">A</option><option value="B">B</option><option value="C">C</option></select>
+        </div>
+        <div class="field">
+          <label>Нэвтрэх код</label>
+          <div style="display:flex;gap:8px;">
+            <input type="text" id="nm-passcode" inputmode="numeric" maxlength="6" placeholder="автоматаар" />
+            <button type="button" class="btn btn-secondary cred-btn-small" onclick="document.getElementById('nm-passcode').value=randomPasscode()">Санамсаргүй</button>
+          </div>
+        </div>
+      </div>
+      <button class="btn" onclick="createMerchant()">Мерчант үүсгэх</button>
+      <span class="err" id="nm-err" style="text-align:left;display:inline-block;margin-left:12px;"></span>
+    </div>
+
+    <div class="preview-wrap" style="max-height:520px;">
+      <table class="cred-table" id="cred-table">
+        <thead>
+          <tr><th>Утас</th><th>Байгууллага</th><th>Харилцагч</th><th>Анг.</th><th>Код</th><th>Код солих</th><th>Cashback</th></tr>
+        </thead>
+        <tbody id="cred-tbody">
+          <tr><td colspan="7" class="cred-empty">Ачаалж байна...</td></tr>
+        </tbody>
+      </table>
+    </div>
   </div>
 
   <!-- STEP 1: Upload -->
@@ -370,6 +423,7 @@ async function login() {
     function showApp() {
           document.getElementById('login-screen').style.display = 'none';
           document.getElementById('app').style.display = 'block';
+          loadAllMerchants();
     }
 
     (function initSession() {
@@ -666,64 +720,76 @@ function escapeHtml(s) {
   return String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 }
 
-async function searchMerchants() {
-  const q = document.getElementById('cred-search').value.trim();
-  const el = document.getElementById('cred-results');
-  if (!q) { el.innerHTML = '<div class="cred-empty">Утасны дугаар эсвэл нэр оруулна уу.</div>'; return; }
+let __allMerchants = [];
 
-  el.innerHTML = '<div class="cred-empty">Хайж байна...</div>';
-  const isPhone = /^\d+$/.test(q);
-  const filter = isPhone
-    ? `phone=ilike.*${encodeURIComponent(q)}*`
-    : `brand_name=ilike.*${encodeURIComponent(q)}*`;
-
+async function loadAllMerchants() {
+  const tbody = document.getElementById('cred-tbody');
+  if (!tbody) return;
+  tbody.innerHTML = '<tr><td colspan="7" class="cred-empty">Ачаалж байна...</td></tr>';
   try {
-    const res = await fetch(`${SUPA_URL}/rest/v1/merchants?select=id,phone,brand_name,contact_name,passcode,enabled&${filter}&order=brand_name&limit=25`, {
+    const res = await fetch(`${SUPA_URL}/rest/v1/merchants?select=id,phone,brand_name,contact_name,passcode,enabled,category&order=brand_name`, {
       headers: authHeaders()
     });
-    if (!res.ok) { el.innerHTML = '<div class="cred-empty">Хайлтад алдаа гарлаа.</div>'; return; }
-    const rows = await res.json();
-    renderCredResults(rows);
+    if (!res.ok) { tbody.innerHTML = '<tr><td colspan="7" class="cred-empty">Ачаалахад алдаа гарлаа.</td></tr>'; return; }
+    __allMerchants = await res.json();
+    renderCredTable(__allMerchants);
   } catch (e) {
-    el.innerHTML = '<div class="cred-empty">Сүлжээний алдаа гарлаа.</div>';
+    tbody.innerHTML = '<tr><td colspan="7" class="cred-empty">Сүлжээний алдаа гарлаа.</td></tr>';
   }
 }
 
-function renderCredResults(rows) {
-  const el = document.getElementById('cred-results');
-  if (!rows.length) { el.innerHTML = '<div class="cred-empty">Мерчант олдсонгүй.</div>'; return; }
+function filterMerchantList() {
+  const q = document.getElementById('cred-filter').value.trim().toLowerCase();
+  if (!q) { renderCredTable(__allMerchants); return; }
+  const filtered = __allMerchants.filter(m =>
+    (m.phone || '').toLowerCase().includes(q) ||
+    (m.brand_name || '').toLowerCase().includes(q) ||
+    (m.contact_name || '').toLowerCase().includes(q)
+  );
+  renderCredTable(filtered);
+}
 
-  el.innerHTML = rows.map(m => `
-    <div class="cred-card" id="cred-card-${m.id}">
-      <div class="cred-info">
-        <div class="cred-brand">${escapeHtml(m.brand_name)}${m.enabled === false ? ' <span style="color:var(--warning);font-size:.75rem;">(идэвхгүй)</span>' : ''}</div>
-        <div class="cred-meta">${escapeHtml(m.contact_name || '')}${m.contact_name ? ' · ' : ''}${escapeHtml(m.phone)}</div>
-      </div>
-      <div class="cred-current">
-        <span class="cred-current-label">Одоогийн код</span>
-        <span class="cred-code" id="cred-code-${m.id}">${escapeHtml(m.passcode)}</span>
-      </div>
-      <div class="cred-edit">
-        <input type="text" inputmode="numeric" maxlength="6" placeholder="Шинэ код" id="cred-new-${m.id}" />
-        <button class="btn btn-secondary cred-btn-small" onclick="fillRandomPasscode(${m.id})">Санамсаргүй</button>
-        <button class="btn cred-btn-small" onclick="savePasscode(${m.id})">Хадгалах</button>
-        <span class="cred-saved" id="cred-saved-${m.id}"></span>
-      </div>
-      <div class="cred-current">
-        <span class="cred-current-label">Төлөгдөөгүй Cashback</span>
-        <span class="cred-code" id="cred-cb-amount-${m.id}">…</span>
-        <button class="btn btn-secondary cred-btn-small" id="cred-cb-btn-${m.id}" style="display:none" onclick="markCashbackPaid(${m.id})">Олгосон гэж тэмдэглэх</button>
-        <span class="cred-saved" id="cred-cb-saved-${m.id}"></span>
-      </div>
-    </div>
+function toggleNewMerchantForm() {
+  document.getElementById('new-merchant-form').classList.toggle('row-hidden');
+}
+
+function renderCredTable(rows) {
+  const tbody = document.getElementById('cred-tbody');
+  const countEl = document.getElementById('cred-count');
+  if (countEl) countEl.textContent = rows.length + ' мерчант';
+  if (!rows.length) { tbody.innerHTML = '<tr><td colspan="7" class="cred-empty">Мерчант олдсонгүй.</td></tr>'; return; }
+
+  tbody.innerHTML = rows.map(m => `
+    <tr id="cred-row-${m.id}" class="${m.enabled === false ? 'merchant-disabled' : ''}">
+      <td>${escapeHtml(m.phone)}</td>
+      <td>${escapeHtml(m.brand_name)}${m.enabled === false ? ' <span style="color:var(--warning);">(идэвхгүй)</span>' : ''}</td>
+      <td>${escapeHtml(m.contact_name || '—')}</td>
+      <td>${escapeHtml(m.category || '—')}</td>
+      <td><span class="cred-code" id="cred-code-${m.id}">${escapeHtml(m.passcode)}</span></td>
+      <td>
+        <div class="cred-edit">
+          <input type="text" inputmode="numeric" maxlength="6" id="cred-new-${m.id}" placeholder="шинэ код" />
+          <button class="btn btn-secondary cred-btn-small" onclick="fillRandomPasscode('${m.id}')">🎲</button>
+          <button class="btn cred-btn-small" onclick="savePasscode('${m.id}')">Хадгалах</button>
+          <span class="cred-saved" id="cred-saved-${m.id}"></span>
+        </div>
+      </td>
+      <td>
+        <div class="cred-edit">
+          <span id="cred-cb-amount-${m.id}">—</span>
+          <button class="btn btn-secondary cred-btn-small" onclick="loadCashbackBadge('${m.id}')">Харах</button>
+          <button class="btn btn-secondary cred-btn-small" id="cred-cb-btn-${m.id}" style="display:none" onclick="markCashbackPaid('${m.id}')">Олгосон</button>
+          <span class="cred-saved" id="cred-cb-saved-${m.id}"></span>
+        </div>
+      </td>
+    </tr>
   `).join('');
-
-  rows.forEach(m => loadCashbackBadge(m.id));
 }
 
 async function loadCashbackBadge(id) {
   const amtEl = document.getElementById(`cred-cb-amount-${id}`);
   if (!amtEl) return;
+  amtEl.textContent = '…';
   try {
     const res = await fetch(`${SUPA_URL}/rest/v1/rpc/get_merchant_cashback_breakdown`, {
       method: 'POST', headers: authHeaders(), body: JSON.stringify({ p_merchant_id: id })
@@ -805,9 +871,56 @@ async function savePasscode(id) {
     document.getElementById(`cred-code-${id}`).textContent = newCode;
     input.value = '';
     savedEl.textContent = '✓ Шинэчлэгдлээ';
+    const m = __allMerchants.find(x => x.id === id);
+    if (m) m.passcode = newCode;
   } catch (e) {
     savedEl.style.color = '#FCA5A5';
     savedEl.textContent = 'Сүлжээний алдаа.';
+  }
+}
+
+async function createMerchant() {
+  const phone = document.getElementById('nm-phone').value.trim();
+  const brand = document.getElementById('nm-brand').value.trim();
+  const contact = document.getElementById('nm-contact').value.trim();
+  const category = document.getElementById('nm-category').value;
+  let passcode = document.getElementById('nm-passcode').value.trim();
+  const errEl = document.getElementById('nm-err');
+  errEl.textContent = '';
+
+  if (!phone || !/^\d+$/.test(phone)) { errEl.textContent = 'Утасны дугаараа зөв оруулна уу.'; return; }
+  if (!brand) { errEl.textContent = 'Байгууллагын нэрээ оруулна уу.'; return; }
+  if (!passcode) passcode = randomPasscode();
+  if (!/^\d{4,6}$/.test(passcode)) { errEl.textContent = 'Код 4-6 оронтой тоо байх ёстой.'; return; }
+
+  const payload = { phone, brand_name: brand, passcode, enabled: true };
+  if (contact) payload.contact_name = contact;
+  if (category) payload.category = category;
+
+  try {
+    const res = await fetch(`${SUPA_URL}/rest/v1/merchants`, {
+      method: 'POST',
+      headers: { ...authHeaders(), 'Prefer': 'return=representation' },
+      body: JSON.stringify(payload)
+    });
+    if (!res.ok) {
+      const t = await res.text();
+      errEl.textContent = (t.includes('duplicate') || t.includes('unique')) ? 'Энэ утасны дугаар бүртгэлтэй байна.' : 'Алдаа гарлаа: ' + t;
+      return;
+    }
+    const inserted = await res.json();
+    const m = inserted[0];
+    __allMerchants.unshift(m);
+    document.getElementById('nm-phone').value = '';
+    document.getElementById('nm-brand').value = '';
+    document.getElementById('nm-contact').value = '';
+    document.getElementById('nm-category').value = '';
+    document.getElementById('nm-passcode').value = '';
+    document.getElementById('cred-filter').value = '';
+    renderCredTable(__allMerchants);
+    document.getElementById('new-merchant-form').classList.add('row-hidden');
+  } catch (e) {
+    errEl.textContent = 'Сүлжээний алдаа гарлаа.';
   }
 }
 
