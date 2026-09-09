@@ -263,13 +263,11 @@
     padding:6px 8px; border-radius:8px; background:rgba(255,255,255,.03); font-size:.76rem;
   }
   .cb-sales-month-label{ color:var(--accent-soft); flex:0 0 auto; }
-  .cb-sales-month-amount{ color:#fff; flex:1 1 auto; text-align:right; }
+  .cb-sales-month-amount{ color:#fff; flex:1 1 auto; text-align:right; padding-right:8px; }
+  .cb-sales-month-tag{ flex:0 0 auto; font-weight:700; min-width:70px; text-align:right; }
+  .cb-sales-month-tag.ok{ color:var(--success); }
+  .cb-sales-month-tag.no{ color:var(--muted); }
   .cb-sales-month-empty{ color:var(--muted); padding:6px 0; }
-  .cb-sales-formula{
-    margin-top:10px; padding-top:10px; border-top:1px solid rgba(255,255,255,.08);
-    line-height:1.6;
-  }
-  .cb-sales-formula b{ color:var(--gold-soft); }
 
   .cb-help{
     margin-top:22px; padding:16px 18px; border-radius:14px;
@@ -740,14 +738,33 @@ const CASHBACK_RATES = { A: 0.0025, B: 0.005, C: 0.007 };
 const CASHBACK_BASE = { A: 5000000, B: 3000000, C: 2000000 };
 
 function renderCashbackBreakdown(b, salesRows, rawCategory) {
-  const salesCb = Number(b.sales_cashback || 0);
   const custCb = Number(b.referred_customers_cashback || 0);
   const custCount = Number(b.referred_customers_count || 0);
   const merchCb = Number(b.referred_merchants_cashback || 0);
   const superCount = Number(b.referred_supermarkets_count || 0);
   const otherCount = Number(b.referred_other_merchants_count || 0);
-  const totalUnpaid = Number(b.total_unpaid || 0);
   const minPayout = Number(b.min_payout || 100000);
+
+  const tier = normalizeTier(rawCategory);
+  const tierBase = tier ? CASHBACK_BASE[tier] : 0;
+  const tierRate = tier ? CASHBACK_RATES[tier] : 0;
+
+  // Cashback is earned per calendar month: a month only counts once its
+  // sales reach the tier's base threshold, and only that month's sales are
+  // multiplied by the rate. The total below is the sum of every qualifying
+  // month, so it always matches the month list exactly.
+  const monthRows = (salesRows || [])
+    .slice()
+    .sort((a, b2) => new Date(b2.month) - new Date(a.month))
+    .map(r => {
+      const d = new Date(r.month);
+      const amount = Number(r.sales_amount || 0);
+      const qualified = !!(tier && amount >= tierBase);
+      const monthCb = qualified ? amount * tierRate : 0;
+      return { label: `${d.getMonth() + 1}-р сар, ${d.getFullYear()}`, amount, qualified, monthCb };
+    });
+  const salesCb = monthRows.reduce((s, m) => s + m.monthCb, 0);
+  const totalUnpaid = salesCb + custCb + merchCb;
 
   document.getElementById('cb-balance').textContent = fmt(totalUnpaid);
 
@@ -764,25 +781,6 @@ function renderCashbackBreakdown(b, salesRows, rawCategory) {
       : `Хамгийн бага олголтын дүн ${fmt(minPayout)}-д хүрэх шаардлагатай. Cashback улирал тутам олгогдоно.`}</div>
   `;
 
-  const tier = normalizeTier(rawCategory);
-  const tierBase = tier ? CASHBACK_BASE[tier] : 0;
-  const tierRate = tier ? CASHBACK_RATES[tier] : 0;
-
-  // Cashback is calculated ONCE on the merchant's all-time total sales (not
-  // per month) — same figure as the "Нийт борлуулалт" card above. The month
-  // rows below are just a breakdown of what makes up that total, so they
-  // must sum to it exactly; showing a separate per-month cashback split
-  // here would not add up to the real total and would be misleading.
-  const monthRows = (salesRows || [])
-    .slice()
-    .sort((a, b2) => new Date(b2.month) - new Date(a.month))
-    .map(r => {
-      const d = new Date(r.month);
-      return { label: `${d.getMonth() + 1}-р сар, ${d.getFullYear()}`, amount: Number(r.sales_amount || 0) };
-    });
-  const totalSales = monthRows.reduce((s, m) => s + m.amount, 0);
-  const ratePct = (tierRate * 100).toLocaleString('mn-MN', { maximumFractionDigits: 2 });
-
   const salesDetail = `
     <div class="cb-sales-info">
       <div>Таны зэрэглэл: <b>${tier || '—'}</b></div>
@@ -793,12 +791,9 @@ function renderCashbackBreakdown(b, salesRows, rawCategory) {
         <div class="cb-sales-month-row">
           <span class="cb-sales-month-label">${m.label}</span>
           <span class="cb-sales-month-amount">${fmt(m.amount)}</span>
+          <span class="cb-sales-month-tag ${m.qualified ? 'ok' : 'no'}">${m.qualified ? '✓ ' + fmt(m.monthCb) : '—'}</span>
         </div>
       `).join('')}
-    </div>
-    <div class="cb-sales-formula">
-      Нийт борлуулалт (бүх цаг үе): <b>${fmt(totalSales)}</b><br>
-      ${fmt(totalSales)} × ${ratePct}% = <b>${fmt(salesCb)}</b>
     </div>
   `;
 
