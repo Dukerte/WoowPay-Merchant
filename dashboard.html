@@ -251,8 +251,23 @@
   .cbb-chevron{ width:13px; height:13px; color:var(--accent-soft); flex-shrink:0; transition:transform .25s ease; margin-left:4px; }
   .cbb-item.open .cbb-chevron{ transform:rotate(180deg); }
   .cbb-detail-wrap{ max-height:0; overflow:hidden; transition:max-height .3s ease; }
-  .cbb-item.open .cbb-detail-wrap{ max-height:200px; }
+  .cbb-item.open .cbb-detail-wrap{ max-height:420px; }
   .cbb-detail{ padding:0 12px 12px; font-size:.78rem; color:var(--muted); line-height:1.6; }
+
+  .cb-sales-info{ margin-bottom:10px; }
+  .cb-sales-info div{ margin-bottom:2px; }
+  .cb-sales-info b{ color:#fff; }
+  .cb-sales-months{ max-height:280px; overflow-y:auto; display:flex; flex-direction:column; gap:4px; }
+  .cb-sales-month-row{
+    display:flex; align-items:center; justify-content:space-between; gap:8px;
+    padding:6px 8px; border-radius:8px; background:rgba(255,255,255,.03); font-size:.76rem;
+  }
+  .cb-sales-month-label{ color:var(--accent-soft); flex:0 0 auto; }
+  .cb-sales-month-amount{ color:#fff; flex:1 1 auto; text-align:right; padding-right:8px; }
+  .cb-sales-month-tag{ flex:0 0 auto; font-weight:700; min-width:70px; text-align:right; }
+  .cb-sales-month-tag.ok{ color:var(--success); }
+  .cb-sales-month-tag.no{ color:var(--muted); }
+  .cb-sales-month-empty{ color:var(--muted); padding:6px 0; }
 
   .cb-help{
     margin-top:22px; padding:16px 18px; border-radius:14px;
@@ -351,10 +366,9 @@
       </div>
     </div>
     <div class="dash-header-right">
-      <div class="tier-pill tier-unrated" id="tier-badge" onclick="toggleTierTip(event)">
+      <div class="tier-pill tier-unrated" id="tier-badge">
         <span class="tier-dot" id="tier-letter">—</span>
         <span class="tier-label">Зэрэглэл</span>
-        <div class="tier-tooltip">🏆 6 сар тутамд зэрэглэл нэмэгдэнэ</div>
       </div>
       <button class="logout-btn" onclick="logout()">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" x2="9" y1="12" y2="12"/></svg>
@@ -427,7 +441,7 @@
 
         <div class="fold" id="fold-history">
           <div class="fold-head" onclick="toggleFold('fold-history')">
-            <div class="hist-title">Түүх</div>
+            <div class="hist-title">Одоогийн үлдэгдэл</div>
             <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
           </div>
           <div class="fold-wrap"><div class="fold-inner">
@@ -493,7 +507,7 @@ async function rpc(fn, args) {
 }
 function fmt(n) {
   n = Number(n || 0);
-  return n.toLocaleString('mn-MN') + '₮';
+  return n.toLocaleString('mn-MN', { maximumFractionDigits: 1 }) + '₮';
 }
 
 // ══════════════════════════════════════════════════════════════
@@ -532,15 +546,6 @@ function toggleFold(id) {
   document.getElementById(id).classList.toggle('open');
 }
 
-function toggleTierTip(e) {
-  e.stopPropagation();
-  document.getElementById('tier-badge').classList.toggle('tt-open');
-}
-document.addEventListener('click', () => {
-  const tb = document.getElementById('tier-badge');
-  if (tb) tb.classList.remove('tt-open');
-});
-
 function logout() {
   try { sessionStorage.removeItem(LS_KEY); } catch(e) {}
   document.getElementById('app').style.display = 'none';
@@ -571,22 +576,27 @@ async function showDashboard(merchant) {
     rpc('get_merchant_cashback_breakdown', { p_merchant_id: merchant.id }).catch(() => [])
   ]);
 
+  const b = (breakdown && breakdown[0]) || {};
   renderSales(sales);
-  renderCashbackHistory(cashback);
-  renderCashbackBreakdown((breakdown && breakdown[0]) || {});
+  renderCashbackBreakdown(b, sales, merchant.category);
+  renderCashbackHistory(cashback, Number(b.total_unpaid || 0));
+}
+
+// Normalize a raw category value to 'A'/'B'/'C', or null if unrated.
+// (Cyrillic С gets typed in by staff sometimes -> map to Latin C.)
+function normalizeTier(rawCategory) {
+  const cat = (rawCategory || '').toString().trim().toUpperCase().replace('С', 'C');
+  return (cat === 'A' || cat === 'B' || cat === 'C') ? cat : null;
 }
 
 function renderTier(rawCategory) {
   const badge = document.getElementById('tier-badge');
   const letterEl = document.getElementById('tier-letter');
-  // Normalize: Cyrillic С -> Latin C, trim, uppercase
-  let cat = (rawCategory || '').toString().trim().toUpperCase().replace('С', 'C');
+  const cat = normalizeTier(rawCategory);
   badge.className = 'tier-pill';
-  if (cat === 'A') badge.classList.add('tier-A');
-  else if (cat === 'B') badge.classList.add('tier-B');
-  else if (cat === 'C') badge.classList.add('tier-C');
-  else { badge.classList.add('tier-unrated'); cat = '—'; }
-  letterEl.textContent = cat;
+  if (cat) badge.classList.add('tier-' + cat);
+  else badge.classList.add('tier-unrated');
+  letterEl.textContent = cat || '—';
 }
 
 // Build a fixed 6-month window ending at the latest month present in the
@@ -683,26 +693,35 @@ function renderSales(sales) {
   });
 }
 
-function renderCashbackHistory(entries) {
+// Shows just the current balance (as of today) plus any actual withdrawals —
+// not the raw per-import ledger entries (snapshot/earned rows), which just
+// duplicated the same running total over and over.
+function renderCashbackHistory(entries, currentBalance) {
   entries = entries || [];
   const tbody = document.getElementById('cb-tbody');
   const emptyEl = document.getElementById('cb-empty');
   tbody.innerHTML = '';
-
-  if (entries.length === 0) {
-    document.getElementById('cb-table').style.display = 'none';
-    emptyEl.style.display = 'block';
-    return;
-  }
-
   document.getElementById('cb-table').style.display = 'table';
   emptyEl.style.display = 'none';
 
-  entries.slice().reverse().forEach(e => {
+  const todayIso = new Date().toISOString().slice(0, 10);
+  const rows = [{ date: todayIso, amount: currentBalance, note: 'Одоогийн үлдэгдэл' }];
+
+  entries
+    .filter(e => e.entry_type === 'redeemed')
+    .sort((a, b) => {
+      const da = a.as_of_date || (a.created_at || '').slice(0, 10);
+      const db = b.as_of_date || (b.created_at || '').slice(0, 10);
+      return db.localeCompare(da);
+    })
+    .forEach(e => {
+      const date = e.as_of_date || (e.created_at || '').slice(0, 10);
+      rows.push({ date, amount: e.amount, note: 'Ашигласан' });
+    });
+
+  rows.forEach(r => {
     const tr = document.createElement('tr');
-    const date = e.as_of_date || (e.created_at || '').slice(0, 10);
-    const noteMap = { snapshot: 'Тайлан үлдэгдэл', earned: 'Цуглуулсан', redeemed: 'Ашигласан', adjustment: 'Тохируулга' };
-    tr.innerHTML = `<td class="muted">${date}</td><td class="gold">${fmt(e.amount)}</td><td class="muted">${noteMap[e.entry_type] || e.entry_type}</td>`;
+    tr.innerHTML = `<td class="muted">${r.date}</td><td class="gold">${fmt(r.amount)}</td><td class="muted">${r.note}</td>`;
     tbody.appendChild(tr);
   });
 }
@@ -714,7 +733,11 @@ function toggleCbb(id) {
   document.getElementById(id).classList.toggle('open');
 }
 
-function renderCashbackBreakdown(b) {
+// Same tier rates/thresholds admin-import.html uses to compute sales cashback.
+const CASHBACK_RATES = { A: 0.0025, B: 0.005, C: 0.007 };
+const CASHBACK_BASE = { A: 5000000, B: 3000000, C: 2000000 };
+
+function renderCashbackBreakdown(b, salesRows, rawCategory) {
   const salesCb = Number(b.sales_cashback || 0);
   const custCb = Number(b.referred_customers_cashback || 0);
   const custCount = Number(b.referred_customers_count || 0);
@@ -739,11 +762,39 @@ function renderCashbackBreakdown(b) {
       : `Хамгийн бага олголтын дүн ${fmt(minPayout)}-д хүрэх шаардлагатай. Cashback улирал тутам олгогдоно.`}</div>
   `;
 
+  const tier = normalizeTier(rawCategory);
+  const tierBase = tier ? CASHBACK_BASE[tier] : 0;
+  const tierRate = tier ? CASHBACK_RATES[tier] : 0;
+
+  const monthRows = (salesRows || [])
+    .slice()
+    .sort((a, b2) => new Date(b2.month) - new Date(a.month))
+    .map(r => {
+      const d = new Date(r.month);
+      const amount = Number(r.sales_amount || 0);
+      const qualified = tier && amount >= tierBase;
+      const monthCb = qualified ? amount * tierRate : 0;
+      return { label: `${d.getMonth() + 1}-р сар, ${d.getFullYear()}`, amount, qualified, monthCb };
+    });
+
+  const salesDetail = `
+    <div class="cb-sales-info">
+      <div>Таны зэрэглэл: <b>${tier || '—'}</b></div>
+      <div>Cashback цуглуулах сарын суурь борлуулалтын дүн: <b>${fmt(tierBase)}</b></div>
+    </div>
+    <div class="cb-sales-months">
+      ${monthRows.length === 0 ? '<div class="cb-sales-month-empty">Сарын борлуулалтын мэдээлэл алга байна.</div>' : monthRows.map(m => `
+        <div class="cb-sales-month-row">
+          <span class="cb-sales-month-label">${m.label}</span>
+          <span class="cb-sales-month-amount">${fmt(m.amount)}</span>
+          <span class="cb-sales-month-tag ${m.qualified ? 'ok' : 'no'}">${m.qualified ? '✓ ' + fmt(m.monthCb) : '—'}</span>
+        </div>
+      `).join('')}
+    </div>
+  `;
+
   const items = [
-    {
-      id: 'cbb-sales', icon: '💰', label: 'Борлуулалтын Cashback', amount: salesCb,
-      detail: 'Таны мерчант ангилалд (A/B/C) харгалзах хувиар, шаардлагатай суурь борлуулалтад хүрсэн үед тухайн сарын нийт борлуулалтаас тооцогдоно.'
-    },
+    { id: 'cbb-sales', icon: '💰', label: 'Борлуулалтын Cashback', amount: salesCb, detail: salesDetail },
     {
       id: 'cbb-customers', icon: '🎁', label: 'Урьсан харилцагчийн Cashback', amount: custCb,
       detail: `${custCount} харилцагч амжилттай бүртгүүлж, зээлийн эрхээ тогтоолгосон тул ${custCount} × 1,000₮ = ${fmt(custCb)} тооцогдлоо.`
