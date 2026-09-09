@@ -596,8 +596,8 @@ async function showDashboard(merchant) {
 
   const b = (breakdown && breakdown[0]) || {};
   renderSales(sales);
-  renderCashbackBreakdown(b, sales, merchant.category);
-  renderCashbackHistory(cashback, Number(b.total_unpaid || 0));
+  const totalUnpaidNow = renderCashbackBreakdown(b, sales, merchant.category);
+  renderCashbackHistory(cashback, totalUnpaidNow);
 }
 
 // Normalize a raw category value to 'A'/'B'/'C', or null if unrated.
@@ -839,6 +839,8 @@ function renderCashbackBreakdown(b, salesRows, rawCategory) {
       <div class="cbb-detail-wrap"><div class="cbb-detail">${it.detail}</div></div>
     </div>
   `).join('');
+
+  return totalUnpaid;
 }
 
 // ══════════════════════════════════════════════════════════════
