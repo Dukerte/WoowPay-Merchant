@@ -173,6 +173,13 @@ table.cred-table .cred-edit input{
   width:90px; padding:7px 8px; background:rgba(255,255,255,.07); border:1px solid rgba(255,255,255,.15);
   border-radius:6px; color:#fff; font-size:.82rem; font-family:ui-monospace,monospace; letter-spacing:.05em; outline:none;
 }
+table.cred-table tr.no-category{ background:rgba(239,68,68,.08); }
+.cat-missing-badge{ color:var(--warning); font-size:.7rem; font-weight:600; margin-left:4px; }
+select.cat-select{
+  padding:7px 8px; background:rgba(255,255,255,.07); border:1px solid rgba(255,255,255,.15);
+  border-radius:6px; color:#fff; font-size:.82rem; outline:none;
+}
+select.cat-select:focus{ border-color:var(--primary); }
 </style>
 </head>
 <body>
@@ -753,6 +760,31 @@ function toggleNewMerchantForm() {
   document.getElementById('new-merchant-form').classList.toggle('row-hidden');
 }
 
+async function updateCategory(id, value) {
+  const row = document.getElementById(`cred-row-${id}`);
+  try {
+    const res = await fetch(`${SUPA_URL}/rest/v1/merchants?id=eq.${id}`, {
+      method: 'PATCH',
+      headers: { ...authHeaders(), 'Prefer': 'return=representation' },
+      body: JSON.stringify({ category: value || null })
+    });
+    if (!res.ok) { alert('Ангилал шинэчлэхэд алдаа гарлаа.'); return; }
+    const m = __allMerchants.find(x => x.id === id);
+    if (m) m.category = value || null;
+    if (row) {
+      row.classList.toggle('no-category', !value);
+      const badge = row.querySelector('.cat-missing-badge');
+      if (value && badge) badge.remove();
+      if (!value && !badge) {
+        const brandTd = row.children[1];
+        brandTd.insertAdjacentHTML('beforeend', ' <span class="cat-missing-badge" title="Ангилал байхгүй тул Cashback тооцогдохгүй">⚠ Анг. дутуу</span>');
+      }
+    }
+  } catch (e) {
+    alert('Сүлжээний алдаа.');
+  }
+}
+
 function renderCredTable(rows) {
   const tbody = document.getElementById('cred-tbody');
   const countEl = document.getElementById('cred-count');
@@ -760,11 +792,18 @@ function renderCredTable(rows) {
   if (!rows.length) { tbody.innerHTML = '<tr><td colspan="7" class="cred-empty">Мерчант олдсонгүй.</td></tr>'; return; }
 
   tbody.innerHTML = rows.map(m => `
-    <tr id="cred-row-${m.id}" class="${m.enabled === false ? 'merchant-disabled' : ''}">
+    <tr id="cred-row-${m.id}" class="${m.enabled === false ? 'merchant-disabled' : ''} ${!m.category ? 'no-category' : ''}">
       <td>${escapeHtml(m.phone)}</td>
-      <td>${escapeHtml(m.brand_name)}${m.enabled === false ? ' <span style="color:var(--warning);">(идэвхгүй)</span>' : ''}</td>
+      <td>${escapeHtml(m.brand_name)}${m.enabled === false ? ' <span style="color:var(--warning);">(идэвхгүй)</span>' : ''}${!m.category ? ' <span class="cat-missing-badge" title="Ангилал байхгүй тул Cashback тооцогдохгүй">⚠ Анг. дутуу</span>' : ''}</td>
       <td>${escapeHtml(m.contact_name || '—')}</td>
-      <td>${escapeHtml(m.category || '—')}</td>
+      <td>
+        <select class="cat-select" onchange="updateCategory('${m.id}', this.value)">
+          <option value="" ${!m.category ? 'selected' : ''}>—</option>
+          <option value="A" ${m.category === 'A' ? 'selected' : ''}>A</option>
+          <option value="B" ${m.category === 'B' ? 'selected' : ''}>B</option>
+          <option value="C" ${m.category === 'C' ? 'selected' : ''}>C</option>
+        </select>
+      </td>
       <td><span class="cred-code" id="cred-code-${m.id}">${escapeHtml(m.passcode)}</span></td>
       <td>
         <div class="cred-edit">
@@ -890,6 +929,7 @@ async function createMerchant() {
 
   if (!phone || !/^\d+$/.test(phone)) { errEl.textContent = 'Утасны дугаараа зөв оруулна уу.'; return; }
   if (!brand) { errEl.textContent = 'Байгууллагын нэрээ оруулна уу.'; return; }
+  if (!category) { errEl.textContent = 'Ангилал (A/B/C) сонгоно уу — Cashback тооцоход заавал шаардлагатай.'; return; }
   if (!passcode) passcode = randomPasscode();
   if (!/^\d{4,6}$/.test(passcode)) { errEl.textContent = 'Код 4-6 оронтой тоо байх ёстой.'; return; }
 
