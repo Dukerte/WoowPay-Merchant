@@ -791,19 +791,22 @@ function renderCredTable(rows) {
   if (countEl) countEl.textContent = rows.length + ' мерчант';
   if (!rows.length) { tbody.innerHTML = '<tr><td colspan="7" class="cred-empty">Мерчант олдсонгүй.</td></tr>'; return; }
 
-  tbody.innerHTML = rows.map(m => `
-    <tr id="cred-row-${m.id}" class="${m.enabled === false ? 'merchant-disabled' : ''} ${!m.category ? 'no-category' : ''}">
+  tbody.innerHTML = rows.map(m => {
+    const catNorm = normalizeCategory(m.category);
+    return `
+    <tr id="cred-row-${m.id}" class="${m.enabled === false ? 'merchant-disabled' : ''} ${!catNorm ? 'no-category' : ''}">
       <td>${escapeHtml(m.phone)}</td>
-      <td>${escapeHtml(m.brand_name)}${m.enabled === false ? ' <span style="color:var(--warning);">(идэвхгүй)</span>' : ''}${!m.category ? ' <span class="cat-missing-badge" title="Ангилал байхгүй тул Cashback тооцогдохгүй">⚠ Анг. дутуу</span>' : ''}</td>
+      <td>${escapeHtml(m.brand_name)}${m.enabled === false ? ' <span style="color:var(--warning);">(идэвхгүй)</span>' : ''}${!catNorm ? ' <span class="cat-missing-badge" title="Ангилал байхгүй тул Cashback тооцогдохгүй">⚠ Анг. дутуу</span>' : ''}</td>
       <td>${escapeHtml(m.contact_name || '—')}</td>
       <td>
         <select class="cat-select" onchange="updateCategory('${m.id}', this.value)">
-          <option value="" ${!m.category ? 'selected' : ''}>—</option>
-          <option value="A" ${m.category === 'A' ? 'selected' : ''}>A</option>
-          <option value="B" ${m.category === 'B' ? 'selected' : ''}>B</option>
-          <option value="C" ${m.category === 'C' ? 'selected' : ''}>C</option>
+          <option value="" ${!catNorm ? 'selected' : ''}>—</option>
+          <option value="A" ${catNorm === 'A' ? 'selected' : ''}>A</option>
+          <option value="B" ${catNorm === 'B' ? 'selected' : ''}>B</option>
+          <option value="C" ${catNorm === 'C' ? 'selected' : ''}>C</option>
         </select>
-      </td>
+      </td>`;
+  }).join('');
       <td><span class="cred-code" id="cred-code-${m.id}">${escapeHtml(m.passcode)}</span></td>
       <td>
         <div class="cred-edit">
@@ -822,7 +825,7 @@ function renderCredTable(rows) {
         </div>
       </td>
     </tr>
-  `).join('');
+  `;
 }
 
 async function loadCashbackBadge(id) {
