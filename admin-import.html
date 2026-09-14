@@ -805,7 +805,7 @@ function renderCredTable(rows) {
           <option value="B" ${catNorm === 'B' ? 'selected' : ''}>B</option>
           <option value="C" ${catNorm === 'C' ? 'selected' : ''}>C</option>
         </select>
-      </td>`;
+      </td>
       <td><span class="cred-code" id="cred-code-${m.id}">${escapeHtml(m.passcode)}</span></td>
       <td>
         <div class="cred-edit">
@@ -824,7 +824,7 @@ function renderCredTable(rows) {
         </div>
       </td>
     </tr>
-  `;
+    `;
   }).join('');
 }
 
