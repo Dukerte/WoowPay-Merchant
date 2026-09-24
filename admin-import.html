@@ -180,6 +180,12 @@ select.cat-select{
   border-radius:6px; color:#fff; font-size:.82rem; outline:none;
 }
 select.cat-select:focus{ border-color:var(--primary); }
+.field-edit{
+  width:100%; min-width:90px; padding:6px 8px; background:transparent; border:1px solid transparent;
+  border-radius:6px; color:#fff; font-size:.82rem; outline:none; transition:border-color .15s,background .15s;
+}
+.field-edit:hover{ background:rgba(255,255,255,.05); border-color:rgba(255,255,255,.12); }
+.field-edit:focus{ background:rgba(255,255,255,.07); border-color:var(--primary); }
 </style>
 </head>
 <body>
@@ -795,9 +801,19 @@ function renderCredTable(rows) {
     const catNorm = normalizeCategory(m.category);
     return `
     <tr id="cred-row-${m.id}" class="${m.enabled === false ? 'merchant-disabled' : ''} ${!catNorm ? 'no-category' : ''}">
-      <td>${escapeHtml(m.phone)}</td>
-      <td>${escapeHtml(m.brand_name)}${m.enabled === false ? ' <span style="color:var(--warning);">(идэвхгүй)</span>' : ''}${!catNorm ? ' <span class="cat-missing-badge" title="Ангилал байхгүй тул Cashback тооцогдохгүй">⚠ Анг. дутуу</span>' : ''}</td>
-      <td>${escapeHtml(m.contact_name || '—')}</td>
+      <td>
+        <input type="text" class="field-edit" inputmode="numeric" value="${escapeHtml(m.phone)}" id="cred-phone-${m.id}"
+          onchange="updateMerchantField('${m.id}', 'phone', this)" />
+      </td>
+      <td>
+        <input type="text" class="field-edit" value="${escapeHtml(m.brand_name)}" id="cred-brand-${m.id}"
+          onchange="updateMerchantField('${m.id}', 'brand_name', this)" />
+        ${m.enabled === false ? ' <span style="color:var(--warning);">(идэвхгүй)</span>' : ''}${!catNorm ? ' <span class="cat-missing-badge" title="Ангилал байхгүй тул Cashback тооцогдохгүй">⚠ Анг. дутуу</span>' : ''}
+      </td>
+      <td>
+        <input type="text" class="field-edit" value="${escapeHtml(m.contact_name || '')}" placeholder="—" id="cred-contact-${m.id}"
+          onchange="updateMerchantField('${m.id}', 'contact_name', this)" />
+      </td>
       <td>
         <select class="cat-select" onchange="updateCategory('${m.id}', this.value)">
           <option value="" ${!catNorm ? 'selected' : ''}>—</option>
@@ -826,6 +842,48 @@ function renderCredTable(rows) {
     </tr>
     `;
   }).join('');
+}
+
+async function updateMerchantField(id, field, inputEl) {
+  const newVal = inputEl.value.trim();
+  const prevVal = inputEl.defaultValue;
+
+  if (field === 'phone' && (!newVal || !/^\d+$/.test(newVal))) {
+    alert('Утасны дугаар зөвхөн тоо байх ёстой.');
+    inputEl.value = prevVal;
+    return;
+  }
+  if (field === 'brand_name' && !newVal) {
+    alert('Байгууллагын нэр хоосон байж болохгүй.');
+    inputEl.value = prevVal;
+    return;
+  }
+
+  inputEl.disabled = true;
+  try {
+    const res = await fetch(`${SUPA_URL}/rest/v1/merchants?id=eq.${id}`, {
+      method: 'PATCH',
+      headers: { ...authHeaders(), 'Prefer': 'return=representation' },
+      body: JSON.stringify({ [field]: field === 'contact_name' && !newVal ? null : newVal })
+    });
+    if (!res.ok) {
+      const t = await res.text();
+      alert((t.includes('duplicate') || t.includes('unique')) ? 'Энэ утасны дугаар өөр мерчантад бүртгэлтэй байна.' : 'Алдаа гарлаа: ' + t);
+      inputEl.value = prevVal;
+      inputEl.disabled = false;
+      return;
+    }
+    inputEl.defaultValue = newVal;
+    const m = __allMerchants.find(x => x.id === id);
+    if (m) m[field] = newVal || null;
+    inputEl.disabled = false;
+    inputEl.style.borderColor = 'var(--success)';
+    setTimeout(() => { inputEl.style.borderColor = ''; }, 900);
+  } catch (e) {
+    alert('Сүлжээний алдаа.');
+    inputEl.value = prevVal;
+    inputEl.disabled = false;
+  }
 }
 
 async function loadCashbackBadge(id) {
