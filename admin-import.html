@@ -539,7 +539,9 @@ const ROLES = [
 function guessRole(headerText) {
   const h = (headerText || '').toString().toLowerCase();
   if (!h) return 'ignore';
-  if (h.includes('урьсан харилцагч')) return 'referred_customers';
+  if (h.includes('урьсан харилцагч') || h.startsWith('харилцагч')) return 'referred_customers';
+if (h.startsWith('мерчант') && h.includes('дэлгүүр')) return 'referred_supermarkets';
+if (h.startsWith('мерчант') && h.includes('бусад')) return 'referred_other_merchants';
   if (h.includes('хүнсний дэлгүүр')) return 'referred_supermarkets';
   if (h.includes('урьсан мерчант') && h.includes('бусад')) return 'referred_other_merchants';
   if (h.includes('утас') || h.includes('phone')) return 'phone';
@@ -1209,7 +1211,10 @@ async function runImport() {
   const referredCustomersCol = colRoles.indexOf('referred_customers');
   const referredSupermarketsCol = colRoles.indexOf('referred_supermarkets');
   const referredOtherCol = colRoles.indexOf('referred_other_merchants');
-  const totalSalesColForCashback = kpiFieldCols.total_sales;
+  let totalSalesColForCashback = kpiFieldCols.total_sales;
+// Cashback is based on the LATEST month's sales (not cumulative total)
+const _cbMonthCols = monthSalesCols.filter(ci => colMonths[ci]);
+if (_cbMonthCols.length) totalSalesColForCashback = _cbMonthCols.reduce((x, y) => colMonths[y] > colMonths[x] ? y : x);
   const hasCashbackData = referredCustomersCol >= 0 || referredSupermarketsCol >= 0 ||
     referredOtherCol >= 0 || (totalSalesColForCashback >= 0 && categoryCol >= 0);
 
