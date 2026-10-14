@@ -277,6 +277,9 @@
   .cb-sales-month-tag{ flex:0 0 auto; font-weight:700; min-width:70px; text-align:right; }
   .cb-sales-month-tag.ok{ color:var(--success); }
   .cb-sales-month-tag.no{ color:var(--muted); }
+.cb-sales-month-tag.pre{ color:var(--muted); font-weight:600; }
+.cb-sales-month-row.prelaunch{ opacity:.4; filter:grayscale(1); }
+.cb-sales-note{ font-size:.72rem; color:var(--muted); margin:0 0 8px; line-height:1.5; }
   .cb-sales-month-empty{ color:var(--muted); padding:6px 0; }
 
   .cb-help{
@@ -754,6 +757,8 @@ function toggleCbb(id) {
 // Same tier rates/thresholds admin-import.html uses to compute sales cashback.
 const CASHBACK_RATES = { A: 0.0025, B: 0.005, C: 0.007 };
 const CASHBACK_BASE = { A: 5000000, B: 3000000, C: 2000000 };
+// Cashback program launches with September 2026; earlier months are shown greyed out and not counted.
+const CASHBACK_START = { year: 2026, month: 9 };
 
 function renderCashbackBreakdown(b, salesRows, rawCategory) {
   const custCb = Number(b.referred_customers_cashback || 0);
@@ -779,9 +784,10 @@ function renderCashbackBreakdown(b, salesRows, rawCategory) {
       const amount = Number(r.sales_amount || 0);
       const qualified = !!(tier && amount >= tierBase);
       const monthCb = qualified ? amount * tierRate : 0;
-      return { label: `${d.getMonth() + 1}-р сар, ${d.getFullYear()}`, amount, qualified, monthCb };
+const counted = (d.getFullYear() * 12 + d.getMonth() + 1) >= (CASHBACK_START.year * 12 + CASHBACK_START.month);
+      return { label: `${d.getMonth() + 1}-р сар, ${d.getFullYear()}`, amount, qualified, monthCb, counted };
     });
-  const salesCb = monthRows.reduce((s, m) => s + m.monthCb, 0);
+  const salesCb = monthRows.reduce((s, m) => s + (m.counted ? m.monthCb : 0), 0);
   const totalUnpaid = salesCb + custCb + merchCb;
 
   document.getElementById('cb-balance').textContent = fmt(totalUnpaid);
@@ -804,12 +810,13 @@ function renderCashbackBreakdown(b, salesRows, rawCategory) {
       <div>Таны зэрэглэл: <b>${tier || '—'}</b></div>
       <div>Cashback цуглуулах сарын суурь борлуулалтын дүн: <b>${fmt(tierBase)}</b></div>
     </div>
-    <div class="cb-sales-months">
+    <div class="cb-sales-note">Cashback 2026 оны 9-р сараас эхлэн тооцогдоно. Өмнөх саруудын дүн зөвхөн мэдээллийн зорилготой.</div>
+<div class="cb-sales-months">
       ${monthRows.length === 0 ? '<div class="cb-sales-month-empty">Сарын борлуулалтын мэдээлэл алга байна.</div>' : monthRows.map(m => `
-        <div class="cb-sales-month-row">
+        <div class="cb-sales-month-row${m.counted ? '' : ' prelaunch'}">
           <span class="cb-sales-month-label">${m.label}</span>
           <span class="cb-sales-month-amount">${fmt(m.amount)}</span>
-          <span class="cb-sales-month-tag ${m.qualified ? 'ok' : 'no'}">${m.qualified ? '✓ ' + fmt(m.monthCb) : '—'}</span>
+          <span class="cb-sales-month-tag ${!m.counted ? 'pre' : (m.qualified ? 'ok' : 'no')}">${m.qualified ? (m.counted ? '✓ ' : '') + fmt(m.monthCb) : '—'}</span>
         </div>
       `).join('')}
     </div>
