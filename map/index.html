@@ -1,0 +1,2308 @@
+<!doctype html>
+<html lang="mn">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<link rel="icon" href="/map/assets/favicon.png">
+<link rel="apple-touch-icon" href="/map/assets/apple-touch-icon.png">
+<link rel="manifest" href="/map/site.webmanifest">
+<link rel="canonical" href="https://merchant.woowpay.mn/map/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="WoowPay-ээр хүүгүй, шимтгэлгүй, урьдчилгаагүй төлөх газраа олоорой">
+<meta property="og:description" content="Ойр байгаа WoowPay мерчантаа олоорой: хэдэн метрт байгаа, одоо нээлттэй эсэх, ангиллаар нь.">
+<meta property="og:site_name" content="Woow Pay">
+<meta property="og:url" content="https://merchant.woowpay.mn/map/">
+<meta property="og:image" content="https://merchant.woowpay.mn/map/assets/og-cover.png?v=424a200d8b">
+<meta name="twitter:image" content="https://merchant.woowpay.mn/map/assets/og-cover.png?v=424a200d8b">
+<meta property="og:image:width" content="1200"><meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<title>WoowPay хүлээн авдаг газрууд</title>
+<meta name="description" content="WoowPay-ээр төлөх боломжтой мерчантуудын газрын зураг — Улаанбаатар болон орон нутагт. Ажиллах цаг, хөнгөлөлт, чиглэл нэг дороос.">
+<meta name="theme-color" content="#273270">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700;800&family=Rubik:wght@400;500;600;700&display=swap">
+<style>
+:root{
+  /* WoowPay campaign palette: royal navy base, lighter rings, lime highlight (#D2F845, from the «100,000+» ad), cyan «Pay» */
+  --royal:#273270; --royal-deep:#1D2660; --ring-1:#2C3D84; --ring-2:#33509A; --ring-3:#3B6BA9; --yellow:#D2F845; --yellow-hover:#DDFA6E; --lime-ink:#1D2660;
+  --navy:#030132; --navy-2:#0B0A52; --navy-3:#162045;
+  --cyan:#33A8DD; --cyan-dark:#0B6BFF; --cyan-hover:#0A5FE0; --cyan-soft:#E8F4FD; --cyan-tint:#F4FAFF;
+  --orange:#F2A93B; --orange-soft:#FEF3E0;
+  --ink:#10213F; --gray-600:#566275; --gray-500:#7C8AA0; --gray-400:#AEB9C9; --gray-300:#D3DBE6; --gray-200:#E6EBF2;
+  --surface:#FFFFFF; --surface-alt:#F5F7FA;
+  --good:#1FA971; --good-bg:#E4F7EF; --warn:#B4700E; --warn-bg:#FDF1DF; --muted:#566275; --muted-bg:#EDF1F6;
+  --bad:#C0392F; --bad-bg:#FCEBEA;
+  --shadow-rest:0 1px 2px rgba(3,1,50,.06); --shadow-float:0 12px 30px -12px rgba(3,1,50,.3),0 2px 6px rgba(3,1,50,.06);
+  --font:"Rubik","Noto Sans",system-ui,-apple-system,"Segoe UI",Arial,sans-serif;
+  --display:"Montserrat","Rubik","Noto Sans",system-ui,Arial,sans-serif;
+  --header-h:64px; --gutter:clamp(16px,4vw,40px);
+  color-scheme:light;
+}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+html{scroll-behavior:smooth;scroll-padding-top:calc(var(--header-h) + 12px)}
+body{margin:0;background:var(--surface);color:var(--ink);font:15px/1.55 var(--font);-webkit-font-smoothing:antialiased}
+img{max-width:100%;display:block}
+button,input,select{font:inherit;color:inherit}
+button{cursor:pointer}
+a{color:var(--cyan-dark)}
+:focus-visible{outline:2px solid var(--cyan-dark);outline-offset:2px;border-radius:6px}
+.wrap{max-width:1280px;margin-inline:auto;padding-inline:var(--gutter)}
+.sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+.skip{position:fixed;left:12px;top:-60px;z-index:100;background:var(--navy);color:#fff;padding:10px 14px;border-radius:8px;text-decoration:none}
+.skip:focus{top:12px}
+h1,h2,h3{text-wrap:balance;margin:0;letter-spacing:-.01em;font-weight:700}
+h1,h2{font-family:var(--display);font-weight:800;letter-spacing:-.02em}
+p{margin:0}
+.ext::after{content:"↗";margin-left:4px;font-size:.9em}
+
+.proto{background:var(--navy);color:#C9D6EA;font-size:12.5px}
+.proto .wrap{display:flex;gap:12px;align-items:center;justify-content:space-between;padding-block:7px}
+.proto b{color:var(--orange);font-weight:600}
+.proto button{background:none;border:0;color:#C9D6EA;padding:2px 6px}
+
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:48px;padding:0 20px;border-radius:12px;border:1px solid transparent;font-weight:500;font-size:15px;text-decoration:none;white-space:nowrap;transition:background .15s,border-color .15s}
+.btn svg{width:18px;height:18px;flex:none}
+.btn-primary{background:var(--royal);color:#fff}
+.btn-primary:hover{background:var(--ring-1)}
+.btn-soft{background:#E9ECF7;color:var(--royal)}
+.btn-soft:hover{background:#DCE1F2}
+.btn-line{background:var(--surface);border-color:var(--gray-300);color:var(--ink)}
+.btn-line:hover{border-color:var(--cyan-dark);color:var(--cyan-dark)}
+.btn-sm{min-height:40px;padding:0 14px;font-size:14px;border-radius:10px}
+.link{color:var(--cyan-dark);font-weight:500;text-decoration:none}
+.link:hover{text-decoration:underline}
+
+.site-header{position:sticky;top:0;z-index:40;background:rgba(39,50,112,.97);backdrop-filter:saturate(1.4) blur(14px);border-bottom:1px solid rgba(255,255,255,.08)}
+.site-header .wrap{height:var(--header-h);display:flex;align-items:center;justify-content:space-between;gap:16px}
+.logo{display:flex;align-items:center;text-decoration:none;color:var(--navy)}
+.logo img{height:32px;width:auto;display:block}
+.site-header .wordmark{color:#fff}.site-header .wordmark i{color:var(--cyan)}
+.wordmark{display:inline-flex;align-items:baseline;gap:2px;font:700 25px/1 var(--font);letter-spacing:-.03em;color:var(--cyan-dark)}
+.wordmark i{font-style:normal;color:var(--navy)}
+.wordmark sup{font-size:11px;color:var(--cyan);font-weight:600;top:-.9em}
+.nav{display:flex;align-items:center;gap:6px}
+.nav a.plain{padding:8px 12px;border-radius:8px;color:#C6D2E8;text-decoration:none}
+.nav a.plain:hover{background:rgba(255,255,255,.08);color:#fff}
+.site-header .btn-soft{background:var(--yellow);color:var(--royal);font-weight:600}.site-header .btn-soft:hover{background:var(--yellow-hover)}
+.icon-btn{display:none;width:42px;height:42px;border-radius:10px;align-items:center;justify-content:center;background:rgba(255,255,255,.10);color:#fff;border:0}
+.icon-btn svg{width:20px;height:20px}
+
+.hero{color:#fff;position:relative;overflow:hidden;background:
+  radial-gradient(circle at 78% 18%, var(--ring-3) 0 120px, var(--ring-2) 120px 240px, var(--ring-1) 240px 370px, #29357A 370px 510px, var(--royal) 510px)}
+.hero .wrap{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,.9fr);gap:28px;align-items:center;padding-block:44px 40px;position:relative;z-index:1}
+.oir{width:170px;height:auto;margin-bottom:6px}
+.eyebrow{display:inline-flex;align-items:center;gap:8px;font-size:13px;font-weight:500;color:var(--cyan);letter-spacing:.02em}
+.eyebrow::before{content:"";width:8px;height:8px;border-radius:50%;background:var(--orange)}
+.hero h1{font-size:clamp(32px,4.6vw,58px);line-height:1.04;letter-spacing:-.03em;margin-top:8px;max-width:14ch}
+.hero h1 em{font-style:normal;color:var(--yellow)}
+.nw{white-space:nowrap}
+.hero-sub{margin-top:16px;font-size:clamp(15.5px,1.4vw,18px);color:#D5DCF2;max-width:46ch}
+.hero-sub strong{color:#fff;font-weight:600;font-variant-numeric:tabular-nums}
+.hero-actions{display:flex;flex-wrap:wrap;gap:12px;margin-top:22px}
+.hero .btn-primary{background:var(--yellow);color:var(--royal);font-weight:700}
+.hero .btn-primary:hover{background:var(--yellow-hover)}
+.hero .btn-line{background:rgba(255,255,255,.08);color:#fff;border-color:rgba(255,255,255,.28);backdrop-filter:blur(6px)}
+.hero .btn-line:hover{border-color:#fff;color:#fff}
+.hero-pill{display:inline-flex;align-items:center;gap:12px;margin-top:18px;padding:8px 18px 8px 8px;border-radius:999px;background:rgba(24,51,104,.55);border:1px solid rgba(255,255,255,.16);color:#E4E9F7;text-decoration:none;font-size:14.5px;backdrop-filter:blur(6px)}
+.hero-pill .pi{width:34px;height:34px;border-radius:50%;background:var(--cyan);display:grid;place-items:center;color:#fff;flex:none}
+.hero-pill .pi svg{width:18px;height:18px}
+.hero-pill b{color:#fff;font-family:var(--display);font-weight:800;font-size:16px;letter-spacing:.01em}
+[data-pending] .row-cats,[data-pending] #region-seg,[data-pending] .sort,[data-pending] #filters-toggle,[data-pending] .mobile-area,[data-pending] .sort-mobile{display:none!important}
+.d-about{color:var(--gray-600);margin-top:4px;font-size:15px}
+.fresh{font-size:12.5px;color:var(--gray-500);margin-top:2px}
+.fresh.is-stale{color:#B4540A}
+.load-error{padding:40px 24px;text-align:center;display:flex;flex-direction:column;align-items:center;gap:10px}
+
+.pill{display:inline-flex;align-items:center;gap:6px;border-radius:999px;padding:3px 10px 3px 8px;font-size:12.5px;font-weight:500;line-height:1.35;white-space:nowrap}
+.pill::before{content:"";width:7px;height:7px;border-radius:50%;background:currentColor}
+.pill .d{font-weight:400;color:var(--gray-600)}
+.tone-good.pill{background:var(--good-bg);color:var(--good)}
+.tone-warn.pill{background:var(--warn-bg);color:var(--warn)}
+.tone-muted.pill{background:var(--muted-bg);color:var(--muted)}
+.tone-bad.pill{background:var(--bad-bg);color:var(--bad)}
+.offer{display:inline-flex;align-items:center;gap:6px;background:var(--orange-soft);color:#8A5A07;border-radius:8px;padding:3px 9px;font-size:12.5px;font-weight:500;white-space:nowrap;max-width:100%;overflow:hidden;text-overflow:ellipsis}
+.offer svg{width:13px;height:13px;flex:none}
+.cat-tag{display:inline-flex;align-items:center;gap:6px;font-size:13px;color:var(--gray-600)}
+.cat-dot{width:8px;height:8px;border-radius:3px;flex:none}
+
+.finder{background:var(--surface-alt);position:relative}
+.toolbar{position:sticky;top:var(--header-h);z-index:30;background:rgba(245,247,250,.97);backdrop-filter:blur(8px);border-bottom:1px solid var(--gray-200)}
+.toolbar .wrap{display:flex;flex-direction:column;gap:12px;padding-block:14px}
+.row{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.search{position:relative;flex:1 1 420px;min-width:0}
+.search input{width:100%;height:52px;border-radius:12px;border:1px solid var(--gray-300);background:#fff;padding:0 44px 0 48px;font-size:16px;box-shadow:var(--shadow-rest)}
+.search input::placeholder{color:var(--gray-400)}
+.search input:focus{outline:none;border-color:var(--cyan-dark);box-shadow:0 0 0 4px rgba(11,107,255,.14)}
+.search .s-icon{position:absolute;left:16px;top:50%;transform:translateY(-50%);width:20px;height:20px;color:var(--gray-400);pointer-events:none}
+.search .clear{position:absolute;right:8px;top:50%;transform:translateY(-50%);width:36px;height:36px;border-radius:8px;border:0;background:none;color:var(--gray-600);display:grid;place-items:center}
+.suggest{position:absolute;left:0;right:0;top:calc(100% + 6px);background:#fff;border:1px solid var(--gray-200);border-radius:12px;box-shadow:var(--shadow-float);padding:6px;list-style:none;margin:0;max-height:380px;overflow:auto;z-index:5}
+.suggest li{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:10px 12px;border-radius:8px;cursor:pointer}
+.suggest li[aria-selected="true"],.suggest li:hover{background:var(--cyan-tint)}
+.suggest .s-name{font-weight:500}
+.suggest .s-meta{color:var(--gray-600);font-size:13px}
+.suggest .s-kind{font-size:11.5px;color:var(--gray-400);text-transform:uppercase;letter-spacing:.06em}
+.suggest mark{background:none;color:var(--cyan-dark)}
+.filters-toggle{display:none}
+.badge-count{min-width:20px;height:20px;border-radius:10px;background:var(--royal);color:#fff;font-size:12px;display:inline-grid;place-items:center;padding:0 6px}
+.seg{display:inline-flex;background:#fff;border:1px solid var(--gray-200);border-radius:11px;padding:3px;gap:2px}
+.seg button{border:0;background:none;border-radius:8px;padding:7px 12px;color:var(--gray-600);white-space:nowrap}
+.seg button[aria-pressed="true"]{background:var(--royal);color:#fff}
+.seg button span{font-variant-numeric:tabular-nums;opacity:.75;margin-left:4px}
+.chips-wrap{position:relative;flex:1 1 320px;min-width:0}
+.chips{display:flex;gap:6px;overflow-x:auto;scrollbar-width:none;padding-block:2px;mask-image:linear-gradient(90deg,#000 0,#000 calc(100% - 44px),transparent)}
+.chips::-webkit-scrollbar{display:none}
+.chip{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--gray-200);background:#fff;border-radius:999px;padding:6px 12px;font-size:13.5px;white-space:nowrap;color:var(--gray-600)}
+.chip span{color:var(--gray-400);margin-left:2px;font-variant-numeric:tabular-nums}
+.chip[aria-pressed="true"]{border-color:var(--royal);background:var(--royal);color:#fff;font-weight:500}
+.chip[aria-pressed="true"] span{color:#C9D3F0}
+.toggle{display:inline-flex;align-items:center;gap:8px;border:1px solid var(--gray-200);background:#fff;border-radius:999px;padding:6px 12px;font-size:13.5px;color:var(--gray-600);white-space:nowrap}
+.toggle i{width:8px;height:8px;border-radius:50%;background:var(--gray-400)}
+.toggle[aria-pressed="true"]{border-color:var(--good);background:var(--good-bg);color:var(--good);font-weight:500}
+.toggle[aria-pressed="true"] i{background:var(--good)}
+.toggle.offer-toggle[aria-pressed="true"]{border-color:var(--orange);background:var(--orange-soft);color:#8A5A07}
+.toggle.offer-toggle[aria-pressed="true"] i{background:var(--orange)}
+select.select{height:40px;border-radius:10px;border:1px solid var(--gray-300);background:#fff;padding:0 34px 0 12px;appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' fill='none'%3E%3Cpath d='M1 1.5l5 5 5-5' stroke='%23566275' stroke-width='1.6' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 12px center}
+.mobile-area{display:none}
+.toolbar.is-compact:not(.is-open) .row-2{display:none}
+.toolbar.is-compact .filters-toggle{display:inline-flex}
+
+.results-bar{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.results-title{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap}
+.results-title h2{font-size:20px}
+.results-title .count{color:var(--gray-600);font-variant-numeric:tabular-nums}
+.loc-chip{display:inline-flex;align-items:center;gap:6px;background:var(--cyan-soft);color:var(--cyan-dark);border-radius:999px;padding:4px 6px 4px 10px;font-size:13px}
+.loc-chip button{border:0;background:#fff;border-radius:999px;padding:2px 8px;font-size:12px;color:var(--gray-600)}
+.sort{display:flex;align-items:center;gap:8px;color:var(--gray-600);font-size:14px}
+.view-seg{display:none}
+
+.finder-body{display:grid;grid-template-columns:430px minmax(0,1fr);height:calc(100vh - var(--header-h) - var(--toolbar-h,150px));min-height:520px;max-height:900px;border-bottom:1px solid var(--gray-200)}
+.results{background:#fff;border-right:1px solid var(--gray-200);overflow:auto;overscroll-behavior:contain;position:relative}
+.results-inner{padding:4px 0 16px}
+.group-label{padding:14px 20px 6px;font-size:12px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--gray-400)}
+.notice{margin:12px 16px 4px;padding:12px 14px;border-radius:10px;background:var(--cyan-tint);font-size:14px;display:flex;flex-direction:column;gap:8px}
+.m-list{list-style:none;margin:0;padding:0}
+.m-row{display:grid;grid-template-columns:64px minmax(0,1fr) auto;gap:14px;align-items:center;padding:12px 16px 12px 20px;border-bottom:1px solid var(--gray-200);position:relative;cursor:pointer}
+.m-row:hover,.m-row.is-hover{background:var(--surface-alt)}
+.m-row.is-selected{background:var(--cyan-tint)}
+.m-row.is-selected::before{content:"";position:absolute;left:0;top:10px;bottom:10px;width:3px;border-radius:0 3px 3px 0;background:var(--cyan-dark)}
+.m-row .open-btn{all:unset;position:absolute;inset:0;cursor:pointer}
+.m-row .open-btn:focus-visible{outline:2px solid var(--cyan-dark);outline-offset:-2px}
+.thumb{width:64px;height:64px;border-radius:12px;overflow:hidden;background:var(--cyan-soft);position:relative;flex:none;display:grid;place-items:center;color:var(--cyan-dark)}
+.thumb img{width:100%;height:100%;object-fit:cover}
+.thumb svg{width:28px;height:28px}
+.m-name{font-weight:600;font-size:16px;line-height:1.25}
+.m-meta{font-size:13.5px;color:var(--gray-600);margin-top:2px;display:flex;gap:4px 12px;flex-wrap:wrap;align-items:center}
+.m-meta .km{color:var(--ink);font-weight:600;font-variant-numeric:tabular-nums}
+.m-tags{display:flex;gap:6px;flex-wrap:wrap;margin-top:7px}
+.row-end{position:relative;z-index:1;display:flex;flex-direction:column;gap:6px}
+.icon-act{width:40px;height:40px;border-radius:10px;border:1px solid var(--gray-200);background:#fff;display:grid;place-items:center;color:var(--cyan-dark);text-decoration:none}
+.icon-act:hover{border-color:var(--cyan-dark);background:var(--cyan-tint)}
+.icon-act svg{width:18px;height:18px}
+.empty{padding:40px 24px;text-align:center;display:flex;flex-direction:column;align-items:center;gap:10px}
+.empty h3{font-size:18px}
+.empty p{color:var(--gray-600);max-width:34ch}
+
+.map-wrap{position:relative;background:#E6ECF5;overflow:hidden}
+.map{position:absolute;inset:0;touch-action:none;cursor:grab}
+.map:active{cursor:grabbing}
+.demo-map-svg{display:block}
+.map-sea{fill:#E4EBF5}
+.map-grid{stroke:#D7DFEC;stroke-width:1;fill:none}
+.map-land{fill:#F8FBFE;stroke:#BCC8DC;stroke-width:1.2;stroke-linejoin:round}
+.map-label{font:500 12px var(--font);fill:#5C667D;paint-order:stroke;stroke:#F8FBFE;stroke-width:4px}
+.map-label.is-district{font-size:10.5px;letter-spacing:.08em;fill:#8A95AA}
+.pin{cursor:pointer}
+.pin-body{fill:var(--cyan-dark);stroke:#fff;stroke-width:2}
+.pin-glyph{fill:#fff}.pin-screen{fill:var(--cyan-dark)}
+.pin.tone-muted .pin-body{fill:#8A95AA}.pin.tone-muted .pin-screen{fill:#8A95AA}
+.pin.tone-bad .pin-body{fill:#A3ABBB}.pin.tone-bad .pin-screen{fill:var(--bad)}
+.pin.tone-warn .pin-body{fill:var(--cyan-dark);stroke:var(--orange)}
+.pin.is-selected .pin-body{fill:var(--navy);stroke:var(--orange);stroke-width:2.5}
+.pin-shadow{fill:rgba(3,1,50,.18)}
+.pin-halo{fill:rgba(11,107,255,.2)}
+.pin:focus-visible .pin-body{stroke:var(--navy);stroke-width:3}
+.cluster{cursor:pointer}
+.cluster-core{fill:var(--cyan-dark)}
+.cluster-ring{fill:rgba(11,107,255,.2)}
+.cluster text{font:600 13px var(--font);fill:#fff}
+.me-dot{fill:var(--cyan-dark);stroke:#fff;stroke-width:3}
+.me-pulse{fill:rgba(11,107,255,.18)}
+@media (prefers-reduced-motion:no-preference){.me-pulse{animation:pulse 2s ease-out infinite;transform-box:fill-box;transform-origin:center}}
+@keyframes pulse{0%{transform:scale(.6);opacity:1}100%{transform:scale(1.8);opacity:0}}
+.map-ctrls{position:absolute;right:14px;top:14px;display:flex;flex-direction:column;gap:8px;z-index:2}
+.map-ctrls .grp{display:flex;flex-direction:column;background:#fff;border-radius:10px;box-shadow:var(--shadow-float);overflow:hidden}
+.map-ctrls button{width:42px;height:42px;border:0;background:#fff;display:grid;place-items:center;color:var(--ink)}
+.map-ctrls .grp button+button{border-top:1px solid var(--gray-200)}
+.map-ctrls svg{width:18px;height:18px}
+.mode-seg{position:absolute;left:14px;top:14px;z-index:2;display:flex;background:#fff;border-radius:14px;padding:4px;gap:4px;box-shadow:var(--shadow-float)}
+.mode-seg button{display:inline-flex;align-items:center;gap:7px;border:0;background:none;border-radius:10px;padding:9px 14px;font-weight:600;font-size:14px;color:var(--royal);white-space:nowrap}
+.mode-seg button svg{width:17px;height:17px}
+.mode-seg button[aria-pressed="true"]{background:var(--royal);color:#fff}
+.mode-seg button[data-mode="near"][aria-pressed="true"]{background:var(--yellow);color:var(--royal)}
+.map-hint{position:absolute;inset:0;display:grid;place-items:center;background:rgba(3,1,50,.45);color:#fff;font-weight:500;font-size:15px;opacity:0;pointer-events:none;transition:opacity .25s;z-index:3}
+.map-hint.show{opacity:1}
+.map-badge{position:absolute;left:14px;bottom:12px;z-index:2;background:rgba(255,255,255,.92);border:1px solid var(--gray-200);border-radius:8px;padding:4px 8px;font-size:11.5px;color:var(--gray-600)}
+.sheet-handle{display:none}
+
+.band{padding-block:56px}
+.band .wrap{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}
+.tile{border:1px solid var(--gray-200);border-radius:16px;padding:22px;display:flex;flex-direction:column;gap:10px;background:#fff}
+.tile .ic{width:44px;height:44px;border-radius:12px;background:var(--cyan-soft);color:var(--royal);display:grid;place-items:center}
+.tile.has-owl{position:relative;overflow:hidden;padding-right:150px;min-height:180px}
+.tile .owl-art{position:absolute;right:-16px;bottom:-10px;width:170px;height:auto;pointer-events:none}
+.tile .ic svg{width:22px;height:22px}
+.tile h3{font-size:18px}
+.tile p{color:var(--gray-600);font-size:14.5px}
+.tile .link{margin-top:auto;padding-top:8px}
+.cta{background:radial-gradient(circle at 92% 50%, var(--ring-3) 0 70px, var(--ring-2) 70px 140px, var(--ring-1) 140px 215px, var(--royal) 215px);color:#fff;border-radius:20px;padding:30px 34px;display:grid;grid-template-columns:1fr auto;gap:22px;align-items:center;position:relative;overflow:hidden}
+.cta::after{content:"";position:absolute;right:-60px;top:-60px;width:220px;height:220px;border-radius:50%;background:radial-gradient(circle,rgba(51,168,221,.5),transparent 70%)}
+.cta h2{font-size:clamp(21px,2.3vw,28px)}
+.cta{grid-template-columns:auto 1fr auto!important}
+.cta-art{width:72px;height:auto;border-radius:18px;box-shadow:0 10px 24px rgba(0,0,0,.25)}
+.cta p{color:#AEBCD6;margin-top:6px}
+.cta .acts{display:flex;gap:12px;flex-wrap:wrap;position:relative;z-index:1}
+.cta .btn-line{background:rgba(255,255,255,.08);color:#fff;border-color:rgba(255,255,255,.28)}
+.cta .btn-primary{background:var(--yellow);color:var(--royal);font-weight:700}
+.cta .btn-primary:hover{background:var(--yellow-hover)}
+
+.site-footer{background:var(--surface-alt);border-top:1px solid var(--gray-200);padding-block:44px 24px;font-size:14px;color:var(--gray-600);margin-top:56px}
+.foot-grid{display:grid;grid-template-columns:1.4fr 1fr 1fr;gap:32px}
+.foot-grid h3{font-size:14px;font-weight:600;color:var(--ink);margin-bottom:12px}
+.foot-grid ul{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:10px}
+.foot-grid a{color:var(--gray-600);text-decoration:none}
+.foot-grid a:hover{color:var(--cyan-dark)}
+.foot-org{display:flex;flex-direction:column;gap:12px;max-width:34ch}
+.foot-logo img{height:30px;width:auto}
+.foot-phone{font-family:var(--display);font-weight:800;color:var(--royal);font-size:18px;text-decoration:none}
+.load-error .owl{width:132px;height:auto}
+.foot-bottom{margin-top:30px;padding-top:18px;border-top:1px solid var(--gray-200);display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}
+
+dialog.drawer{position:fixed;inset:0 0 0 auto;margin:0;height:100%;max-height:100%;max-width:100%;width:min(460px,100%);border:0;padding:0;background:#fff;box-shadow:-20px 0 60px rgba(3,1,50,.18);overflow:hidden}
+dialog.drawer::backdrop{background:rgba(3,1,50,.4)}
+@media (prefers-reduced-motion:no-preference){dialog.drawer[open]{animation:slide .22s ease-out}}
+@keyframes slide{from{transform:translateX(24px);opacity:.4}to{transform:none;opacity:1}}
+.d-scroll{height:100%;overflow:auto;overscroll-behavior:contain}
+.d-top{position:sticky;top:0;z-index:2;display:flex;align-items:center;justify-content:space-between;padding:12px 16px 12px 20px;background:rgba(255,255,255,.95);backdrop-filter:blur(8px);border-bottom:1px solid var(--gray-200)}
+.d-top span{font-size:13px;color:var(--gray-600)}
+.close-btn{width:40px;height:40px;border-radius:10px;border:0;background:var(--surface-alt);display:grid;place-items:center}
+.close-btn svg{width:18px;height:18px}
+.d-photo{aspect-ratio:16/9;background:linear-gradient(145deg,var(--cyan-soft),#D7EBFA);position:relative;display:grid;place-items:center;color:var(--cyan-dark)}
+.d-photo img{width:100%;height:100%;object-fit:cover}
+.d-photo svg{width:72px;height:72px}
+.d-photo.is-empty{aspect-ratio:auto;height:112px}
+.d-photo.is-empty svg{width:44px;height:44px}
+.d-body{padding:20px 24px 32px;display:flex;flex-direction:column;gap:22px}
+.d-head h2{font-size:25px;letter-spacing:-.025em;line-height:1.15}
+.d-head .m-meta{font-size:14.5px;margin-top:6px}
+.d-head .pill{margin-top:12px;font-size:13.5px;padding:5px 12px 5px 10px}
+.d-actions{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.d-sec h3{font-size:12px;font-weight:600;letter-spacing:.07em;text-transform:uppercase;color:var(--gray-400);margin-bottom:10px}
+.callout{border-radius:12px;padding:14px 16px;font-size:14px;display:flex;flex-direction:column;gap:6px}
+.callout.offer{background:var(--orange-soft);color:#7A4E06}
+.callout.bad{background:var(--bad-bg);color:#8E2B23}
+.callout strong{font-weight:600}
+.addr{display:flex;flex-direction:column;gap:4px}
+.addr .place{font-weight:600}
+.addr .how{margin-top:6px;display:flex;gap:8px;color:var(--gray-600);font-size:14px}
+.addr .how svg{width:16px;height:16px;flex:none;margin-top:3px;color:var(--cyan-dark)}
+.week{width:100%;border-collapse:collapse;font-variant-numeric:tabular-nums}
+.week td{padding:7px 0;border-bottom:1px solid var(--gray-200);font-size:14.5px}
+.week td:last-child{text-align:right}
+.week tr.today td{font-weight:600;color:var(--ink)}
+.week tr.today td:first-child::after{content:"Өнөөдөр";margin-left:8px;font-size:11px;font-weight:500;color:var(--cyan-dark);background:var(--cyan-soft);border-radius:6px;padding:2px 6px}
+.week tr.closed td:last-child{color:var(--bad)}
+.note{font-size:13px;color:var(--gray-600);margin-top:10px}
+.map .street-map,.mini-map .street-map{position:absolute!important;inset:0;width:100%;height:100%}   /* beats maplibre-gl.css position:relative */
+.map.is-street{cursor:auto;touch-action:auto}
+.finder:has(.map.is-street) .map-badge{display:none}
+.origin-dot{width:18px;height:18px;border-radius:50%;background:#0B6BFF;border:3px solid #fff;box-shadow:0 0 0 6px rgba(11,107,255,.25)}
+.maplibregl-ctrl-attrib{font-size:11px}
+.mini-map{height:180px;border-radius:12px;overflow:hidden;position:relative;border:1px solid var(--gray-200);background:#E6ECF5}
+.near-list{list-style:none;margin:0;padding:0}
+.near-list button{all:unset;box-sizing:border-box;width:100%;display:flex;justify-content:space-between;gap:12px;align-items:center;padding:10px 0;border-bottom:1px solid var(--gray-200);cursor:pointer}
+.near-list button:hover .m-name{color:var(--cyan-dark)}
+.near-list button:focus-visible{outline:2px solid var(--cyan-dark);outline-offset:2px}
+.near-list .m-name{font-size:15px}
+.near-list .km{font-weight:600;font-variant-numeric:tabular-nums;white-space:nowrap}
+.report{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:14px 16px;border:1px dashed var(--gray-300);border-radius:12px;font-size:14px;color:var(--gray-600)}
+
+.toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%) translateY(20px);background:var(--navy);color:#fff;border-radius:12px;padding:12px 16px;font-size:14px;display:flex;gap:12px;align-items:center;opacity:0;pointer-events:none;transition:.2s;z-index:80;max-width:calc(100vw - 32px);box-shadow:var(--shadow-float)}
+.toast.show{opacity:1;transform:translateX(-50%);pointer-events:auto}
+.toast button{border:0;background:var(--orange);color:var(--navy);border-radius:8px;padding:6px 10px;font-weight:600;white-space:nowrap}
+
+
+/* client-first: slim brand strip, map right under it */
+.hero-slim .wrap{display:flex;align-items:center;gap:22px;padding-block:18px 16px;grid-template-columns:none}
+.hero-slim .oir{width:120px;margin:0;flex:none}
+.hero-slim .hs-text{min-width:0}
+.hero-slim h1{font-size:clamp(22px,2.3vw,30px);margin:0;max-width:none}
+.hero-slim .hero-sub{margin-top:4px;font-size:14.5px;max-width:none}
+.hero-slim .hero-owl{position:static;margin-left:auto;width:auto;height:96px;margin-block:-18px -16px;align-self:flex-end;transform:scaleX(-1)}
+.row-cats{flex-wrap:nowrap}
+.chips>*{flex:none}
+.results-bar{flex-wrap:nowrap}
+.results-title{min-width:0;flex:1 1 auto;flex-wrap:nowrap}
+.results-title>*{flex:none}
+.results-title .fresh{flex:0 1 auto;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.sort{flex:none}
+.row-2{display:none}
+@media (min-width:900px){.filters-toggle{display:none!important}}
+.chip .ci{display:inline-grid;place-items:center;width:18px;height:18px}
+.chip .ci svg{width:16px;height:16px}
+.chip[aria-pressed="true"] .ci{color:#fff!important}
+.chip.tg{font-weight:500}
+.chip.tg i{width:8px;height:8px;border-radius:50%;background:var(--good)}
+.chip.tg.offer i{background:var(--orange)}
+.chip.tg[aria-pressed="true"]{background:var(--good);border-color:var(--good)}
+.chip.tg.offer[aria-pressed="true"]{background:var(--orange);border-color:var(--orange);color:var(--royal)}
+.chip.tg[aria-pressed="true"] i{background:#fff}
+.chip-sep{flex:none;width:1px;background:var(--gray-200);margin:4px 2px}
+
+/* brand strip: product promise */
+.hero-slim h1 em{color:var(--yellow)}
+.perks{display:none;gap:6px;flex-wrap:wrap}
+.perks span{display:inline-flex;align-items:center;gap:5px;background:rgba(210,248,69,.14);color:var(--yellow);border:1px solid rgba(210,248,69,.35);border-radius:999px;padding:4px 10px 4px 7px;font-size:12.5px;font-weight:600}
+.perks svg{width:13px;height:13px}
+/* location pop-up (every visit until location is allowed) */
+dialog.loc-modal{border:0;padding:0;border-radius:24px;width:min(400px,calc(100vw - 32px));overflow:hidden;box-shadow:0 30px 80px rgba(3,1,50,.35);background:#fff}
+dialog.loc-modal::backdrop{background:rgba(20,24,60,.55);backdrop-filter:blur(3px)}
+@media (prefers-reduced-motion:no-preference){dialog.loc-modal[open]{animation:pop .28s cubic-bezier(.2,.9,.3,1.2)}}
+@keyframes pop{from{transform:translateY(16px) scale(.96);opacity:0}to{transform:none;opacity:1}}
+.lm-art{position:relative;height:150px;overflow:hidden;background:radial-gradient(circle at 74% 105%, var(--ring-3) 0 60px, var(--ring-2) 60px 120px, var(--ring-1) 120px 185px, #29357A 185px 250px, var(--royal) 250px)}
+.lm-oir{position:absolute;left:22px;top:24px;width:118px;height:auto}
+.lm-owl{position:absolute;right:46px;bottom:-34px;height:170px;width:auto;filter:drop-shadow(0 12px 18px rgba(0,0,0,.3))}
+.lm-x{position:absolute;right:12px;top:12px;width:36px;height:36px;border-radius:50%;border:0;background:rgba(255,255,255,.14);color:#fff;display:grid;place-items:center}
+.lm-x svg{width:16px;height:16px}
+.lm-body{padding:22px 24px 18px;text-align:center;display:flex;flex-direction:column;align-items:center;gap:12px}
+.lm-body h2{font-family:var(--display);font-weight:800;font-size:22px;letter-spacing:-.02em;color:var(--royal)}
+.lm-body p{color:var(--gray-600);font-size:14.5px;line-height:1.5}
+.lm-perks{display:flex;gap:6px;justify-content:center;flex-wrap:wrap}
+.lm-perks span{background:var(--royal);color:var(--yellow);border-radius:999px;padding:3px 10px;font-size:12px;font-weight:700}
+.lm-go{width:100%;min-height:52px;border:0;border-radius:14px;background:var(--yellow);color:var(--royal);font-weight:800;font-size:16px;display:inline-flex;align-items:center;justify-content:center;gap:8px;margin-top:4px}
+.lm-go:hover{background:var(--yellow-hover)}
+.lm-go svg{width:20px;height:20px}
+.lm-alt{border:0;background:none;color:var(--royal);font-weight:600;padding:8px 12px;text-decoration:underline;text-underline-offset:3px}
+/* what's around you */
+.near-card{margin:12px 14px 6px;border-radius:16px;overflow:hidden;background:radial-gradient(circle at 100% 0%, var(--ring-2) 0 70px, var(--ring-1) 70px 140px, var(--royal) 140px);color:#fff}
+.nc-top{display:grid;grid-template-columns:auto 1fr;gap:12px;align-items:center;padding:14px 14px 10px}
+.nc-big{min-width:58px;height:58px;border-radius:16px;background:var(--yellow);color:var(--royal);display:grid;place-items:center;font:800 26px/1 var(--display);padding:0 8px}
+.nc-top b{display:block;font-size:15.5px;font-weight:600;line-height:1.3}
+.nc-top b em{font-style:normal;color:var(--yellow)}
+.nc-top small{display:block;color:#D5DCF2;font-size:12.5px;margin-top:3px;line-height:1.4}
+.nc-top small button{all:unset;color:#fff;font-weight:600;text-decoration:underline;cursor:pointer}
+.nc-radius{display:flex;gap:6px;padding:0 14px 14px;flex-wrap:wrap}
+.nc-radius button{border:1px solid rgba(255,255,255,.28);background:rgba(255,255,255,.08);color:#fff;border-radius:999px;padding:6px 12px;font-size:13px;font-weight:500}
+.nc-radius button span{opacity:.7;margin-left:4px;font-variant-numeric:tabular-nums}
+.nc-radius button[aria-pressed="true"]{background:var(--yellow);border-color:var(--yellow);color:var(--royal);font-weight:700}
+.nc-radius button[aria-pressed="true"] span{opacity:.8}
+
+/* categories: big icon chips, scroll arrows, and a full grid sheet */
+.chips-wrap{position:relative}
+.chips{gap:8px;scroll-behavior:smooth}
+.chip{min-height:40px;padding:4px 14px 4px 5px;font-size:14px;color:var(--ink);border-color:var(--gray-200)}
+.chip .ci{width:30px;height:30px;border-radius:50%;background:color-mix(in srgb,currentColor 13%,#fff)}
+.chip .ci svg{width:17px;height:17px}
+.chip[aria-pressed="true"] .ci{background:rgba(255,255,255,.18)}
+.chip.tg{padding-left:12px}
+.chip.cats-btn{background:var(--royal);border-color:var(--royal);color:#fff;font-weight:600;padding-left:6px}
+.chip.cats-btn .ci{background:var(--yellow);color:var(--royal)!important}
+.chip.cats-btn b{background:var(--yellow);color:var(--royal);border-radius:999px;font-size:11.5px;padding:1px 7px;margin-left:2px}
+.chip.cats-btn .car{width:14px;height:14px;margin-left:-2px}
+.chips-nav{position:absolute;top:50%;transform:translateY(-50%);z-index:2;width:36px;height:36px;border-radius:50%;border:1px solid var(--gray-200);background:#fff;box-shadow:var(--shadow-float);display:grid;place-items:center;color:var(--royal)}
+.chips-nav svg{width:18px;height:18px}
+.chips-nav.prev{left:-6px}.chips-nav.next{right:-6px}
+dialog.cat-sheet{border:0;padding:0;border-radius:22px;width:min(640px,calc(100vw - 32px));max-height:min(80vh,720px);overflow:hidden;box-shadow:0 30px 80px rgba(3,1,50,.35);display:none;flex-direction:column}
+dialog.cat-sheet[open]{display:flex}
+dialog.cat-sheet::backdrop{background:rgba(20,24,60,.5);backdrop-filter:blur(2px)}
+.cs-head{display:flex;align-items:center;justify-content:space-between;padding:18px 18px 14px 22px;background:var(--royal);color:#fff}
+.cs-head h2{font-family:var(--display);font-weight:800;font-size:19px;line-height:1.25;padding-right:12px}
+.cs-x{position:static;background:rgba(255,255,255,.14)}
+.cs-body{padding:16px 18px 20px;overflow:auto;display:flex;flex-direction:column;gap:14px}
+.cs-body .seg.region{width:100%}.cs-body .seg.region button{flex:1}
+.cs-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}
+.cs-tile{border:1px solid var(--gray-200);background:#fff;border-radius:16px;padding:14px 8px 12px;display:flex;flex-direction:column;align-items:center;gap:8px;text-align:center;font-size:13.5px;font-weight:500;color:var(--ink);line-height:1.25}
+.cs-tile .ti{width:48px;height:48px;border-radius:14px;display:grid;place-items:center}
+.cs-tile .ti svg{width:24px;height:24px}
+.cs-tile small{color:var(--gray-500);font-weight:400;font-size:12px}
+.cs-tile:hover{border-color:var(--royal)}
+.cs-tile[aria-pressed="true"]{border-color:var(--royal);box-shadow:inset 0 0 0 2px var(--royal);background:#F3F5FC}
+@media (max-width:899px){
+  dialog.cat-sheet{width:100%;max-width:100%;margin:auto 0 0;border-radius:22px 22px 0 0;max-height:86svh}
+  .cs-grid{grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+  .chips-nav{display:none}
+}
+@media (max-width:1100px){.finder-body{grid-template-columns:370px minmax(0,1fr)}.hero .wrap{grid-template-columns:1fr 300px}}
+@media (max-width:899px){.fresh{display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:52vw;font-size:12px}}
+@media (max-width:899px){
+  :root{--header-h:56px}
+  .nav a.plain,.nav .btn{display:none}
+  .icon-btn{display:inline-flex}
+  .hero .wrap{grid-template-columns:1fr;padding-block:22px 20px;gap:0}
+  .hero-visual{display:none}
+  .hero h1{font-size:29px;margin-top:10px}
+  .hero-sub{font-size:15px;margin-top:10px}
+  .hero-actions .btn{flex:1 1 auto;min-height:46px}
+  .toolbar .wrap{gap:10px;padding-block:10px}
+  .search{flex:1 1 auto}
+  .search input{height:48px;padding-left:42px}
+  .search .s-icon{left:13px}
+  .row-1{flex-wrap:nowrap;gap:8px}
+  .row-1 .locate-btn span{display:none}
+  .row-1 .locate-btn{width:48px;min-height:48px;padding:0;flex:none}
+  .filters-toggle{display:inline-flex;min-height:48px;width:48px;padding:0;flex:none;position:relative}
+  .filters-toggle .ft-label{display:none}
+  .filters-toggle .badge-count{position:absolute;top:-6px;right:-6px}
+  .toolbar:not(.is-open) .row-2{display:none}
+  .row-2{flex-direction:column;align-items:stretch}
+  .seg.region{width:100%}.seg.region button{flex:1}
+  .chips-wrap{flex:1 1 auto}
+  .chips{margin-inline:calc(var(--gutter) * -1);padding-inline:var(--gutter);mask-image:none}
+  .hero-slim .wrap{padding-block:9px;gap:0}
+  .hero-slim .oir,.hero-slim .hero-owl,.hero-slim .hero-sub{display:none}
+  .hero-slim h1{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+  .perks{display:flex;flex-wrap:nowrap;gap:6px}
+  .perks span{font-size:12px;padding:3px 9px 3px 6px}
+  .hero-slim{background:var(--royal)}
+  .toolbar.is-open .row-2{display:flex}
+  .results-title h2{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+  .results-title{flex-direction:column;gap:0;align-items:flex-start}
+  .results-title .count{font-weight:600;color:var(--ink)}
+  .fresh{font-size:11.5px;margin:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:52vw}
+  .row-cats{margin-top:-2px}
+  .mobile-area{display:block}
+  .mobile-area select{width:100%}
+  .results-bar{flex-wrap:nowrap}
+  .results-title{gap:6px;min-width:0}
+  .results-title h2{font-size:16px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:44vw}
+  .results-title .count{font-size:14px;white-space:nowrap}
+  .results-bar .sort{display:none}
+  .sort-mobile{display:flex}
+  .loc-chip{position:absolute;left:var(--gutter);top:calc(100% + 10px);z-index:3;box-shadow:var(--shadow-float);background:#fff}
+  .view-seg{display:inline-flex}
+  .view-seg button{padding:6px 10px;font-size:13.5px}
+  .finder-body{display:block;height:auto;max-height:none;min-height:0}
+  .finder[data-view="map"] .finder-body{position:relative;height:calc(100svh - var(--header-h) - var(--toolbar-h,120px));min-height:460px}
+  .finder[data-view="map"] .map-wrap{position:absolute;inset:0}
+  .finder[data-view="map"] .results{position:absolute;left:0;right:0;bottom:0;z-index:4;height:calc(100% - 24px);border:0;border-radius:18px 18px 0 0;box-shadow:0 -10px 30px rgba(3,1,50,.16);transform:translateY(calc(100% - var(--peek,176px)));transition:transform .25s ease;overflow:hidden}
+  .finder[data-view="map"] .results[data-sheet="half"]{transform:translateY(45%)}
+  .finder[data-view="map"] .results[data-sheet="full"]{transform:translateY(0);overflow:auto}
+  .finder[data-view="map"] .results.dragging{transition:none}
+  .finder[data-view="map"] .sheet-handle{display:flex;position:sticky;top:0;z-index:2;background:#fff;flex-direction:column;align-items:center;gap:6px;padding:8px 16px 4px;border:0;width:100%;touch-action:none}
+  .sheet-handle i{width:40px;height:5px;border-radius:3px;background:var(--gray-300)}
+  .sheet-handle span{font-size:13px;color:var(--gray-600)}
+  .finder[data-view="list"] .map-wrap{display:none}
+  .finder[data-view="list"] .results{border:0}
+  .map-ctrls{top:10px;right:10px}
+  .mode-seg{left:10px;top:10px}
+  .mode-seg button{padding:8px 11px;font-size:13.5px}
+  .loc-chip{display:none!important}
+  .map-badge{top:auto;left:10px;bottom:calc(var(--peek,176px) + 10px)}
+  .band .wrap{grid-template-columns:1fr}
+  .cta{grid-template-columns:1fr!important;padding:24px 22px}
+  .cta-art{width:56px}
+  .tile.has-owl{padding-right:118px}
+  .tile .owl-art{width:130px}
+  .oir{width:140px}
+  .hero{background:radial-gradient(circle at 100% 0%, var(--ring-3) 0 80px, var(--ring-2) 80px 160px, var(--ring-1) 160px 250px, #29357A 250px 340px, var(--royal) 340px)}
+  .foot-grid{grid-template-columns:1fr 1fr}
+  .foot-org{grid-column:1/-1}
+  dialog.drawer{inset:auto 0 0 0;width:100%;height:92svh;border-radius:20px 20px 0 0}
+  .d-body{padding:18px 18px 28px}
+  .proto .wrap span.long{display:none}
+}
+.sort-mobile{display:none;align-items:center;gap:8px}
+.sort-mobile select{flex:1}
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
+</style>
+</head>
+<body>
+
+
+<a class="skip" href="#search-input">Хайлт руу очих</a>
+<a class="skip" href="#results">Үр дүн рүү очих</a>
+
+
+
+<header class="site-header">
+  <div class="wrap">
+    <a class="logo" href="/map/" aria-label="WoowPay мерчант газрын зураг">
+      <img src="/map/assets/woow-logo.png" alt="Woow Pay" width="152" height="32" data-fallback="wordmark">
+    </a>
+    <nav class="nav" aria-label="Үндсэн цэс">
+      <a class="plain" href="#finder">Газрын зураг</a>
+      <a class="plain ext" href="https://merchant.woowpay.mn/register.html">Мерчант болох</a>
+      <a class="btn btn-soft btn-sm ext" href="https://onelink.to/4z2e53" target="_blank" rel="noopener">Апп татах</a>
+      <a class="icon-btn ext" href="https://m.me/woowpay" target="_blank" rel="noopener" aria-label="Messenger-ээр асуух">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M12 3C6.8 3 3 6.6 3 11.2c0 2.4 1 4.5 2.8 6V21l3.1-1.7c1 .3 2 .4 3.1.4 5.2 0 9-3.6 9-8.4S17.2 3 12 3z"/><path d="M7.5 13l3-3 2.2 2 3.8-3"/></svg>
+      </a>
+      <a class="icon-btn ext" href="https://onelink.to/4z2e53" target="_blank" rel="noopener" aria-label="Апп татах">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><rect x="7" y="2" width="10" height="20" rx="2"/><path d="M11 18h2"/></svg>
+      </a>
+    </nav>
+  </div>
+</header>
+
+<main id="main">
+  <section class="hero hero-slim" aria-labelledby="hero-title">
+    <div class="wrap">
+      <img class="oir" src="/map/assets/oir-baya.png" alt="Ойр байя." width="170" height="60">
+      <div class="hs-text">
+        <h1 id="hero-title"><span class="nw">WoowPay-ээр</span> <em>хүүгүй, шимтгэлгүй, урьдчилгаагүй</em> төлөх газраа олоорой</h1>
+        <p class="perks" aria-hidden="true"><span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>Хүүгүй</span><span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>Шимтгэлгүй</span><span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>Урьдчилгаагүй</span></p>
+        <p class="hero-sub" id="hero-sub"><strong data-count="all">0</strong> газар · Улаанбаатарт <strong data-count="ub">0</strong>, орон нутагт <strong data-count="rural">0</strong></p>
+      </div>
+      <img class="hero-owl" src="/map/assets/owl.webp" alt="" width="150" height="117">
+    </div>
+  </section>
+
+  <section class="finder" id="finder" data-view="map" aria-labelledby="results-title">
+    <div class="toolbar" id="toolbar">
+      <div class="wrap">
+        <div class="row row-1">
+          <div class="search" role="search">
+            <label class="sr-only" for="search-input">Мерчант хайх</label>
+            <svg class="s-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>
+            <input id="search-input" type="search" autocomplete="off" enterkeyhint="search"
+              placeholder="Нэр, ангилал, дүүрэг — жишээ нь: кафе, Баянзүрх, Эрдэнэт"
+              role="combobox" aria-expanded="false" aria-controls="suggest" aria-autocomplete="list">
+            <button class="clear" type="button" id="clear-search" aria-label="Хайлтыг цэвэрлэх" hidden>
+              <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>
+            </button>
+            <ul class="suggest" id="suggest" role="listbox" aria-label="Санал болгох" hidden></ul>
+          </div>
+          <button class="btn btn-soft locate-btn" type="button" data-action="locate" aria-label="Миний байршил">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3"/></svg>
+            <span>Миний байршил</span>
+          </button>
+          <button class="btn btn-line filters-toggle" type="button" id="filters-toggle" aria-expanded="false" aria-controls="row-2" aria-label="Шүүлтүүр">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M4 7h10M18 7h2M4 17h4M12 17h8"/><circle cx="16" cy="7" r="2"/><circle cx="10" cy="17" r="2"/></svg>
+            <span class="ft-label">Шүүлтүүр</span> <span class="badge-count" id="filter-count" hidden>0</span>
+          </button>
+        </div>
+        <div class="row row-cats">
+          <div class="chips-wrap">
+            <button class="chips-nav prev" type="button" data-scroll="-1" aria-label="Өмнөх ангилал" hidden><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg></button>
+            <div class="chips" id="cat-chips" role="group" aria-label="Ангилал"></div>
+            <button class="chips-nav next" type="button" data-scroll="1" aria-label="Дараагийн ангилал" hidden><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg></button>
+          </div>
+        </div>
+        <div class="row row-2" id="row-2">
+          <label class="mobile-area"><span class="sr-only">Дүүрэг, аймаг</span><select class="select" id="area-select"></select></label>
+          <label class="sort-mobile"><span>Эрэмбэ</span><select class="select" id="sort-select-m" aria-label="Эрэмбэлэх"></select></label>
+        </div>
+        <div class="results-bar">
+          <div class="results-title">
+            <h2 id="results-title">Бүх мерчант</h2>
+            <span class="count" id="results-count" aria-live="polite"></span>
+            <span class="fresh" id="fresh" hidden></span>
+            <span class="loc-chip" id="loc-chip" hidden>
+              <svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor" aria-hidden="true"><circle cx="12" cy="12" r="5"/></svg>
+              <span id="loc-label">Таны байршлаас</span>
+              <button type="button" data-action="clear-location">Цуцлах</button>
+            </span>
+          </div>
+          <label class="sort"><span>Эрэмбэлэх</span><select class="select" id="sort-select"></select></label>
+          <div class="seg view-seg" role="group" aria-label="Харагдац">
+            <button type="button" data-view="map" aria-pressed="true">Газрын зураг</button>
+            <button type="button" data-view="list" aria-pressed="false">Жагсаалт</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="finder-body">
+      <div class="results" id="results" data-sheet="peek" tabindex="-1" aria-labelledby="results-title">
+        <button class="sheet-handle" type="button" id="sheet-handle" aria-label="Жагсаалтыг дээш татах"><i></i><span id="sheet-label"></span></button>
+        <div class="results-inner" id="results-inner"></div>
+      </div>
+      <div class="map-wrap">
+        <div class="map" id="map"></div>
+        <div class="mode-seg" role="group" aria-label="Газрын зургийн хүрээ">
+          <button type="button" data-mode="near" aria-pressed="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3"/></svg>Өөрт ойр</button>
+          <button type="button" data-mode="all" aria-pressed="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M9 4L3 6v14l6-2 6 2 6-2V4l-6 2-6-2z"/><path d="M9 4v14M15 6v14"/></svg>Бүх байршил</button>
+        </div>
+        <div class="map-ctrls">
+          <div class="grp">
+            <button type="button" data-action="zoom-in" aria-label="Томруулах"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg></button>
+            <button type="button" data-action="zoom-out" aria-label="Жижигрүүлэх"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M5 12h14"/></svg></button>
+          </div>
+          <div class="grp"><button type="button" data-action="locate" aria-label="Миний байршил"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M3 11l18-8-8 18-2-8z"/></svg></button></div>
+        </div>
+        <div class="map-hint" id="map-hint">Томруулахын тулд Ctrl (⌘) дараад гүйлгэнэ үү</div>
+        
+      </div>
+    </div>
+  </section>
+
+  <section class="band" aria-labelledby="band-title">
+    <h2 class="sr-only" id="band-title">WoowPay мерчант</h2>
+    <div class="wrap">
+      <article class="tile has-owl">
+        <img class="owl-art" src="/map/assets/owl-phone.webp" alt="" width="170" height="132" loading="lazy">
+        <h3>WoowPay аппаар төлөх</h3>
+        <p>Аппаа татаад бүртгүүлж, энэ газрын зураг дээрх мерчантуудад төлбөрөө хийгээрэй.</p>
+        <a class="link ext" href="https://onelink.to/4z2e53" target="_blank" rel="noopener">Апп татах</a>
+      </article>
+      <article class="tile">
+        <span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M3 21V8l9-5 9 5v13"/><path d="M9 21v-6h6v6"/></svg></span>
+        <h3>Мерчант болох</h3>
+        <p>Танай бизнес WoowPay хүлээн авч, шинэ худалдан авагчдад энэ газрын зураг дээр харагдана.</p>
+        <a class="link ext" href="https://merchant.woowpay.mn/register.html">Бүртгүүлэх</a>
+      </article>
+      <article class="tile has-owl">
+        <img class="owl-art" src="/map/assets/owl-operator.webp" alt="" width="170" height="132" loading="lazy">
+        <h3>Мэдээлэл буруу байна уу?</h3>
+        <p>Хаяг, ажиллах цаг өөрчлөгдсөн бол бидэнд мэдэгдээрэй. Лавлах: <a class="link nw" href="tel:+97672726565">7272-6565</a></p>
+        <a class="link ext" href="https://m.me/woowpay" target="_blank" rel="noopener">Messenger-ээр мэдэгдэх</a>
+      </article>
+    </div>
+  </section>
+
+  <section class="wrap" aria-labelledby="cta-title">
+    <div class="cta">
+      <img class="cta-art" src="/map/assets/growth.webp" alt="" width="72" height="74" loading="lazy">
+      <div>
+        <h2 id="cta-title">Танай бизнес ч энд байж болно</h2>
+        <p>WoowPay мерчант болоод шинэ худалдан авагчдад хүрээрэй.</p>
+      </div>
+      <div class="acts">
+        <a class="btn btn-primary ext" href="https://merchant.woowpay.mn/register.html">Мерчант болох</a>
+        <a class="btn btn-line ext" href="https://m.me/woowpay" target="_blank" rel="noopener">Асуулт асуух</a>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="site-footer">
+  <div class="wrap">
+    <div class="foot-grid">
+      <div class="foot-org">
+        <a class="logo foot-logo" href="/map/" aria-label="Woow Pay"><img src="/map/assets/woow-logo-navy.png" alt="Woow Pay" width="143" height="30"></a>
+        <a class="foot-phone" href="tel:+97672726565">7272-6565</a>
+      </div>
+      <div>
+        <h3>Холбоо барих</h3>
+        <ul>
+          <li><a class="ext" href="https://m.me/woowpay" target="_blank" rel="noopener">Messenger</a></li>
+          <li><a class="ext" href="https://www.facebook.com/woowpay" target="_blank" rel="noopener">Facebook</a></li>
+          <li><a class="ext" href="https://onelink.to/4z2e53" target="_blank" rel="noopener">Апп татах</a></li>
+        </ul>
+      </div>
+      <div>
+        <h3>Мэдээлэл</h3>
+        <ul>
+          <li><a class="ext" href="https://merchant.woowpay.mn/">Мерчант портал</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="foot-bottom">
+      <span>© <span id="year">2026</span> Woow Pay</span>
+      <span>Ойр байя.</span>
+    </div>
+  </div>
+</footer>
+
+<dialog class="drawer" id="drawer" aria-labelledby="d-title"><div class="d-scroll" id="d-scroll"></div></dialog>
+<dialog class="cat-sheet" id="cat-sheet" aria-labelledby="cs-title">
+  <div class="cs-head"><h2 id="cs-title">Та ямар бүтээгдэхүүн, үйлчилгээ хайж байна вэ?</h2>
+    <button class="lm-x cs-x" type="button" data-cs="close" aria-label="Хаах"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button></div>
+  <div class="cs-body">
+    <div class="seg region" role="group" aria-label="Бүс сонгох" id="region-seg"></div>
+    <div class="cs-grid" id="cs-grid"></div>
+  </div>
+</dialog>
+<dialog class="loc-modal" id="loc-modal" aria-labelledby="lm-title" aria-describedby="lm-text">
+  <div class="lm-art">
+    <img class="lm-oir" src="/map/assets/oir-baya.png" alt="" width="120" height="43">
+    <img class="lm-owl" src="/map/assets/owl.webp" alt="" width="170" height="133">
+    <button class="lm-x" type="button" data-lm="close" aria-label="Хаах"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+  </div>
+  <div class="lm-body">
+    <h2 id="lm-title">Ойр байгаа мерчантаа олоорой</h2>
+    <p id="lm-text">Байршлаа зөвшөөрвөл таны эргэн тойронд WoowPay-ээр төлөх газрууд хэдэн метрт байгааг шууд харуулна.</p>
+    <p class="lm-perks"><span>Хүүгүй</span><span>Шимтгэлгүй</span><span>Урьдчилгаагүй</span></p>
+    <button class="lm-go" type="button" data-lm="locate"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3"/></svg><span id="lm-go-text">Байршлаа зөвшөөрөх</span></button>
+    <button class="lm-alt" type="button" data-lm="search">Хайлтаар олох</button>
+  </div>
+</dialog>
+<div class="toast" id="toast" role="status" aria-live="polite"><span id="toast-text"></span><button type="button" id="toast-btn" hidden></button></div>
+
+<script type="application/json" id="merchant-data">{}</script>
+<script type="application/json" id="site-data">{"base":"/map","origin":"https://merchant.woowpay.mn","mode":"live","data":{"version":"20261103T0727Z-d02544","generated":"2026-11-03T07:27:59.745Z","count":205},"staleAfterHours":192,"mapStyle":"https://tiles.openfreemap.org/styles/positron"}</script>
+<script type="application/json" id="category-data">[{"key":"food","mn":"Хоол, ресторан","icon":"utensils","color":"#F2A93B","words":"кафе кофе шоп зоогийн газар паб хурдан хоол пицца бургер цайны газар"},{"key":"grocery","mn":"Хүнсний дэлгүүр","icon":"basket","color":"#1FA971","words":"супермаркет маркет хүнс дэлгүүр"},{"key":"fashion","mn":"Хувцас, гутал","icon":"shirt","color":"#B45FD6","words":"хувцасны дэлгүүр гутал цүнх"},{"key":"electronics","mn":"Цахилгаан бараа, утас","icon":"device","color":"#0B6BFF","words":"утас компьютер гар утас техник"},{"key":"home","mn":"Гэр ахуй, тавилга","icon":"sofa","color":"#7C8AA0","words":"тавилга гэр ахуйн бараа"},{"key":"building","mn":"Барилгын материал","icon":"tools","color":"#8A6E4B","words":"барилга засвар материал"},{"key":"beauty","mn":"Гоо сайхан, үсчин","icon":"sparkle","color":"#E5564E","words":"салон үсчин гоо сайхан маникюр спа"},{"key":"health","mn":"Эм, эрүүл мэнд","icon":"cross","color":"#33A8DD","words":"эмийн сан эмнэлэг шүдний эмнэлэг нүдний шил"},{"key":"auto","mn":"Авто сэлбэг, засвар","icon":"car","color":"#566275","words":"машин авто засвар сэлбэг дугуй"},{"key":"kids","mn":"Хүүхдийн бараа","icon":"bear","color":"#F27BA9","words":"хүүхдийн тоглоом хүүхдийн хувцас"},{"key":"sport","mn":"Спорт, фитнес","icon":"dumbbell","color":"#15A3A3","words":"фитнес спорт заал"},{"key":"education","mn":"Сургалт","icon":"book","color":"#5B6BE5","words":"сургалт курс ном"},{"key":"travel","mn":"Аялал, тасалбар","icon":"plane","color":"#2F8FD6","words":"аялал онгоцны тийз тасалбар"},{"key":"services","mn":"Үйлчилгээ","icon":"wrench","color":"#7C8AA0","words":"үйлчилгээ угаалга хими цэвэрлэгээ"},{"key":"online","mn":"Онлайн шоп","icon":"globe","color":"#0E7C86","words":"онлайн шоп интернэт дэлгүүр хүргэлт online shop"},{"key":"other","mn":"Бусад","icon":"dot","color":"#AEB9C9","words":""}]</script>
+<script type="application/json" id="mn-outline">[[87.81,49.16],[88.12,49.26],[88.19,49.45],[89.11,49.5],[89.24,49.63],[89.65,49.72],[89.64,49.9],[89.98,49.98],[90.05,50.09],[91.42,50.47],[91.8,50.69],[92.19,50.7],[92.35,50.86],[92.63,50.69],[92.94,50.78],[93.1,50.6],[94.25,50.56],[94.35,50.22],[94.61,50.02],[95.52,49.91],[96.07,50.0],[96.32,49.9],[96.99,49.88],[97.21,49.73],[97.36,49.74],[97.59,49.91],[98.0,50.01],[98.25,50.3],[98.28,50.53],[98.03,50.64],[97.84,51.05],[98.04,51.45],[98.22,51.51],[98.35,51.72],[98.64,51.8],[98.89,52.12],[99.92,51.76],[100.47,51.73],[101.38,51.45],[102.11,51.35],[102.29,50.59],[103.3,50.2],[104.08,50.15],[105.38,50.47],[106.22,50.3],[106.71,50.31],[107.23,49.99],[107.92,49.95],[107.97,49.65],[108.61,49.32],[109.24,49.33],[110.71,49.14],[111.34,49.36],[112.81,49.52],[113.57,50.01],[114.3,50.27],[114.74,50.23],[115.43,49.9],[116.35,49.98],[116.68,49.82],[115.82,48.58],[115.79,48.25],[115.53,48.13],[115.62,47.87],[115.9,47.69],[116.23,47.86],[116.51,47.84],[116.9,47.85],[117.35,47.65],[117.77,47.99],[118.5,47.98],[119.71,47.15],[119.9,46.86],[119.87,46.67],[119.33,46.61],[118.84,46.76],[118.07,46.67],[117.74,46.52],[117.44,46.59],[117.33,46.36],[116.86,46.39],[116.56,46.29],[116.21,45.89],[116.2,45.74],[115.68,45.46],[114.56,45.39],[114.08,44.97],[113.59,44.75],[112.71,44.88],[112.41,45.06],[111.9,45.06],[111.62,44.83],[111.4,44.37],[111.84,43.93],[111.93,43.71],[111.01,43.34],[110.4,42.77],[109.34,42.44],[108.17,42.45],[106.77,42.29],[104.98,41.6],[104.5,41.66],[104.5,41.88],[103.71,41.75],[103.07,42.01],[102.16,42.16],[101.5,42.54],[99.98,42.68],[99.47,42.57],[97.21,42.79],[96.39,42.72],[96.3,42.93],[95.86,43.28],[95.53,43.95],[95.33,44.04],[95.35,44.28],[94.71,44.35],[93.52,44.94],[90.88,45.2],[90.66,45.53],[90.71,45.73],[91.0,46.04],[90.91,46.27],[91.03,46.57],[90.87,46.95],[90.72,47.0],[90.5,47.29],[90.33,47.66],[90.1,47.75],[90.03,47.88],[89.78,47.83],[89.48,48.03],[89.05,48.0],[88.58,48.22],[88.52,48.38],[87.98,48.56],[88.06,48.71],[87.74,48.88],[87.87,49.0],[87.81,49.16]]</script>
+<script type="module">
+// ---- src/schedule.js ----
+// schedule.js — merchant opening hours and live status, always evaluated in Ulaanbaatar time.
+// Hours are stored per weekday: hours[1..7] = { open:'10:00', close:'22:00' } or null (closed that day).
+// close <= open means the place runs past midnight (e.g. 18:00–02:00).
+
+const WEEKDAYS = ['Даваа', 'Мягмар', 'Лхагва', 'Пүрэв', 'Баасан', 'Бямба', 'Ням']; // ISO 1..7
+const TZ = 'Asia/Ulaanbaatar';
+const CLOSING_SOON_MIN = 60;
+
+function ubNow(date = new Date()) {
+  const p = Object.fromEntries(new Intl.DateTimeFormat('en-GB', {
+    timeZone: TZ, year: 'numeric', month: 'numeric', day: 'numeric',
+    hour: 'numeric', minute: 'numeric', weekday: 'short', hourCycle: 'h23',
+  }).formatToParts(date).map(x => [x.type, x.value]));
+  return {
+    y: +p.year, m: +p.month, d: +p.day,
+    weekday: { Mon: 1, Tue: 2, Wed: 3, Thu: 4, Fri: 5, Sat: 6, Sun: 7 }[p.weekday],
+    minutes: (+p.hour % 24) * 60 + +p.minute,
+  };
+}
+function addDays(day, n) {
+  const t = new Date(Date.UTC(day.y, day.m - 1, day.d + n));
+  return { y: t.getUTCFullYear(), m: t.getUTCMonth() + 1, d: t.getUTCDate(), weekday: ((day.weekday - 1 + n) % 7 + 7) % 7 + 1 };
+}
+const toMin = hm => { const [h, m] = String(hm).split(':').map(Number); return h * 60 + m; };
+const fmtMin = min => { const x = ((min % 1440) + 1440) % 1440; return `${String(Math.floor(x / 60)).padStart(2, '0')}:${String(x % 60).padStart(2, '0')}`; };
+
+/** Window for one weekday, in minutes from midnight; close may exceed 1440. null when closed. */
+function windowFor(m, weekday) {
+  if (m.alwaysOpen) return { open: 0, close: 1440 };
+  const h = m.hours && m.hours[weekday];
+  if (!h) return null;
+  const open = toMin(h.open);
+  let close = toMin(h.close);
+  if (close <= open) close += 1440;
+  return { open, close };
+}
+
+const isAlwaysOpen = m => !!m.alwaysOpen;
+/** Open past 22:00 on any day — drives the “late opening” filter. */
+const isLateNight = m => !!m.alwaysOpen || [1, 2, 3, 4, 5, 6, 7].some(d => { const w = windowFor(m, d); return w && w.close > 22 * 60; });
+
+function nextOpening(m, today, fromOffset) {
+  for (let i = fromOffset; i < fromOffset + 8; i++) {
+    const day = addDays(today, i);
+    const w = windowFor(m, day.weekday);
+    if (w) return { offset: i, day, w };
+  }
+  return null;
+}
+const dayWord = (offset, day) => offset === 0 ? 'Өнөөдөр' : offset === 1 ? 'Маргааш' : WEEKDAYS[day.weekday - 1];
+
+/**
+ * state: open | closing | closed | offline   tone: good | warn | muted | bad
+ */
+function getStatus(m, now = ubNow()) {
+  if (m.status === 'temporarily-closed') {
+    return { state: 'offline', tone: 'bad', label: 'Түр хаалттай', detail: m.statusNote || 'Энэ мерчант түр хугацаанд үйлчлэхгүй байна.' };
+  }
+  if (m.alwaysOpen) return { state: 'open', tone: 'good', label: 'Нээлттэй', detail: '24 цагаар' };
+
+  const today = { y: now.y, m: now.m, d: now.d, weekday: now.weekday };
+  const t = now.minutes;
+
+  // still inside yesterday's overnight window?
+  const yWin = windowFor(m, addDays(today, -1).weekday);
+  if (yWin && yWin.close > 1440 && t < yWin.close - 1440) return openState(yWin.close - 1440 - t, fmtMin(yWin.close));
+
+  const w = windowFor(m, now.weekday);
+  if (w && t >= w.open && t < w.close) return openState(w.close - t, fmtMin(w.close));
+  if (w && t < w.open) return { state: 'closed', tone: 'muted', label: 'Хаалттай', detail: `${fmtMin(w.open)} цагт нээнэ` };
+
+  const nxt = nextOpening(m, today, 1);
+  if (!nxt) return { state: 'closed', tone: 'muted', label: 'Хаалттай', detail: 'Ажиллах цаг тодорхойгүй' };
+  return { state: 'closed', tone: 'muted', label: 'Хаалттай', detail: `${dayWord(nxt.offset, nxt.day)} ${fmtMin(nxt.w.open)} цагт нээнэ` };
+}
+function openState(minsLeft, hmClose) {
+  if (minsLeft <= CLOSING_SOON_MIN) return { state: 'closing', tone: 'warn', label: 'Удахгүй хаагдана', detail: `${hmClose} цагт хаагдана` };
+  return { state: 'open', tone: 'good', label: 'Нээлттэй', detail: `${hmClose} хүртэл` };
+}
+
+function statusLine(s) { return s.detail ? `${s.label} · ${s.detail}` : s.label; }
+
+/** Monday-first table for the detail panel; consecutive identical days are grouped by the caller if wanted. */
+function weekTable(m, now = ubNow()) {
+  return WEEKDAYS.map((name, i) => {
+    const wd = i + 1;
+    const w = windowFor(m, wd);
+    return { name, weekday: wd, isToday: wd === now.weekday, closed: !w, text: m.alwaysOpen ? '24 цаг' : w ? `${fmtMin(w.open)}–${fmtMin(w.close)}` : 'Амарна' };
+  });
+}
+/** “Даваа–Баасан 10:00–20:00 · Бямба 11:00–18:00 · Ням амарна” — for cards and meta descriptions. */
+function hoursSummary(m) {
+  if (m.alwaysOpen) return '24 цагаар';
+  const rows = weekTable(m, { weekday: 0 });
+  if (rows.every(r => r.closed)) return 'Ажиллах цаг тодорхойгүй';
+  const runs = [];
+  for (const r of rows) {
+    const last = runs.at(-1);
+    if (last && last.text === r.text) last.end = r;
+    else runs.push({ start: r, end: r, text: r.text });
+  }
+  return runs.map(run => {
+    const days = run.start === run.end ? run.start.name
+      : run.end.weekday - run.start.weekday === 1 ? `${run.start.name}, ${run.end.name}`
+      : `${run.start.name}–${run.end.name}`;
+    return run.text === 'Амарна' ? `${days} амарна` : `${days} ${run.text}`;
+  }).join(' · ');
+}
+
+const STATE_RANK = { open: 0, closing: 1, closed: 2, offline: 3 };
+
+// ---- src/geo.js ----
+// geo.js — distance, nearest-kiosk and map-link helpers.
+
+function distanceKm(a, b) {
+  const R = 6371, rad = x => x * Math.PI / 180;
+  const dLat = rad(b.lat - a.lat), dLon = rad(b.lon - a.lon);
+  const h = Math.sin(dLat / 2) ** 2 + Math.cos(rad(a.lat)) * Math.cos(rad(b.lat)) * Math.sin(dLon / 2) ** 2;
+  return 2 * R * Math.asin(Math.sqrt(h));
+}
+
+/** 0.42 → “420 м”, 1.234 → “1.2 км”, 23.4 → “23 км”, 812 → “812 км”. */
+function formatKm(km) {
+  if (km == null || Number.isNaN(km)) return '';
+  if (km < 1) return `${Math.max(10, Math.round(km * 100) * 10)} м`;
+  if (km < 10) return `${km.toFixed(1)} км`;
+  return `${Math.round(km).toLocaleString('en-US')} км`;
+}
+
+/** n nearest kiosks to a point, optionally filtered (e.g. only open ones). */
+function nearest(kiosks, point, n = 3, filter = () => true) {
+  return kiosks
+    .filter(filter)
+    .map(k => ({ k, km: distanceKm(point, k) }))
+    .sort((a, b) => a.km - b.km)
+    .slice(0, n);
+}
+
+const directionsUrl = k => `https://www.google.com/maps/dir/?api=1&destination=${k.lat},${k.lon}`;
+const mapUrl = k => `https://www.google.com/maps/search/?api=1&query=${k.lat},${k.lon}`;
+
+/** Bounding box of Mongolia, for Google Maps `restriction.latLngBounds`. */
+const MONGOLIA_BOUNDS = { north: 52.2, south: 41.5, west: 87.6, east: 120.0 };
+
+// ---- src/search.js ----
+// search.js — forgiving merchant search: Cyrillic or Latin, common misspellings, nicknames,
+// category names and offer text.
+// Every string is reduced to a Latin "skeleton" so «Дархан», «darkhan» and «darhan» all match,
+// doubled letters are collapsed so «нарантул» finds «Нарантуул», and o/u are treated alike.
+
+const CYR = {
+  а: 'a', б: 'b', в: 'v', г: 'g', д: 'd', е: 'e', ё: 'yo', ж: 'j', з: 'z', и: 'i', й: 'i',
+  к: 'k', л: 'l', м: 'm', н: 'n', о: 'o', ө: 'o', п: 'p', р: 'r', с: 's', т: 't', у: 'u',
+  ү: 'u', ф: 'f', х: 'h', ц: 'ts', ч: 'ch', ш: 'sh', щ: 'sh', ъ: '', ы: 'i', ь: 'i', э: 'e',
+  ю: 'yu', я: 'ya',
+};
+
+/** Latin skeleton used for all comparisons. */
+function skeleton(input) {
+  let s = String(input || '').toLowerCase().normalize('NFKC');
+  s = s.replace(/[а-яёөү]/g, ch => CYR[ch] ?? ch);
+  s = s
+    .replace(/kh/g, 'h').replace(/x/g, 'h').replace(/q/g, 'k').replace(/w/g, 'v')
+    .replace(/zh/g, 'j').replace(/c(?!h)/g, 'ts')
+    .replace(/[yj]e/g, 'e').replace(/y/g, 'i')
+    .replace(/o/g, 'u') // ө/о/ү/у are romanised interchangeably (Хөвсгөл = Khuvsgul = Hovsgol)
+    .replace(/[^a-z0-9]+/g, ' ')
+    .replace(/([a-z])\1+/g, '$1')
+    .trim();
+  return s;
+}
+
+/** Everyday district abbreviations people type. */
+const DISTRICT_ALIASES = {
+  'схд': 'Сонгинохайрхан', 'сбд': 'Сүхбаатар', 'бгд': 'Баянгол', 'бзд': 'Баянзүрх',
+  'чд': 'Чингэлтэй', 'худ': 'Хан-Уул', 'нд': 'Налайх', 'бнд': 'Багануур',
+};
+
+function editDistance(a, b, max) {
+  if (Math.abs(a.length - b.length) > max) return max + 1;
+  let prev = Array.from({ length: b.length + 1 }, (_, i) => i);
+  for (let i = 1; i <= a.length; i++) {
+    const cur = [i];
+    let best = i;
+    for (let j = 1; j <= b.length; j++) {
+      cur[j] = Math.min(prev[j] + 1, cur[j - 1] + 1, prev[j - 1] + (a[i - 1] === b[j - 1] ? 0 : 1));
+      best = Math.min(best, cur[j]);
+    }
+    if (best > max) return max + 1;
+    prev = cur;
+  }
+  return prev[b.length];
+}
+
+/** Build once from the merchant list. `categoryLabel` maps a category key to its Mongolian name. */
+function buildIndex(merchants, categoryLabel = () => '') {
+  return merchants.map(k => ({
+    k,
+    name: skeleton(k.name),
+    alias: (k.aliases || []).map(skeleton),
+    area: skeleton(`${k.area} ${k.place || ''} ${k.province || ''}`),
+    addr: skeleton(`${k.address || ''} ${k.landmark || ''}`),
+    cat: skeleton(`${k.category} ${categoryLabel(k.category)} ${k.about || ''}`),
+    offer: skeleton(k.offer ? k.offer.label : ''),
+  }));
+}
+
+const words = s => s.split(' ').filter(Boolean);
+
+function fuzzyHit(qWord, text) {
+  if (qWord.length < 4) return false;
+  const max = qWord.length >= 8 ? 2 : 1;
+  return words(text).some(w => editDistance(qWord, w.slice(0, qWord.length + max), max) <= max);
+}
+
+/**
+ * Search every merchant, ignoring the current filters (the UI decides what to do with
+ * matches outside them). Returns [{k, score}] best first.
+ */
+function search(index, query) {
+  const raw = String(query || '').trim().toLowerCase();
+  if (!raw) return index.map(e => ({ k: e.k, score: 0 }));
+  const expanded = DISTRICT_ALIASES[raw] || raw;
+  const q = skeleton(expanded);
+  if (!q) return [];
+  const qWords = words(q);
+
+  const results = [];
+  for (const e of index) {
+    let score = 0;
+    if (e.name.startsWith(q)) score = 100;
+    else if (e.name.includes(q)) score = 85;
+    else if (e.alias.some(a => a.includes(q))) score = 75;
+    else if (e.area.includes(q)) score = 65;
+    else if (e.cat.includes(q)) score = 55;
+    else if (e.addr.includes(q)) score = 50;
+    else if (e.offer && e.offer.includes(q)) score = 48;
+    else if (qWords.every(w => e.name.includes(w) || e.alias.some(a => a.includes(w)) || e.area.includes(w) || e.addr.includes(w) || e.cat.includes(w) || e.offer.includes(w))) score = 45;
+    else if (qWords.every(w => fuzzyHit(w, `${e.name} ${e.alias.join(' ')} ${e.area}`))) score = 30;
+    if (score) results.push({ k: e.k, score });
+  }
+  return results.sort((a, b) => b.score - a.score || a.k.name.localeCompare(b.k.name, 'mn'));
+}
+
+/** Autocomplete: up to `limit` merchants plus districts/provinces whose name matches. */
+function suggest(index, query, limit = 5) {
+  const hits = search(index, query).filter(h => h.score > 0);
+  const raw = String(query || '').trim().toLowerCase();
+  const q = skeleton(DISTRICT_ALIASES[raw] || raw);
+  const areas = new Map();
+  if (q) for (const e of index) {
+    if (skeleton(e.k.area).includes(q)) {
+      const a = areas.get(e.k.area) || { area: e.k.area, region: e.k.region, count: 0 };
+      a.count++; areas.set(e.k.area, a);
+    }
+  }
+  return { merchants: hits.slice(0, limit), areas: [...areas.values()].slice(0, 3) };
+}
+
+// ---- src/index-row.js ----
+// index-row.js — the compact row format the Worker serves at /map/api/index.json and the page reads.
+// Internal model only: this file knows nothing about the vendor API (that is normalize.js's job).
+
+
+
+const compactHours = hours => hours
+  ? [1, 2, 3, 4, 5, 6, 7].map(d => hours[d] ? `${toMin(hours[d].open) / 15}-${toMin(hours[d].close) / 15}` : '').join(',')
+  : null;
+
+/** Inverse of compactHours. */
+const expandHours = h => {
+  if (h === 24) return { alwaysOpen: true, hours: null };
+  if (!h) return { alwaysOpen: false, hours: null };
+  const hours = {};
+  h.split(',').forEach((part, i) => {
+    if (!part) { hours[i + 1] = null; return; }
+    const [o, c] = part.split('-').map(Number);
+    hours[i + 1] = { open: fmtMin(o * 15), close: fmtMin(c * 15) };
+  });
+  return { alwaysOpen: false, hours };
+};
+
+/**
+ * Slim record for map, list and search. Carries everything a card needs (call, directions,
+ * status, offer, address for search); the panel fetches the rest from /api/merchant/:id.json.
+ */
+const toIndexRow = m => ({
+  i: m.id, n: m.name, c: m.category, a: m.area, r: m.region === 'ub' ? 1 : 0,
+  pl: m.place || null, pv: m.province || null,
+  y: +m.lat.toFixed(5), x: +m.lon.toFixed(5),
+  o: m.offer ? m.offer.label : null,
+  h: m.alwaysOpen ? 24 : compactHours(m.hours),
+  s: m.status === 'active' ? 1 : 0,
+  p: m.photo || 0,
+  t: m.phone ? m.phone.tel.replace(/^\+976/, '') : null,
+  d: m.address || null,
+  al: m.aliases?.length ? m.aliases : undefined,
+  ab: m.about ? m.about.slice(0, 90) : undefined,
+  f: m.featured ? 1 : undefined,
+});
+
+/** Index row → the merchant shape the UI uses. `partial` marks fields the detail call fills in. */
+const fromIndexRow = r => {
+  const { hours, alwaysOpen } = expandHours(r.h);
+  const t = r.t ? String(r.t) : null;
+  return {
+    id: String(r.i), name: r.n, category: r.c, area: r.a, region: r.r ? 'ub' : 'rural',
+    place: r.pl || r.a, province: r.pv || (r.r ? 'Улаанбаатар' : r.a),
+    lat: r.y, lon: r.x,
+    offer: r.o ? { label: r.o, type: null, until: null } : null,
+    hours, alwaysOpen,
+    status: r.s ? 'active' : 'temporarily-closed',
+    phone: t ? { display: `${t.slice(0, 4)}-${t.slice(4)}`, tel: `+976${t}` } : null,
+    address: r.d || null, landmark: null, photo: typeof r.p === 'string' ? r.p : null, hasPhoto: !!r.p,
+    aliases: r.al || [], about: r.ab || null, featured: !!r.f, partial: true,
+  };
+};
+
+// ---- src/ui/cat-icons.js ----
+// cat-icons.js — one line icon per category (24×24, stroke = currentColor), keyed by categories.json "icon".
+// Used for list thumbnails and the photo placeholder when a merchant has no photo.
+const P = {
+  utensils: '<path d="M7 3v8M5 3v5a2 2 0 0 0 4 0V3M7 11v10"/><path d="M17 21V3c-2.2 1.2-3 3.6-3 6.5V13h3"/>',
+  basket: '<path d="M3 10h18l-2 10H5L3 10z"/><path d="M8 10l3-6M16 10l-3-6"/><path d="M9 14v3M15 14v3"/>',
+  shirt: '<path d="M8 3l-5 3 2 4 3-1v12h8V9l3 1 2-4-5-3a4 4 0 0 1-8 0z"/>',
+  device: '<rect x="7" y="2" width="10" height="20" rx="2"/><path d="M11 18h2"/>',
+  sofa: '<path d="M4 11V8a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v3"/><path d="M2 13a2 2 0 0 1 4 0v2h12v-2a2 2 0 0 1 4 0v5H2v-5z"/><path d="M5 18v2M19 18v2"/>',
+  tools: '<path d="M14 6a4 4 0 0 0 5 5l-9 9a2 2 0 0 1-3-3l9-9a4 4 0 0 0-2-2z"/><path d="M3 7l4-4 3 3-4 4z"/>',
+  sparkle: '<path d="M12 3l1.8 5.2L19 10l-5.2 1.8L12 17l-1.8-5.2L5 10l5.2-1.8z"/><path d="M19 16l.8 2.2L22 19l-2.2.8L19 22l-.8-2.2L16 19l2.2-.8z"/>',
+  cross: '<rect x="3" y="3" width="18" height="18" rx="4"/><path d="M12 8v8M8 12h8"/>',
+  car: '<path d="M5 16l1.5-6A2 2 0 0 1 8.4 8.5h7.2a2 2 0 0 1 1.9 1.5L19 16"/><rect x="3" y="15" width="18" height="4" rx="1.5"/><circle cx="7" cy="19.5" r="1.5"/><circle cx="17" cy="19.5" r="1.5"/>',
+  bear: '<circle cx="12" cy="13" r="7"/><circle cx="6" cy="6" r="2.5"/><circle cx="18" cy="6" r="2.5"/><path d="M10 15c1 1 3 1 4 0"/><path d="M9.5 11h.01M14.5 11h.01"/>',
+  dumbbell: '<path d="M6 7v10M3 9v6M18 7v10M21 9v6M6 12h12"/>',
+  book: '<path d="M4 5a2 2 0 0 1 2-2h13v16H6a2 2 0 0 0-2 2V5z"/><path d="M4 19a2 2 0 0 1 2-2h13"/>',
+  plane: '<path d="M10.5 13.5L3 11l1.5-1.5 8 .5 4-4a2.1 2.1 0 0 1 3 3l-4 4 .5 8L14.5 22 12 14.5"/>',
+  wrench: '<path d="M15 4a5 5 0 0 0-4.6 7L4 17.4 6.6 20l6.4-6.4A5 5 0 0 0 20 9l-3 3-3-1-1-3 3-3a5 5 0 0 0-1-1z"/>',
+  globe: '<circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.8 3 2.8 15 0 18M12 3c-2.8 3-2.8 15 0 18"/>',
+  dot: '<circle cx="12" cy="12" r="4"/>',
+};
+const catIcon = name => `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${P[name] || P.dot}</svg>`;
+/** Inner SVG of a category icon, for drawing map pins. */
+const catIconPaths = name => P[name] || P.dot;
+
+// ---- src/ui/map.js ----
+// map.js — lightweight SVG map used by the prototype (and the merchant-panel mini map).
+// Production keeps Google Maps; see src/maps-config.js for the matching options.
+
+const SVGNS = 'http://www.w3.org/2000/svg';
+const KX = Math.cos(47.5 * Math.PI / 180); // horizontal squeeze at Mongolia's latitude
+const toWorld = (lat, lon) => ({ x: lon * KX, y: -lat });
+const COUNTRY_SCALE = 18;   // px per world unit when all of Mongolia fits (recomputed on fit)
+const MAX_SCALE = 9000;
+const PIN_PATH = 'M14 0C6.3 0 0 6.1 0 13.7 0 23.6 14 36 14 36s14-12.4 14-22.3C28 6.1 21.7 0 14 0z';
+
+class DemoMap {
+  constructor(el, { outline, interactive = true, onSelect = () => {}, onHover = () => {}, onHint = () => {} } = {}) {
+    this.el = el; this.interactive = interactive;
+    this.onSelect = onSelect; this.onHover = onHover; this.onHint = onHint;
+    this.outline = outline.map(([lon, lat]) => toWorld(lat, lon));
+    this.items = []; this.status = new Map(); this.selected = null; this.hover = null; this.origin = null;
+    this.view = { cx: 106.9 * KX, cy: -47.9, s: 400 };
+    this.svg = document.createElementNS(SVGNS, 'svg');
+    this.svg.setAttribute('class', 'demo-map-svg');
+    this.svg.setAttribute('role', 'group');
+    this.svg.setAttribute('aria-label', 'Киоскуудын газрын зураг');
+    el.appendChild(this.svg);
+    this.ro = new ResizeObserver(() => this.render());
+    this.ro.observe(el);
+    if (interactive) this.bind();
+  }
+
+  size() { const r = this.el.getBoundingClientRect(); return { w: Math.max(1, r.width), h: Math.max(1, r.height) }; }
+  project(k) { const p = toWorld(k.lat, k.lon); const { w, h } = this.size(); return { x: (p.x - this.view.cx) * this.view.s + w / 2, y: (p.y - this.view.cy) * this.view.s + h / 2 }; }
+
+  setData(items, status) { this.items = items; this.status = status; this.render(); }
+  setSelected(id) { this.selected = id; this.render(); }
+  setHover(id) { if (this.hover !== id) { this.hover = id; this.render(); } }
+  setOrigin(pt) { this.origin = pt; this.render(); }
+
+  fit(list = this.items, { pad = 56, maxScale = 2600 } = {}) {
+    const P = typeof pad === 'number' ? { top: pad, right: pad, bottom: pad, left: pad } : pad;
+    const pts = list.map(k => toWorld(k.lat, k.lon));
+    if (this.origin && list.length) pts.push(toWorld(this.origin.lat, this.origin.lon));
+    const { w, h } = this.size();
+    if (!pts.length) { this.fitCountry(); return; }
+    const xs = pts.map(p => p.x), ys = pts.map(p => p.y);
+    const minX = Math.min(...xs), maxX = Math.max(...xs), minY = Math.min(...ys), maxY = Math.max(...ys);
+    const dx = Math.max(maxX - minX, 0.01), dy = Math.max(maxY - minY, 0.01);
+    const aw = Math.max(40, w - P.left - P.right), ah = Math.max(40, h - P.top - P.bottom);
+    const s = Math.max(Math.min(aw / dx, ah / dy, maxScale), this.countryScale() * 0.9);
+    // centre the box inside the padded area
+    const cx = (minX + maxX) / 2 - ((P.left - P.right) / 2) / s;
+    const cy = (minY + maxY) / 2 - ((P.top - P.bottom) / 2) / s;
+    this.view = { cx, cy, s };
+    this.render();
+  }
+
+  countryScale() {
+    const { w, h } = this.size();
+    const xs = this.outline.map(p => p.x), ys = this.outline.map(p => p.y);
+    return Math.min((w - 40) / (Math.max(...xs) - Math.min(...xs)), (h - 40) / (Math.max(...ys) - Math.min(...ys))) || COUNTRY_SCALE;
+  }
+  fitCountry() {
+    const xs = this.outline.map(p => p.x), ys = this.outline.map(p => p.y);
+    this.view = { cx: (Math.min(...xs) + Math.max(...xs)) / 2, cy: (Math.min(...ys) + Math.max(...ys)) / 2, s: this.countryScale() };
+    this.render();
+  }
+
+  zoom(factor, at) {
+    const { w, h } = this.size();
+    const ax = at ? at.x : w / 2, ay = at ? at.y : h / 2;
+    const wx = (ax - w / 2) / this.view.s + this.view.cx, wy = (ay - h / 2) / this.view.s + this.view.cy;
+    const s = Math.min(MAX_SCALE, Math.max(this.countryScale() * 0.8, this.view.s * factor));
+    this.view = { s, cx: wx - (ax - w / 2) / s, cy: wy - (ay - h / 2) / s };
+    this.render();
+  }
+
+  focus(k, minScale = 1800) {
+    const p = toWorld(k.lat, k.lon);
+    this.view = { cx: p.x, cy: p.y, s: Math.max(this.view.s, minScale) };
+    this.render();
+  }
+
+  bind() {
+    const el = this.el;
+    let drag = null;
+    el.addEventListener('pointerdown', e => {
+      if (e.target.closest('[data-pin],[data-cluster]')) return;
+      drag = { x: e.clientX, y: e.clientY, cx: this.view.cx, cy: this.view.cy, moved: false };
+      el.setPointerCapture(e.pointerId);
+    });
+    el.addEventListener('pointermove', e => {
+      if (!drag) return;
+      const dx = e.clientX - drag.x, dy = e.clientY - drag.y;
+      if (Math.abs(dx) + Math.abs(dy) > 3) drag.moved = true;
+      this.view.cx = drag.cx - dx / this.view.s; this.view.cy = drag.cy - dy / this.view.s;
+      this.render();
+    });
+    const end = () => { drag = null; };
+    el.addEventListener('pointerup', end); el.addEventListener('pointercancel', end);
+    el.addEventListener('wheel', e => {
+      if (!(e.ctrlKey || e.metaKey)) { this.onHint(); return; }
+      e.preventDefault();
+      const r = el.getBoundingClientRect();
+      this.zoom(e.deltaY < 0 ? 1.35 : 1 / 1.35, { x: e.clientX - r.left, y: e.clientY - r.top });
+    }, { passive: false });
+    el.addEventListener('dblclick', e => {
+      if (e.target.closest('[data-pin],[data-cluster]')) return;
+      const r = el.getBoundingClientRect();
+      this.zoom(1.8, { x: e.clientX - r.left, y: e.clientY - r.top });
+    });
+    this.svg.addEventListener('click', e => {
+      const pin = e.target.closest('[data-pin]');
+      const cl = e.target.closest('[data-cluster]');
+      if (pin) this.onSelect(pin.dataset.pin);
+      else if (cl) this.zoomToCluster(cl.dataset.cluster.split('|'));
+    });
+    this.svg.addEventListener('keydown', e => {
+      if (e.key !== 'Enter' && e.key !== ' ') return;
+      const pin = e.target.closest('[data-pin]'); const cl = e.target.closest('[data-cluster]');
+      if (pin || cl) e.preventDefault();
+      if (pin) this.onSelect(pin.dataset.pin);
+      else if (cl) this.zoomToCluster(cl.dataset.cluster.split('|'));
+    });
+    this.svg.addEventListener('pointerover', e => { const p = e.target.closest('[data-pin]'); this.onHover(p ? p.dataset.pin : null); });
+    this.svg.addEventListener('pointerleave', () => this.onHover(null));
+  }
+
+  zoomToCluster(ids) {
+    const list = this.items.filter(k => ids.includes(k.id));
+    const before = this.view.s;
+    this.fit(list, { pad: 80, maxScale: MAX_SCALE });
+    if (this.view.s <= before * 1.05) this.zoom(2.2, this.project(list[0]));
+  }
+
+  render() {
+    const { w, h } = this.size();
+    const { s, cx, cy } = this.view;
+    const svg = this.svg;
+    svg.setAttribute('viewBox', `0 0 ${w} ${h}`);
+    svg.setAttribute('width', w); svg.setAttribute('height', h);
+    const tx = w / 2 - cx * s, ty = h / 2 - cy * s;
+    const d = 'M' + this.outline.map(p => `${(p.x * s + tx).toFixed(1)},${(p.y * s + ty).toFixed(1)}`).join('L') + 'Z';
+    const cityView = s > 900;
+
+    // graticule
+    const step = s > 3000 ? 0.02 : s > 900 ? 0.05 : s > 150 ? 1 : 2;
+    const x0 = (-w / 2) / s + cx, x1 = (w / 2) / s + cx, y0 = (-h / 2) / s + cy, y1 = (h / 2) / s + cy;
+    let grid = '';
+    for (let gx = Math.ceil(x0 / step) * step; gx < x1; gx += step) grid += `M${(gx * s + tx).toFixed(1)},0V${h}`;
+    for (let gy = Math.ceil(y0 / step) * step; gy < y1; gy += step) grid += `M0,${(gy * s + ty).toFixed(1)}H${w}`;
+
+    // pins with greedy clustering
+    const pts = this.items.map(k => ({ k, ...this.project(k) })).filter(p => p.x > -40 && p.x < w + 40 && p.y > -40 && p.y < h + 60);
+    const clusters = [];
+    for (const p of pts) {
+      if (p.k.id === this.selected) continue;
+      const c = clusters.find(c => Math.hypot(c.x - p.x, c.y - p.y) < 30);
+      if (c) { c.members.push(p.k); } else clusters.push({ x: p.x, y: p.y, members: [p.k] });
+    }
+    // labels: district names in the city view, town names in the country view
+    let labels = '';
+    const keyOf = k => cityView ? (k.region === 'ub' ? k.area : null) : (k.region === 'rural' ? k.area.split(' · ')[1] : 'Улаанбаатар');
+    const boxes = [];
+    const placeLabel = (text, x, y) => {
+      if (x < -50 || x > w + 50 || y < -20 || y > h + 20) return;
+      const bw = text.length * 7 + 8, box = { l: x - bw / 2, r: x + bw / 2, t: y - 12, b: y + 4 };
+      if (boxes.some(o => box.l < o.r && box.r > o.l && box.t < o.b && box.b > o.t)) return;
+      boxes.push(box);
+      labels += `<text class="map-label${cityView ? ' is-district' : ''}" x="${x.toFixed(1)}" y="${y.toFixed(1)}" text-anchor="middle">${escAttr(text)}</text>`;
+    };
+    if (cityView) {
+      const groups = new Map();
+      for (const p of pts) { const key = keyOf(p.k); if (!key) continue; const g = groups.get(key) || []; g.push(p); groups.set(key, g); }
+      for (const [name, g] of groups) placeLabel(name.toUpperCase(), g.reduce((a, p) => a + p.x, 0) / g.length, Math.min(...g.map(p => p.y)) - 44);
+    } else {
+      // one label per place name — the biggest cluster carrying it wins
+      const byKey = new Map();
+      for (const c of clusters) {
+        const keys = new Set(c.members.map(keyOf));
+        if (keys.size !== 1) continue;
+        const key = [...keys][0];
+        if (!key) continue;
+        const prev = byKey.get(key);
+        if (!prev || c.members.length > prev.members.length) byKey.set(key, c);
+      }
+      for (const [key, c] of byKey) {
+        const one = c.members.length === 1 ? c.members[0] : null;
+        placeLabel(one && one.region === 'ub' ? one.area : key, c.x, c.y + (one ? 20 : 34));
+      }
+    }
+    let pins = '';
+    const pinSvg = (k, x, y, big) => {
+      const st = this.status.get(k.id) || { tone: 'good' };
+      const sc = big ? 1.25 : (k.id === this.hover ? 1.12 : 1);
+      const label = `${k.name}, ${st.label || ''}`;
+      return `<g class="pin tone-${st.tone}${big ? ' is-selected' : ''}${k.id === this.hover ? ' is-hover' : ''}" data-pin="${k.id}" ${this.interactive ? 'tabindex="0" role="button"' : ''} aria-label="${escAttr(label)}" transform="translate(${(x - 14 * sc).toFixed(1)},${(y - 36 * sc).toFixed(1)}) scale(${sc})">
+        ${big ? '<ellipse class="pin-halo" cx="14" cy="36" rx="13" ry="5"/>' : '<ellipse class="pin-shadow" cx="14" cy="36" rx="7" ry="2.5"/>'}
+        <path class="pin-body" d="${PIN_PATH}"/>
+        <path class="pin-glyph" d="M8 9h12l-1 9H9L8 9z"/><path class="pin-screen" d="M11 9V7.4a3 3 0 0 1 6 0V9h-1.6V7.4a1.4 1.4 0 0 0-2.8 0V9H11z"/>
+      </g>`;
+    };
+    for (const c of clusters) {
+      if (c.members.length === 1) pins += pinSvg(c.members[0], c.x, c.y, false);
+      else {
+        const r = c.members.length > 9 ? 19 : 16;
+        pins += `<g class="cluster" data-cluster="${c.members.map(k => k.id).join('|')}" ${this.interactive ? 'tabindex="0" role="button"' : ''} aria-label="${c.members.length} мерчант — томруулах">
+          <circle cx="${c.x.toFixed(1)}" cy="${c.y.toFixed(1)}" r="${r + 5}" class="cluster-ring"/><circle cx="${c.x.toFixed(1)}" cy="${c.y.toFixed(1)}" r="${r}" class="cluster-core"/>
+          <text x="${c.x.toFixed(1)}" y="${(c.y + 4.5).toFixed(1)}" text-anchor="middle">${c.members.length}</text></g>`;
+      }
+    }
+    const sel = pts.find(p => p.k.id === this.selected);
+    if (sel) pins += pinSvg(sel.k, sel.x, sel.y, true);
+
+    let me = '';
+    if (this.origin) {
+      const o = this.project(this.origin);
+      me = `<g class="me" aria-label="Таны байршил"><circle cx="${o.x.toFixed(1)}" cy="${o.y.toFixed(1)}" r="16" class="me-pulse"/><circle cx="${o.x.toFixed(1)}" cy="${o.y.toFixed(1)}" r="7" class="me-dot"/></g>`;
+    }
+
+    svg.innerHTML = `<rect class="map-sea" width="${w}" height="${h}"/><path class="map-grid" d="${grid}"/><path class="map-land" d="${d}"/>${labels}${me}${pins}`;
+  }
+}
+
+function escAttr(s) { return String(s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c])); }
+
+// ---- src/ui/street-map.js ----
+// street-map.js — real street map: MapLibre GL (self-hosted) + OpenFreeMap tiles (free, no key, no account).
+// Same interface as DemoMap (setData, setSelected, setHover, setOrigin, fit, focus, zoom, render, selected),
+// so app.js doesn't care which one it has. StreetMap.create() resolves to null when WebGL, the library
+// or the map style can't load; the caller then falls back to DemoMap.
+
+const TONE_COLOR = { good: '#0B6BFF', warn: '#F2A93B', muted: '#8A95AA', bad: '#AEB9C9' };
+const CLOSED = '#9AA6B8';
+const CLUSTER_MAX_ZOOM = 13;          // beyond this every shop has its own pin
+const CLUSTER_RADIUS = 22;            // px: only pins that would overlap are grouped
+const FONT = 'Noto Sans Regular', FONT_BOLD = 'Noto Sans Bold';
+
+/** Teardrop pin: category colour (grey when closed), white category icon, drawn at 2× for sharpness. */
+function pinSvg(color, iconPaths) {
+  return `<svg xmlns="http://www.w3.org/2000/svg" width="56" height="72" viewBox="0 0 56 72">
+<path d="M28 2C14 2 3 12.9 3 26.6 3 44.5 28 70 28 70s25-25.5 25-43.4C53 12.9 42 2 28 2z" fill="${color}" stroke="#fff" stroke-width="4"/>
+<g transform="translate(16 14.5)" fill="none" stroke="#fff" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round">${iconPaths}</g></svg>`;
+}
+const loadImg = svg => new Promise((res, rej) => { const i = new Image(56, 72); i.onload = () => res(i); i.onerror = rej; i.src = `data:image/svg+xml;charset=utf-8,${encodeURIComponent(svg)}`; });
+const RAW_NAME = ['coalesce', ['get', 'name:mn'], ['get', 'name'], ['get', 'name:latin'], ''];
+// Cut the label at the first traditional-Mongolian character (no regex in style expressions, so: min index-of).
+const SCRIPT_CHARS = Array.from({ length: 0x18AA - 0x1820 }, (_, i) => String.fromCharCode(0x1820 + i));
+const firstScript = ['min', 9999, ...SCRIPT_CHARS.map(c => ['let', 'i', ['index-of', c, ['var', 'n']], ['case', ['>=', ['var', 'i'], 0], ['var', 'i'], 9999]])];
+const MN_NAME = ['let', 'n', RAW_NAME,
+  ['let', 'cut', firstScript,
+    ['case',
+      ['==', ['var', 'cut'], 9999], ['var', 'n'],
+      ['>', ['var', 'cut'], 0], ['slice', ['var', 'n'], 0, ['var', 'cut']],
+      ['coalesce', ['get', 'name:latin'], '']]]];
+let libPromise = null;
+
+function loadLib(base) {
+  if (window.maplibregl) return Promise.resolve(window.maplibregl);
+  if (libPromise) return libPromise;
+  libPromise = new Promise((resolve, reject) => {
+    const dir = `${base}/assets/vendor/maplibre-gl-4.7.1`;
+    const css = document.createElement('link'); css.rel = 'stylesheet'; css.href = `${dir}/maplibre-gl.css`; document.head.appendChild(css);
+    const s = document.createElement('script'); s.src = `${dir}/maplibre-gl.js`; s.async = true;
+    s.onload = () => window.maplibregl ? resolve(window.maplibregl) : reject(new Error('maplibre missing'));
+    s.onerror = () => reject(new Error('maplibre failed to load'));
+    document.head.appendChild(s);
+  });
+  return libPromise;
+}
+const webglOk = () => { try { const c = document.createElement('canvas'); return !!(c.getContext('webgl2') || c.getContext('webgl')); } catch { return false; } };
+
+class StreetMap {
+  /** @returns {Promise<StreetMap|null>} */
+  static async create(el, opts) {
+    if (!opts.style || !webglOk()) return null;
+    try {
+      const lib = await loadLib(opts.base || '');
+      const m = new StreetMap(el, lib, opts);
+      await m.ready;
+      return m;
+    } catch (e) { console.warn('street map unavailable, using outline map:', e?.message || e); el.querySelectorAll('.maplibregl-canvas-container, .maplibregl-control-container').forEach(n => n.remove()); return null; }
+  }
+
+  constructor(el, lib, { style, base = '', interactive = true, cooperative = false, pinStyle = null, onSelect = () => {}, onHover = () => {}, onHint = () => {} }) {
+    this.base = base;
+    this.pinStyle = pinStyle;   // category → { color, icon } ; null = plain dots
+    this.el = el; this.lib = lib; this.interactive = interactive;
+    this.onSelect = onSelect; this.onHover = onHover; this.onHint = onHint;
+    this.items = []; this.status = new Map(); this._selected = null; this.hover = null; this.origin = null; this.originMarker = null;
+    this.map = new lib.Map({
+      container: el, style, center: [106.9176, 47.9186], zoom: 11, minZoom: 4, maxZoom: 18,
+      maxBounds: [[85, 40], [122, 53.5]],                 // Mongolia and a margin
+      attributionControl: { compact: true },
+      interactive, dragRotate: false, pitchWithRotate: false, touchPitch: false,
+      cooperativeGestures: interactive && cooperative,
+      locale: {
+        'CooperativeGesturesHandler.WindowsHelpText': 'Томруулахын тулд Ctrl дараад гүйлгэнэ үү',
+        'CooperativeGesturesHandler.MacHelpText': 'Томруулахын тулд ⌘ дараад гүйлгэнэ үү',
+        'CooperativeGesturesHandler.MobileHelpText': 'Газрын зургийг хоёр хуруугаар хөдөлгөнө үү',
+        'NavigationControl.ZoomIn': 'Томруулах', 'NavigationControl.ZoomOut': 'Жижигрүүлэх',
+      },
+    });
+    if (interactive) this.map.touchZoomRotate.disableRotation();
+    this.ready = new Promise((resolve, reject) => {
+      const t = setTimeout(() => reject(new Error('style timeout')), 12000);
+      this.map.once('load', async () => { clearTimeout(t); try { await this.setup(); resolve(); } catch (e) { reject(e); } });
+      this.map.once('error', e => { if (!this.map.loaded()) { clearTimeout(t); reject(e?.error || new Error('style error')); } });
+    });
+    this.ro = new ResizeObserver(() => this.map.resize()); this.ro.observe(el);
+  }
+
+  async fontOk(font) {
+    const glyphs = this.map.getStyle().glyphs;
+    if (!glyphs) return false;
+    try { const r = await fetch(new URL(glyphs.replace('{fontstack}', encodeURIComponent(font)).replace('{range}', '0-255'), location.href), { mode: 'cors' }); return r.ok; }
+    catch { return false; }
+  }
+
+  /** One pin image per category (+ a grey closed variant). Returns false if images can't be made. */
+  async addPinImages() {
+    if (!this.pinStyle) return false;
+    try {
+      const cats = this.pinStyle.categories();
+      await Promise.all(cats.flatMap(c => {
+        const { color, icon } = this.pinStyle.get(c);
+        return [['open', color], ['closed', CLOSED]].map(async ([kind, col]) => {
+          const id = `pin-${c}-${kind}`;
+          if (!this.map.hasImage(id)) this.map.addImage(id, await loadImg(pinSvg(col, icon)), { pixelRatio: 2 });
+        });
+      }));
+      // WoowPay's own location pin (cyan, owl mark) marks the selected merchant.
+      try {
+        const brand = await new Promise((res, rej) => { const i = new Image(); i.onload = () => res(i); i.onerror = rej; i.src = `${this.base}/assets/pin-brand.png`; });
+        if (!this.map.hasImage('pin-brand')) this.map.addImage('pin-brand', brand, { pixelRatio: 2 });
+        this.brandPin = true;
+      } catch { this.brandPin = false; }
+      return true;
+    } catch { return false; }
+  }
+
+  async setup() {
+    const map = this.map;
+    // Cyrillic names only; quieter base map so merchant pins stand out.
+    for (const l of map.getStyle().layers) {
+      if (l.type === 'symbol' && map.getLayoutProperty(l.id, 'text-field')) { try { map.setLayoutProperty(l.id, 'text-field', MN_NAME); } catch { /* layer without names */ } }
+      if (/poi/i.test(l.id)) map.setLayoutProperty(l.id, 'visibility', 'none');
+    }
+    // Fonts and pin images first: a symbol layer whose font or icon can't load would hide every pin.
+    const [bold, regular, pins] = await Promise.all([this.fontOk(FONT_BOLD), this.fontOk(FONT), this.addPinImages()]);
+    this.pins = pins;
+
+    map.addSource('m', { type: 'geojson', data: this.geojson(), cluster: true, clusterRadius: CLUSTER_RADIUS, clusterMaxZoom: CLUSTER_MAX_ZOOM, promoteId: 'id' });
+    // Clusters: only when zoomed out to region/country level. Size grows with the count.
+    map.addLayer({ id: 'm-cluster', type: 'circle', source: 'm', filter: ['has', 'point_count'],
+      paint: { 'circle-color': '#273270', 'circle-opacity': 0.92,
+        'circle-radius': ['step', ['get', 'point_count'], 13, 10, 17, 50, 22, 150, 27],
+        'circle-stroke-color': '#ffffff', 'circle-stroke-width': 2.5 } });
+    if (bold) map.addLayer({ id: 'm-count', type: 'symbol', source: 'm', filter: ['has', 'point_count'],
+      layout: { 'text-field': ['get', 'point_count_abbreviated'], 'text-size': 13, 'text-font': [FONT_BOLD], 'text-allow-overlap': true },
+      paint: { 'text-color': '#ffffff' } });
+
+    const single = ['!', ['has', 'point_count']];
+    if (pins) {
+      const icon = ['concat', 'pin-', ['get', 'cat'], '-', ['case', ['get', 'open'], 'open', 'closed']];
+      const pinLayout = (size, extra = {}) => ({ 'icon-image': icon, 'icon-size': size, 'icon-anchor': 'bottom', 'icon-allow-overlap': true, 'icon-ignore-placement': true,
+        'symbol-sort-key': ['case', ['get', 'open'], 0, 1], ...extra });
+      map.addLayer({ id: 'm-pin', type: 'symbol', source: 'm', filter: single, layout: pinLayout(['interpolate', ['linear'], ['zoom'], 10, 0.78, 15, 1]) });
+      if (regular) map.addLayer({ id: 'm-label', type: 'symbol', source: 'm', filter: single, minzoom: 14.5,
+        layout: { 'text-field': ['get', 'name'], 'text-font': [FONT], 'text-size': 12, 'text-anchor': 'left', 'text-offset': [1.1, -1.4], 'text-max-width': 10, 'text-optional': true },
+        paint: { 'text-color': '#10213F', 'text-halo-color': '#ffffff', 'text-halo-width': 1.6 } });
+      map.addLayer({ id: 'm-hover', type: 'symbol', source: 'm', filter: ['==', ['get', 'id'], ''], layout: pinLayout(1.18) });
+      map.addLayer({ id: 'm-selected', type: 'symbol', source: 'm', filter: ['==', ['get', 'id'], ''],
+        layout: this.brandPin ? { ...pinLayout(1), 'icon-image': 'pin-brand' } : pinLayout(1.4) });
+    } else {
+      map.addLayer({ id: 'm-pin', type: 'circle', source: 'm', filter: single,
+        paint: { 'circle-color': ['get', 'color'], 'circle-radius': 7, 'circle-stroke-color': '#ffffff', 'circle-stroke-width': 2.5 } });
+      map.addLayer({ id: 'm-hover', type: 'circle', source: 'm', filter: ['==', ['get', 'id'], ''],
+        paint: { 'circle-color': ['get', 'color'], 'circle-radius': 9, 'circle-stroke-color': '#ffffff', 'circle-stroke-width': 2.5 } });
+      map.addLayer({ id: 'm-selected', type: 'circle', source: 'm', filter: ['==', ['get', 'id'], ''],
+        paint: { 'circle-color': ['get', 'color'], 'circle-radius': 11, 'circle-stroke-color': '#273270', 'circle-stroke-width': 3 } });
+    }
+    if (!this.interactive) return;
+    const pick = e => e.features[0]?.properties?.id;
+    for (const layer of ['m-pin', 'm-hover', 'm-selected']) map.on('click', layer, e => { const id = pick(e); if (id) this.onSelect(id); });
+    map.on('click', 'm-cluster', async e => {
+      const f = e.features[0];
+      const z = await map.getSource('m').getClusterExpansionZoom(f.properties.cluster_id);
+      map.easeTo({ center: f.geometry.coordinates, zoom: Math.min(Math.max(z, CLUSTER_MAX_ZOOM + 1), 16) });
+    });
+    for (const id of ['m-pin', 'm-cluster', 'm-selected']) {
+      map.on('mouseenter', id, () => { map.getCanvas().style.cursor = 'pointer'; });
+      map.on('mouseleave', id, () => { map.getCanvas().style.cursor = ''; });
+    }
+    map.on('mousemove', 'm-pin', e => { const id = pick(e); if (id && id !== this.hover) this.onHover(id); });
+    map.on('mouseleave', 'm-pin', () => this.onHover(null));
+  }
+
+  geojson() {
+    return { type: 'FeatureCollection', features: this.items.map(k => {
+      const tone = this.status.get(k.id)?.tone || 'good';
+      return { type: 'Feature', id: String(k.id), geometry: { type: 'Point', coordinates: [k.lon, k.lat] },
+        properties: { id: String(k.id), name: k.name, cat: k.category, open: tone !== 'muted' && tone !== 'bad', color: TONE_COLOR[tone] || TONE_COLOR.good } };
+    }) };
+  }
+
+  setData(items, status) { this.items = items; this.status = status; this.map.getSource('m')?.setData(this.geojson()); this.applySelected(); }
+  get selected() { return this._selected; }
+  set selected(id) { this._selected = id; this.applySelected(); }
+  setSelected(id) { this.selected = id; }
+  applySelected() { if (this.map.getLayer('m-selected')) this.map.setFilter('m-selected', ['all', ['!', ['has', 'point_count']], ['==', ['get', 'id'], String(this._selected ?? '')]]); }
+  setHover(id) {
+    if (this.hover === id) return;
+    this.hover = id;
+    if (this.map.getLayer('m-hover')) this.map.setFilter('m-hover', ['all', ['!', ['has', 'point_count']], ['==', ['get', 'id'], String(id ?? '')], ['!=', ['get', 'id'], String(this._selected ?? '')]]);
+  }
+  setOrigin(pt) {
+    this.origin = pt;
+    this.originMarker?.remove(); this.originMarker = null;
+    if (!pt) return;
+    const dot = document.createElement('div'); dot.className = 'origin-dot'; dot.setAttribute('aria-label', pt.label || 'Таны байршил');
+    this.originMarker = new this.lib.Marker({ element: dot }).setLngLat([pt.lon, pt.lat]).addTo(this.map);
+  }
+
+  /** Dashed circle around the user for the chosen radius (km); null clears it. */
+  setRadius(km) {
+    const m = this.map, id = 'radius';
+    this.radiusKm = km || null;
+    let data = { type: 'FeatureCollection', features: [] };
+    if (this.origin && km) {
+      const { lat, lon } = this.origin, ring = [];
+      for (let i = 0; i <= 64; i++) {
+        const a = (i / 64) * 2 * Math.PI;
+        ring.push([lon + (km / (111.32 * Math.cos(lat * Math.PI / 180))) * Math.cos(a), lat + (km / 110.57) * Math.sin(a)]);
+      }
+      data = { type: 'Feature', geometry: { type: 'Polygon', coordinates: [ring] }, properties: {} };
+    }
+    try {
+      if (m.getSource(id)) { m.getSource(id).setData(data); return; }
+      m.addSource(id, { type: 'geojson', data });
+      const before = m.getLayer('m-cluster') ? 'm-cluster' : undefined;
+      m.addLayer({ id: 'radius-fill', type: 'fill', source: id, paint: { 'fill-color': '#273270', 'fill-opacity': 0.08 } }, before);
+      m.addLayer({ id: 'radius-line', type: 'line', source: id, paint: { 'line-color': '#273270', 'line-width': 1.6, 'line-dasharray': [2, 2], 'line-opacity': 0.7 } }, before);
+    } catch { /* style not ready: the next render sets it */ }
+  }
+
+  fit(list = this.items, { pad = 56, maxScale, all = false } = {}) {
+    const P = typeof pad === 'number' ? { top: pad, right: pad, bottom: pad, left: pad } : pad;
+    // When most results are in Ulaanbaatar, open on the city instead of a country view with one big cluster.
+    const inUB = k => k.lat > 47.75 && k.lat < 48.05 && k.lon > 106.55 && k.lon < 107.35;
+    let cityFirst = false;
+    if (!all && list.length > 8) { const ub = list.filter(inUB); if (ub.length / list.length >= 0.75) { list = ub; cityFirst = true; } }
+    // Frame the dense core: a few far-out shops (Nalaikh, Baganuur) shouldn't zoom the whole city out.
+    if (!all && list.length > 20) {
+      const q = (arr, p) => { const a = [...arr].sort((x, y) => x - y); return a[Math.floor(p * (a.length - 1))]; };
+      const la = list.map(k => k.lat), lo = list.map(k => k.lon);
+      const [a0, a1, o0, o1] = [q(la, 0.05), q(la, 0.95), q(lo, 0.05), q(lo, 0.95)];
+      list = list.filter(k => k.lat >= a0 && k.lat <= a1 && k.lon >= o0 && k.lon <= o1);
+    }
+    const pts = list.map(k => [k.lon, k.lat]);
+    if (this.origin && pts.length) pts.push([this.origin.lon, this.origin.lat]);
+    if (this.origin && this.radiusKm && !all) {      // frame the whole circle, not just the pins in it
+      const { lat, lon } = this.origin, dLat = this.radiusKm / 110.57, dLon = this.radiusKm / (111.32 * Math.cos(lat * Math.PI / 180));
+      pts.push([lon - dLon, lat - dLat], [lon + dLon, lat + dLat]);
+    }
+    if (!pts.length) { this.map.fitBounds([[87.7, 41.6], [119.9, 52.1]], { padding: P, duration: 0 }); return; }
+    if (pts.length === 1) { this.map.jumpTo({ center: pts[0], zoom: 15 }); return; }
+    const b = pts.reduce((bb, p) => bb.extend(p), new this.lib.LngLatBounds(pts[0], pts[0]));
+    const maxZoom = maxScale && maxScale >= 6000 ? 15 : 14.5;
+    if (!all) { /* keep at least city level so pins, not clusters, show */ }
+    try { this.map.fitBounds(b, { padding: P, maxZoom, duration: 0 }); } catch { this.map.fitBounds(b, { padding: 20, maxZoom, duration: 0 }); }
+    // City view: never open so wide that shops turn into clusters; centre on where shops are densest (median).
+    const CITY_ZOOM = 11.6;
+    if (cityFirst && this.map.getZoom() < CITY_ZOOM) {
+      const med = arr => { const a = [...arr].sort((x, y) => x - y); return a[Math.floor(a.length / 2)]; };
+      this.map.jumpTo({ center: [med(list.map(k => k.lon)), med(list.map(k => k.lat))], zoom: CITY_ZOOM });
+    }
+  }
+  /** minScale follows DemoMap's meaning: 0 = keep zoom, ≥1000 = street level, small = regional. */
+  focus(k, minScale = 1800) {
+    const z = this.map.getZoom();
+    // 0 = 'just pan', but a pin hidden in a cluster can't be seen: come in to street level.
+    const target = minScale >= 1000 ? Math.max(z, 15) : minScale > 0 ? Math.max(z, 11) : Math.max(z, 15);
+    this.map.easeTo({ center: [k.lon, k.lat], zoom: target, duration: 450 });
+  }
+  zoom(factor) { this.map.easeTo({ zoom: this.map.getZoom() + Math.log2(factor), duration: 250 }); }
+  render() { this.map.resize(); }
+}
+
+// ---- src/ui/app.js ----
+// app.js — merchant.woowpay.mn/map UI (prototype and production builds).
+
+
+
+
+
+
+
+
+const $ = (s, r = document) => r.querySelector(s);
+const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+
+const SITE_CFG = JSON.parse($('#site-data').textContent);
+// { base, origin, mode: 'prototype'|'pending'|'live', data: { version, generated, count } | null, staleAfterHours }
+const CATEGORIES = JSON.parse($('#category-data').textContent);
+const DATA_DIR = SITE_CFG.data ? `${SITE_CFG.base}/data/${SITE_CFG.data.version}` : null;
+
+/* ---------- data: embedded sample (prototype), nothing yet (pending), or static versioned JSON (live) ---------- */
+// Static files can't age themselves: staleness is worked out here, from the snapshot timestamp.
+const isStale = generated => !!generated && (Date.now() - Date.parse(generated)) / 3600e3 > (SITE_CFG.staleAfterHours || 30);
+async function loadMerchants() {
+  if (SITE_CFG.mode === 'prototype') {
+    const raw = JSON.parse($('#merchant-data').textContent);
+    return { list: raw.merchants || raw, generated: null, stale: false, sample: true };
+  }
+  if (SITE_CFG.mode === 'pending') return { list: [], pending: true };
+  const KEY = 'wmm:index';
+  let body;
+  try {
+    const res = await fetch(`${DATA_DIR}/index.json`, { headers: { accept: 'application/json' } });
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    body = await res.json();
+    try { localStorage.setItem(KEY, JSON.stringify(body)); } catch { /* private mode / quota */ }
+  } catch (e) {
+    // Offline or a failed request: show the last list this phone saw, labelled as possibly out of date.
+    let saved = null;
+    try { saved = JSON.parse(localStorage.getItem(KEY) || 'null'); } catch { /* storage blocked */ }
+    if (!saved?.merchants?.length) throw e;
+    body = { ...saved, offline: true };
+  }
+  return { list: body.merchants.map(fromIndexRow), generated: body.generated, stale: body.offline || isStale(body.generated), sample: false };
+}
+let LOADED;
+try { LOADED = await loadMerchants(); }
+catch (e) {
+  LOADED = { list: [], error: String(e) };
+}
+const DATA = LOADED.list;
+const OUTLINE = JSON.parse($('#mn-outline').textContent);
+const CAT = new Map(CATEGORIES.map(c => [c.key, c]));
+const catLabel = key => CAT.get(key)?.mn || 'Бусад';
+const catWords = key => `${catLabel(key)} ${CAT.get(key)?.words || ''}`;   // search also matches «кафе», «эмийн сан»…
+const catColor = key => CAT.get(key)?.color || '#AEB9C9';
+const catSvg = key => catIcon(CAT.get(key)?.icon);
+const INDEX = buildIndex(DATA, catWords);
+const DEMO_ORIGIN = { lat: 47.9186, lon: 106.9176, label: 'Сүхбаатарын талбай (туршилт)' };
+const OPENISH = new Set(['open', 'closing']);
+const isOnline = m => m.category === 'online';   // online-only shops: listed, never pinned
+const BASE_TITLE = document.title;
+const MESSENGER = 'https://m.me/woowpay';
+const merchantUrl = id => `${SITE_CFG.origin}${SITE_CFG.base}/m/${encodeURIComponent(id)}/`;
+const mq = window.matchMedia('(max-width: 899px)');
+
+const SORTS = [
+  { v: 'recommended', t: 'Нээлттэй нь эхэнд' },
+  { v: 'nearest', t: 'Хамгийн ойр' },
+  { v: 'offer', t: 'Хөнгөлөлттэй нь эхэнд' },
+  { v: 'name', t: 'Нэрээр' },
+];
+const REGIONS = [{ v: 'all', t: 'Бүгд' }, { v: 'ub', t: 'Улаанбаатар' }, { v: 'rural', t: 'Орон нутаг' }];
+
+const ICONS = {
+  shop: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M4 9h16l-1 11H5L4 9z"/><path d="M9 9V6a3 3 0 0 1 6 0v3"/></svg>',
+  pin: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M12 21s7-6.2 7-12a7 7 0 0 0-14 0c0 5.8 7 12 7 12z"/><circle cx="12" cy="9" r="2.5"/></svg>',
+  tag: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M20 12l-8 8-8-8 8-8z"/></svg>',
+  dir: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M3 11l18-8-8 18-2-8z"/></svg>',
+  call: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2"/></svg>',
+};
+
+const state = {
+  q: '', region: 'all', area: null, category: null, openNow: false, offerOnly: false,
+  sort: 'recommended', view: 'map', selected: null, origin: null, radius: null, mode: 'all',
+};
+let status = new Map();
+let lastResults = { main: [], others: [] };
+
+/* ---------- URL state ---------- */
+function readUrl() {
+  try {
+    const p = new URLSearchParams(location.search);
+    state.q = p.get('q') || '';
+    state.region = ['ub', 'rural'].includes(p.get('region')) ? p.get('region') : 'all';
+    state.area = p.get('area') || null;
+    state.category = CAT.has(p.get('cat')) ? p.get('cat') : null;
+    state.openNow = p.get('open') === '1';
+    state.offerOnly = p.get('offer') === '1';
+    const s = p.get('sort');
+    state.sort = SORTS.some(x => x.v === s) && s !== 'nearest' ? s : 'recommended';
+    state.view = p.get('view') === 'list' ? 'list' : 'map';
+    const id = p.get('m');
+    if (id && DATA.some(x => String(x.id) === id)) state.selected = id;
+  } catch { /* preview without URL access */ }
+}
+function writeUrl() {
+  try {
+    const p = new URLSearchParams();
+    if (state.q) p.set('q', state.q);
+    if (state.region !== 'all') p.set('region', state.region);
+    if (state.area) p.set('area', state.area);
+    if (state.category) p.set('cat', state.category);
+    if (state.openNow) p.set('open', '1');
+    if (state.offerOnly) p.set('offer', '1');
+    if (state.sort !== 'recommended' && state.sort !== 'nearest') p.set('sort', state.sort);
+    if (state.view === 'list') p.set('view', 'list');
+    if (state.selected && $('#drawer').open) p.set('m', state.selected);
+    const qs = p.toString();
+    history.replaceState(null, '', qs ? `?${qs}` : location.pathname);
+  } catch { /* sandboxed preview */ }
+}
+
+/* ---------- filtering ---------- */
+const inRegion = m => state.region === 'all' || m.region === state.region;
+const passes = m => inRegion(m)
+  && (!state.area || m.area === state.area)
+  && (!state.category || m.category === state.category)
+  && (!state.openNow || OPENISH.has(status.get(m.id).state))
+  && (!state.offerOnly || !!m.offer)
+  && (!state.radius || !state.origin || (!isOnline(m) && km(m) <= state.radius));
+const km = m => (state.origin ? distanceKm(state.origin, m) : null);
+
+function sortList(list, relevance) {
+  const sortKey = s => s.replace(/^[\s"'«»“”„()\[\]\-–—.,]+/, '');
+  const byName = (a, b) => sortKey(a.name).localeCompare(sortKey(b.name), 'mn');
+  const rank = m => STATE_RANK[status.get(m.id).state];
+  const s = state.sort;
+  if (s === 'nearest' && state.origin) return list.sort((a, b) => km(a) - km(b));
+  if (s === 'name') return list.sort(byName);
+  if (s === 'offer') return list.sort((a, b) => (!!b.offer - !!a.offer) || rank(a) - rank(b) || byName(a, b));
+  if (relevance) return list.sort((a, b) => relevance.get(b.id) - relevance.get(a.id) || rank(a) - rank(b));
+  return list.sort((a, b) => rank(a) - rank(b) || (state.origin ? km(a) - km(b) : 0) || byName(a, b));
+}
+
+function compute() {
+  const now = ubNow();
+  status = new Map(DATA.map(m => [m.id, getStatus(m, now)]));
+  let base = DATA, relevance = null;
+  if (state.q.trim()) {
+    const hits = search(INDEX, state.q);
+    relevance = new Map(hits.map(h => [h.k.id, h.score]));
+    base = hits.map(h => h.k);
+  }
+  const main = sortList(base.filter(passes), relevance);
+  const others = state.q.trim() ? sortList(base.filter(m => !passes(m)), relevance) : [];
+  lastResults = { main, others };
+  return lastResults;
+}
+
+/* ---------- rendering ---------- */
+const thumb = m => m.photo
+  ? `<span class="thumb"><img src="${esc(m.photo)}" alt="" width="64" height="64" loading="lazy" decoding="async" onerror="this.remove()"></span>`
+  : `<span class="thumb" style="background:${catColor(m.category)}1A;color:${catColor(m.category)}" aria-hidden="true">${catSvg(m.category)}</span>`;
+
+function row(m) {
+  const st = status.get(m.id);
+  const d = km(m);
+  return `<li class="m-row${m.id === state.selected ? ' is-selected' : ''}" data-id="${esc(m.id)}">
+    <button class="open-btn" type="button" data-open="${esc(m.id)}" aria-label="${esc(`${m.name} — дэлгэрэнгүй`)}"></button>
+    ${thumb(m)}
+    <span>
+      <span class="m-name">${esc(m.name)}</span>
+      <span class="m-meta">
+        <span class="cat-tag"><i class="cat-dot" style="background:${catColor(m.category)}"></i>${esc(catLabel(m.category))}</span>
+        ${d != null ? `<span class="km">${formatKm(d)}</span>` : ''}<span>${esc(m.area)}</span>
+      </span>
+      <span class="m-tags">
+        <span class="pill tone-${st.tone}">${esc(st.label)}${st.detail ? ` <span class="d">${esc(st.detail)}</span>` : ''}</span>
+        ${m.offer ? `<span class="offer">${ICONS.tag}${esc(m.offer.label)}</span>` : ''}
+      </span>
+    </span>
+    <span class="row-end">
+      ${isOnline(m) ? '' : `<a class="icon-act" href="${directionsUrl(m)}" target="_blank" rel="noopener" aria-label="${esc(`${m.name} руу чиглэл авах`)}" title="Чиглэл авах">${ICONS.dir}</a>`}
+      ${m.phone ? `<a class="icon-act" href="tel:${esc(m.phone.tel)}" aria-label="${esc(`${m.name} руу залгах`)}" title="Залгах">${ICONS.call}</a>` : ''}
+    </span>
+  </li>`;
+}
+
+const scopeName = () => state.category ? catLabel(state.category)
+  : state.area ? state.area
+  : state.region === 'all' ? 'Бүх мерчант' : REGIONS.find(r => r.v === state.region).t;
+
+function renderResults() {
+  const { main, others } = compute();
+  const q = state.q.trim();
+  $('#results-title').textContent = q ? `«${q}»` : scopeName();
+  $('#results-count').textContent = `${main.length} мерчант${q && (state.region !== 'all' || state.area || state.category) ? ` · ${scopeName()}` : ''}`;
+  $('#sheet-label').textContent = `${main.length} мерчант${state.origin ? ' · ойроос нь' : ''}`;
+
+  let html = main.length ? `<ul class="m-list">${main.map(row).join('')}</ul>` : '';
+  if (others.length) {
+    const where = others.every(m => m.region === 'rural') ? 'Орон нутагт' : others.every(m => m.region === 'ub') ? 'Улаанбаатарт' : 'Бусад шүүлтүүрт';
+    html = (main.length ? '' : `<div class="notice" role="status"><span>Сонгосон шүүлтүүрт «${esc(q)}» олдсонгүй. ${where} ${others.length} мерчант олдлоо.</span><button class="link" type="button" data-action="show-all" style="all:unset;color:var(--cyan-dark);font-weight:500;cursor:pointer">Бүх мерчантаас харах →</button></div>`)
+      + html + `<p class="group-label">${where} олдсон · ${others.length}</p><ul class="m-list">${others.map(row).join('')}</ul>`;
+  }
+  if (state.origin && state.mode === 'near' && !q && !LOADED.pending && !LOADED.error) html = nearCard() + html;
+  if (LOADED.pending) {
+    html = `<div class="load-error" role="status">
+      <img class="owl" src="${SITE_CFG.base}/assets/owl.webp" alt="" width="132" height="103" onerror="this.remove()">
+      <h3>Мерчантын мэдээлэл удахгүй нэмэгдэнэ</h3>
+      <p>WoowPay хүлээн авдаг газруудын жагсаалтыг бэлдэж байна.</p>
+      <a class="btn btn-soft btn-sm" href="https://merchant.woowpay.mn/register.html">Мерчант болох</a>
+    </div>`;
+  } else if (LOADED.error) {
+    html = `<div class="load-error" role="alert">
+      <h3>Мерчантын мэдээлэл ачаалж чадсангүй</h3>
+      <p>Түр саатал гарлаа. Хэсэг хугацааны дараа дахин оролдоно уу.</p>
+      <button class="btn btn-soft btn-sm" type="button" onclick="location.reload()">Дахин ачаалах</button>
+    </div>`;
+  } else if (!main.length && !others.length) {
+    html = `<div class="empty">
+      <h3>${q ? `«${esc(q)}» олдсонгүй` : 'Шүүлтүүрт тохирох мерчант алга'}</h3>
+      <p>${q ? 'Нэр, ангилал, дүүрэг эсвэл аймгийн нэрээр хайж үзээрэй. Латин үсгээр бичсэн ч болно.' : 'Сонгосон шүүлтүүрийг цөөлж үзээрэй.'}</p>
+      <button class="btn btn-soft btn-sm" type="button" data-action="reset">Шүүлтүүр цэвэрлэх</button>
+      <p class="note">Мерчант дутуу байна уу? <a class="ext" href="${MESSENGER}" target="_blank" rel="noopener">Бидэнд мэдэгдээрэй</a></p>
+    </div>`;
+  }
+  if (LOADED.pending) {   // nothing to count or filter yet: say so instead of showing zeros
+    $('#results-count').textContent = 'удахгүй'; $('#sheet-label').textContent = 'Удахгүй';
+  }
+  $('#results-inner').innerHTML = html;
+
+  const onMap = main.length ? main : others;
+  const pinned = onMap.filter(m => !isOnline(m));
+  map.setData(pinned, status);
+  return pinned;
+}
+
+function mapPad() {
+  if (!mq.matches || state.view !== 'map') return 56;
+  // Keep pins out from under the list sheet: it covers ~55% of the map when half open.
+  const h = document.querySelector('.map-wrap')?.clientHeight || 600;
+  return { top: 70, right: 70, bottom: $('#results').dataset.sheet === 'half' ? Math.round(h * 0.55) + 16 : 196, left: 36 };
+}
+
+function renderControls() {
+  const counts = { all: DATA.length, ub: DATA.filter(m => m.region === 'ub').length, rural: DATA.filter(m => m.region === 'rural').length };
+  document.querySelectorAll('[data-count]').forEach(el => { el.textContent = counts[el.dataset.count]; });
+  $('#region-seg').innerHTML = REGIONS.map(r => `<button type="button" data-region="${r.v}" aria-pressed="${state.region === r.v}">${r.t}<span>${counts[r.v]}</span></button>`).join('');
+
+  const pool = DATA.filter(inRegion);
+  const catCount = key => pool.filter(m => m.category === key).length;
+  const cats = CATEGORIES.filter(c => catCount(c.key) > 0).sort((a, b) => catCount(b.key) - catCount(a.key));
+  const hasOffers = DATA.some(m => m.offer);
+  const regionOn = (state.region !== 'all') + !!state.area;
+  $('#cat-chips').innerHTML = `<button class="chip cats-btn" type="button" data-action="cats" aria-haspopup="dialog"><span class="ci"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="4" y="4" width="6.5" height="6.5" rx="1.5"/><rect x="13.5" y="4" width="6.5" height="6.5" rx="1.5"/><rect x="4" y="13.5" width="6.5" height="6.5" rx="1.5"/><rect x="13.5" y="13.5" width="6.5" height="6.5" rx="1.5"/></svg></span>Ангилал${regionOn ? `<b>${regionOn}</b>` : ''}<svg class="car" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></button>`
+    + `<button class="chip tg" type="button" data-toggle="open" aria-pressed="${state.openNow}"><i></i>Одоо нээлттэй</button>`
+    + (hasOffers ? `<button class="chip tg offer" type="button" data-toggle="offer" aria-pressed="${state.offerOnly}"><i></i>Хөнгөлөлттэй</button>` : '')
+    + `<span class="chip-sep" aria-hidden="true"></span>`
+    + `<button class="chip" type="button" data-cat="" aria-pressed="${!state.category}">Бүгд<span>${pool.length}</span></button>`
+    + cats.map(c => `<button class="chip" type="button" data-cat="${c.key}" aria-pressed="${state.category === c.key}"><span class="ci" style="color:${c.color}">${catIcon(c.icon)}</span>${esc(c.mn)}<span>${catCount(c.key)}</span></button>`).join('');
+
+  const areas = [...new Set(pool.map(m => m.area))].sort((a, b) => pool.filter(m => m.area === b).length - pool.filter(m => m.area === a).length || a.localeCompare(b, 'mn'));
+  $('#area-select').innerHTML = `<option value="">Бүх дүүрэг, аймаг · ${pool.length}</option>`
+    + areas.map(a => `<option value="${esc(a)}"${state.area === a ? ' selected' : ''}>${esc(a)} · ${pool.filter(m => m.area === a).length}</option>`).join('');
+
+  const opts = SORTS.map(s => `<option value="${s.v}"${state.sort === s.v ? ' selected' : ''}>${s.t}${s.v === 'nearest' && !state.origin ? ' (байршил хэрэгтэй)' : ''}</option>`).join('');
+  $('#sort-select').innerHTML = opts; $('#sort-select-m').innerHTML = opts;
+
+  $('#cs-grid').innerHTML = `<button class="cs-tile" type="button" data-cat="" aria-pressed="${!state.category}"><span class="ti" style="background:#E9ECF7;color:var(--royal)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="4" y="4" width="6.5" height="6.5" rx="1.5"/><rect x="13.5" y="4" width="6.5" height="6.5" rx="1.5"/><rect x="4" y="13.5" width="6.5" height="6.5" rx="1.5"/><rect x="13.5" y="13.5" width="6.5" height="6.5" rx="1.5"/></svg></span>Бүгд<small>${pool.length} газар</small></button>`
+    + cats.map(c => `<button class="cs-tile" type="button" data-cat="${c.key}" aria-pressed="${state.category === c.key}"><span class="ti" style="background:${c.color}1F;color:${c.color}">${catIcon(c.icon)}</span>${esc(c.mn)}<small>${catCount(c.key)} газар</small></button>`).join('');
+  document.querySelectorAll('.mode-seg [data-mode]').forEach(b => b.setAttribute('aria-pressed', String((state.origin ? state.mode : 'all') === b.dataset.mode)));
+  const active = (state.region !== 'all') + !!state.area;
+  $('#filter-count').textContent = active; $('#filter-count').hidden = !active;
+  $('#clear-search').hidden = !state.q;
+  if ($('#search-input').value !== state.q) $('#search-input').value = state.q;
+  $('#loc-chip').hidden = !state.origin;
+  if (state.origin) $('#loc-label').textContent = state.origin.label || 'Таны байршлаас';
+  $('#finder').dataset.view = state.view;
+  document.querySelectorAll('.view-seg button').forEach(b => b.setAttribute('aria-pressed', b.dataset.view === state.view));
+}
+
+function render({ fit = true } = {}) {
+  renderControls();
+  const shown = renderResults();
+  // With a location, frame the user and the closest shops instead of the whole city.
+  const near = state.origin && state.mode === 'near';
+  map.setRadius?.(near ? (state.radius || 0.5) : null);
+  if (fit) {
+    if (near && shown.length) map.fit(state.radius ? shown : shown.slice(0, 5), { pad: mapPad() });
+    else map.fit(shown, { pad: mapPad(), all: !!state.origin });
+  }
+  map.setSelected(state.selected);
+  writeUrl();
+}
+
+/* ---------- detail panel ---------- */
+let lastFocus = null;
+function openMerchant(id, { focusMap = 'pan' } = {}) {
+  const m = DATA.find(x => String(x.id) === String(id));
+  if (!m) return;
+  state.selected = m.id;
+  const st = status.get(m.id) || getStatus(m, ubNow());
+  const d = km(m);
+  const near = nearest(DATA, m, 3, x => x.id !== m.id && x.status === 'active' && !isOnline(x));
+  const openAlt = nearest(DATA, m, 1, x => x.id !== m.id && !isOnline(x) && OPENISH.has((status.get(x.id) || getStatus(x, ubNow())).state))[0];
+  const week = weekTable(m);
+  const report = `${MESSENGER}?ref=merchant-${encodeURIComponent(m.id)}`;
+
+  $('#d-scroll').innerHTML = `
+    <div class="d-top"><span>Мерчантын мэдээлэл</span>
+      <button class="close-btn" type="button" data-action="close" aria-label="Хаах"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button></div>
+    <div class="d-photo${m.photo ? '' : ' is-empty'}" ${m.photo ? '' : `style="background:${catColor(m.category)}14;color:${catColor(m.category)}"`}>${m.photo ? `<img src="${esc(m.photo)}" alt="${esc(m.name)}" width="800" height="450" decoding="async" onerror="this.parentNode.classList.add('is-empty');this.remove()">` : catSvg(m.category)}</div>
+    <div class="d-body">
+      <div class="d-head">
+        <h2 id="d-title">${esc(m.name)}</h2>
+        ${m.about ? `<p class="d-about">${esc(m.about)}</p>` : ''}
+        <p class="m-meta"><span class="cat-tag"><i class="cat-dot" style="background:${catColor(m.category)}"></i>${esc(catLabel(m.category))}</span>${d != null ? `<span class="km">${formatKm(d)}</span>` : ''}<span>${esc(m.place || m.area)}</span></p>
+        <span class="pill tone-${st.tone}">${esc(st.label)}${st.detail ? ` <span class="d">${esc(st.detail)}</span>` : ''}</span>
+      </div>
+      ${m.offer ? `<div class="callout offer"><strong>${esc(m.offer.label)}</strong>${m.offer.until ? `<span>${esc(m.offer.until)} хүртэл</span>` : ''}</div>` : ''}
+      ${st.state === 'offline' ? `<div class="callout bad"><strong>Энэ мерчант түр үйлчлэхгүй байна.</strong>${openAlt ? `<span>Ойролцоох нээлттэй: <button type="button" data-open-near="${esc(openAlt.k.id)}" style="all:unset;color:inherit;font-weight:600;text-decoration:underline;cursor:pointer">${esc(openAlt.k.name)} · ${formatKm(openAlt.km)}</button></span>` : ''}</div>` : ''}
+      <div class="d-actions">
+        ${isOnline(m) ? '' : `<a class="btn btn-primary ext" href="${directionsUrl(m)}" target="_blank" rel="noopener">Чиглэл авах</a>`}
+        ${m.phone ? `<a class="btn btn-line" href="tel:${esc(m.phone.tel)}">${esc(m.phone.display)}</a>` : `<button class="btn btn-line" type="button" data-action="share">Хуваалцах</button>`}
+      </div>
+      ${isOnline(m) ? `<div class="callout"><strong>Онлайн дэлгүүр</strong><span>Энэ мерчант онлайнаар худалдаалдаг тул газрын зураг дээр байршилгүй.</span></div>` : `<div class="d-sec">
+        <h3>Хаяг</h3>
+        <div class="addr">
+          <span class="place">${esc(m.place || m.area)}</span>
+          ${m.address ? `<span>${esc(m.address)}</span>` : ''}
+          ${m.landmark ? `<span class="how">${ICONS.pin}<span>${esc(m.landmark)}</span></span>` : ''}
+          <a class="link ext" href="${mapUrl(m)}" target="_blank" rel="noopener" style="margin-top:8px;font-size:14px">Google Maps-д нээх</a>
+        </div>
+      </div>`}
+      <div class="d-sec">
+        <h3>Ажиллах цаг</h3>
+        <table class="week"><tbody>${week.map(w => `<tr class="${w.isToday ? 'today' : ''}${w.closed ? ' closed' : ''}"><td>${w.name}</td><td>${w.text}</td></tr>`).join('')}</tbody></table>
+        <p class="note">Төлөвийг ажиллах цагийн хуваарьт үндэслэн харуулж байна.</p>
+      </div>
+      ${isOnline(m) ? '' : `<div class="d-sec">
+        <h3>Байршил</h3>
+        <div class="mini-map" id="mini-map"></div>
+      </div>
+      <div class="d-sec">
+        <h3>Ойролцоох мерчантууд</h3>
+        <ul class="near-list">${near.map(n => { const s2 = status.get(n.k.id); return `<li><button type="button" data-open-near="${esc(n.k.id)}"><span><span class="m-name">${esc(n.k.name)}</span><br><span class="pill tone-${s2.tone}" style="margin-top:4px">${esc(statusLine(s2))}</span></span><span class="km">${formatKm(n.km)}</span></button></li>`; }).join('')}</ul>
+      </div>`}
+      <div class="report"><span>Мэдээлэл буруу байна уу?<br><span style="font-size:12.5px;color:var(--gray-400)">ID: ${esc(m.id)}</span></span><a class="link ext" href="${report}" target="_blank" rel="noopener">Мэдэгдэх</a></div>
+    </div>`;
+
+  const dlg = $('#drawer');
+  if (!dlg.open) { lastFocus = document.activeElement; dlg.showModal(); }
+  if (m.partial && DATA_DIR && !m.loading) {
+    // The index row is enough to show the panel at once; landmark, photo and offer end date follow.
+    m.loading = true;
+    // Same version as the index, so details always match the list; the unversioned copy is a fallback.
+    fetch(`${DATA_DIR}/m/${encodeURIComponent(m.id)}.json`)
+      .then(r => r.ok ? r : fetch(`${SITE_CFG.base}/api/merchant/${encodeURIComponent(m.id)}.json`))
+      .then(r => r.ok ? r.json() : null).then(full => {
+      if (!full) return;
+      Object.assign(m, { landmark: full.landmark, photo: full.photo, offer: full.offer, address: full.address, about: full.about ?? m.about, statusNote: full.statusNote, updatedAt: full.updatedAt, partial: false });
+      if (state.selected === m.id && dlg.open) { const top = $('#d-scroll').scrollTop; openMerchant(m.id, { focusMap: false }); $('#d-scroll').scrollTop = top; }
+    }).catch(() => {}).finally(() => { m.loading = false; });
+  }
+  $('#d-scroll').scrollTop = 0;
+  document.title = `${m.name} — WoowPay мерчант`;
+  if (!isOnline(m)) drawMini(m, near.map(n => n.k));
+
+  document.querySelectorAll('.m-row').forEach(r => r.classList.toggle('is-selected', r.dataset.id === String(m.id)));
+  map.setSelected(m.id);
+  if (isOnline(m)) { /* no pin to focus */ } else if (focusMap === 'pan') map.focus(m, 0);
+  else if (focusMap) map.focus(m, m.region === 'ub' ? 2200 : 60);
+  writeUrl();
+}
+const closeMerchant = () => { const d = $('#drawer'); if (d.open) d.close(); };
+$('#drawer').addEventListener('close', () => { document.title = BASE_TITLE; writeUrl(); if (lastFocus && document.contains(lastFocus)) lastFocus.focus(); });
+$('#drawer').addEventListener('click', e => {
+  if (e.target === e.currentTarget) closeMerchant();
+  const near = e.target.closest('[data-open-near]');
+  if (near) openMerchant(near.dataset.openNear);
+  const act = e.target.closest('[data-action]')?.dataset.action;
+  if (act === 'close') closeMerchant();
+  if (act === 'share') share();
+});
+
+async function share() {
+  const m = DATA.find(x => String(x.id) === String(state.selected));
+  const url = merchantUrl(m.id);
+  try {
+    if (navigator.share) { await navigator.share({ title: `${m.name} — WoowPay`, text: `${m.place || m.area}`, url }); return; }
+    await navigator.clipboard.writeText(url);
+    toast('Холбоос хуулагдлаа');
+  } catch (e) { if (e?.name !== 'AbortError') toast(`Холбоос: ${url}`); }
+}
+
+/* ---------- panel mini map: street map when available (one WebGL context, reused), else outline ---------- */
+let miniStreet = null;
+async function drawMini(m, nearList) {
+  const el = $('#mini-map'); if (!el) return;
+  const pts = [m, ...nearList];
+  const paint = mini => { mini.setData(pts, status); mini.selected = m.id; requestAnimationFrame(() => mini.fit(pts, { pad: 34, maxScale: 6000 })); };
+  if (map instanceof StreetMap) {
+    miniStreet?.map.remove(); miniStreet = null;
+    const host = document.createElement('div'); host.className = 'street-map'; el.appendChild(host);
+    const s = await StreetMap.create(host, { style: SITE_CFG.mapStyle, base: SITE_CFG.base, interactive: false, pinStyle });
+    if (s && document.contains(host)) { miniStreet = s; paint(s); return; }
+    host.remove();
+  }
+  paint(new DemoMap(el, { outline: OUTLINE, interactive: false }));
+}
+$('#drawer').addEventListener('close', () => { miniStreet?.map.remove(); miniStreet = null; });
+
+/* ---------- location ---------- */
+function setOrigin(o) {
+  state.origin = o;
+  state.sort = o ? 'nearest' : 'recommended';
+  // Nothing is hidden: the list is sorted nearest-first and the 500 m circle is a guide; radius buttons filter only on request.
+  state.radius = null;
+  state.mode = o ? 'near' : 'all';
+  map.setOrigin(o);
+  if (o && mq.matches && state.view === 'map' && $('#results').dataset.sheet === 'peek') $('#results').dataset.sheet = 'half';
+  render({ fit: !$('#drawer').open });
+
+}
+function locate({ scroll = false, quiet = false } = {}) {
+  if (scroll) $('#finder').scrollIntoView({ behavior: 'smooth' });
+  const fallback = msg => { if (!quiet) toast(msg, SITE_CFG.mode === 'prototype' ? 'Туршилтын байршил' : null, () => setOrigin(DEMO_ORIGIN)); };
+  if (!navigator.geolocation) return fallback('Энэ хөтөч байршил дэмжихгүй байна.');
+  if (!quiet) toast('Байршлыг тодорхойлж байна…');
+  navigator.geolocation.getCurrentPosition(
+    p => {
+      const o = { lat: p.coords.latitude, lon: p.coords.longitude, label: 'Таны байршлаас' };
+      const far = nearest(DATA, o, 1)[0];
+      if (far && far.km > 1500) return fallback('Та Монголоос гадна байгаа тул зай тооцох боломжгүй.');
+      setOrigin(o);
+    },
+    err => { if (err.code === 1) showLocModal('denied'); fallback(err.code === 1 ? 'Байршлын зөвшөөрөл хаалттай байна. Хөтчийн тохиргооноос (aA / 🔒) зөвшөөрнө үү.' : 'Байршил тодорхойлж чадсангүй. Дахин оролдоно уу.'); },
+    { enableHighAccuracy: true, timeout: 8000, maximumAge: 60000 }
+  );
+}
+
+/* ---------- toast ---------- */
+let toastTimer;
+function toast(text, actionText, action) {
+  $('#toast-text').textContent = text;
+  const b = $('#toast-btn');
+  b.hidden = !actionText; b.textContent = actionText || '';
+  b.onclick = () => { $('#toast').classList.remove('show'); action && action(); };
+  $('#toast').classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => $('#toast').classList.remove('show'), actionText ? 7000 : 3200);
+}
+
+/* ---------- suggestions ---------- */
+let sugItems = [], sugIndex = -1;
+const hl = (text, q) => { const i = text.toLowerCase().indexOf(q.toLowerCase()); return i < 0 || !q ? esc(text) : `${esc(text.slice(0, i))}<mark>${esc(text.slice(i, i + q.length))}</mark>${esc(text.slice(i + q.length))}`; };
+function renderSuggest() {
+  const input = $('#search-input'), box = $('#suggest');
+  const q = input.value.trim();
+  if (!q) { box.hidden = true; input.setAttribute('aria-expanded', 'false'); return; }
+  const { merchants, areas } = suggest(INDEX, q, 5);
+  const cats = CATEGORIES.filter(c => c.mn.toLowerCase().includes(q.toLowerCase())).slice(0, 2);
+  sugItems = [...cats.map(c => ({ type: 'cat', c })), ...areas.map(a => ({ type: 'area', a })), ...merchants.map(h => ({ type: 'merchant', m: h.k }))];
+  sugIndex = -1;
+  box.innerHTML = sugItems.length ? sugItems.map((it, i) => {
+    if (it.type === 'cat') return `<li role="option" id="sug-${i}" data-i="${i}" aria-selected="false"><span class="s-name">${hl(it.c.mn, q)}</span><span class="s-kind">Ангилал</span></li>`;
+    if (it.type === 'area') return `<li role="option" id="sug-${i}" data-i="${i}" aria-selected="false"><span><span class="s-name">${hl(it.a.area, q)}</span><br><span class="s-meta">${it.a.region === 'ub' ? 'Улаанбаатар' : 'Орон нутаг'}</span></span><span class="s-kind">${it.a.count} мерчант</span></li>`;
+    return `<li role="option" id="sug-${i}" data-i="${i}" aria-selected="false"><span><span class="s-name">${hl(it.m.name, q)}</span><br><span class="s-meta">${esc(catLabel(it.m.category))} · ${esc(it.m.area)}</span></span><span class="s-kind">${state.origin ? formatKm(km(it.m)) : 'Мерчант'}</span></li>`;
+  }).join('') : `<li aria-disabled="true"><span class="s-meta">Тохирох мерчант алга. Өөр нэрээр хайгаад үзээрэй.</span></li>`;
+  box.hidden = false; input.setAttribute('aria-expanded', 'true');
+}
+function pickSuggestion(i) {
+  const it = sugItems[i]; if (!it) return;
+  $('#suggest').hidden = true; $('#search-input').setAttribute('aria-expanded', 'false');
+  if (it.type === 'cat') { state.q = ''; state.category = it.c.key; render(); }
+  else if (it.type === 'area') { state.q = ''; state.area = it.a.area; state.region = it.a.region === 'ub' ? 'ub' : 'rural'; render(); }
+  else { state.q = it.m.name; render(); openMerchant(it.m.id); }
+}
+
+/* ---------- events ---------- */
+let typeTimer;
+$('#search-input').addEventListener('input', e => {
+  renderSuggest();
+  clearTimeout(typeTimer);
+  typeTimer = setTimeout(() => { state.q = e.target.value; render(); }, 180);
+});
+$('#search-input').addEventListener('keydown', e => {
+  const box = $('#suggest');
+  if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
+    if (box.hidden || !sugItems.length) return;
+    e.preventDefault();
+    sugIndex = (sugIndex + (e.key === 'ArrowDown' ? 1 : -1) + sugItems.length) % sugItems.length;
+    box.querySelectorAll('[role=option]').forEach((li, i) => li.setAttribute('aria-selected', i === sugIndex));
+    e.target.setAttribute('aria-activedescendant', `sug-${sugIndex}`);
+  } else if (e.key === 'Enter') {
+    e.preventDefault();
+    if (sugIndex >= 0) pickSuggestion(sugIndex);
+    else { state.q = e.target.value; box.hidden = true; render(); if (mq.matches) e.target.blur(); }
+  } else if (e.key === 'Escape') { box.hidden = true; e.target.setAttribute('aria-expanded', 'false'); }
+});
+$('#search-input').addEventListener('focus', renderSuggest);
+document.addEventListener('pointerdown', e => { if (!e.target.closest('.search')) { $('#suggest').hidden = true; $('#search-input').setAttribute('aria-expanded', 'false'); } });
+$('#suggest').addEventListener('pointerdown', e => { const li = e.target.closest('[data-i]'); if (li) { e.preventDefault(); pickSuggestion(+li.dataset.i); } });
+$('#clear-search').addEventListener('click', () => { state.q = ''; $('#search-input').value = ''; renderSuggest(); render(); $('#search-input').focus(); });
+
+$('#region-seg').addEventListener('click', e => { const b = e.target.closest('[data-region]'); if (!b) return; state.region = b.dataset.region; state.area = null; render(); });
+$('#cat-chips').addEventListener('click', e => {
+  if (e.target.closest('[data-action="cats"]')) { $('#cat-sheet').showModal(); return; }
+  const t = e.target.closest('[data-toggle]');
+  if (t) { if (t.dataset.toggle === 'open') state.openNow = !state.openNow; else state.offerOnly = !state.offerOnly; render(); return; }
+  const b = e.target.closest('[data-cat]'); if (!b) return;
+  state.category = b.dataset.cat === state.category ? null : (b.dataset.cat || null);   // tap again to clear
+  render();
+  $(`#cat-chips [data-cat="${state.category || ''}"]`)?.scrollIntoView({ block: 'nearest', inline: 'center' });
+});
+$('#area-select').addEventListener('change', e => { state.area = e.target.value || null; render(); });
+for (const id of ['#sort-select', '#sort-select-m']) {
+  $(id).addEventListener('change', e => {
+    if (e.target.value === 'nearest' && !state.origin) { e.target.value = state.sort; locate(); return; }
+    state.sort = e.target.value; render({ fit: false });
+  });
+}
+document.querySelectorAll('.view-seg button').forEach(b => b.addEventListener('click', () => { state.view = b.dataset.view; render(); }));
+$('#filters-toggle').addEventListener('click', () => {
+  const tb = $('#toolbar'); const open = !tb.classList.contains('is-open');
+  tb.classList.toggle('is-open', open); $('#filters-toggle').setAttribute('aria-expanded', open);
+  measureToolbar();
+});
+$('#proto-close')?.addEventListener('click', () => $('#proto').remove());
+
+$('#results').addEventListener('click', e => {
+  const open = e.target.closest('[data-open]');
+  if (open) openMerchant(open.dataset.open);
+  const act = e.target.closest('[data-action]')?.dataset.action;
+  const rb = e.target.closest('[data-radius]');
+  if (rb) { state.radius = rb.dataset.radius ? +rb.dataset.radius : null; render(); return; }
+  const nn = e.target.closest('[data-open-nearest]');
+  if (nn) { openMerchant(nn.dataset.openNearest, { focusMap: true }); return; }
+  if (act === 'reset') { Object.assign(state, { q: '', region: 'all', area: null, category: null, openNow: false, offerOnly: false }); render(); }
+  if (act === 'show-all') { Object.assign(state, { region: 'all', area: null, category: null, openNow: false, offerOnly: false }); render(); }
+});
+$('#results').addEventListener('pointerover', e => { const r = e.target.closest('.m-row'); map.setHover(r ? r.dataset.id : null); });
+$('#results').addEventListener('pointerleave', () => map.setHover(null));
+
+document.addEventListener('click', e => {
+  const act = e.target.closest('[data-action]')?.dataset.action;
+  if (!act || e.target.closest('#results, #drawer')) return;
+  if (act === 'locate') locate();
+  if (act === 'locate-scroll') locate({ scroll: true });
+  if (act === 'clear-location') setOrigin(null);
+  if (act === 'zoom-in') map.zoom(1.6);
+  if (act === 'zoom-out') map.zoom(1 / 1.6);
+  if (act === 'fit') map.fit((lastResults.main.length ? lastResults.main : lastResults.others).filter(m => !isOnline(m)), { pad: mapPad(), all: true });
+  if (act === 'focus-filters') { $('#toolbar').classList.add('is-open'); $('#filters-toggle').setAttribute('aria-expanded', 'true'); setTimeout(measureToolbar, 50); }
+});
+
+/* ---------- near / all switch on the map ---------- */
+document.querySelector('.mode-seg')?.addEventListener('click', e => {
+  const b = e.target.closest('[data-mode]'); if (!b) return;
+  if (b.dataset.mode === 'near') { if (!state.origin) { locate(); return; } state.mode = 'near'; }
+  else { state.mode = 'all'; state.radius = null; }
+  render();
+});
+
+/* ---------- category sheet ---------- */
+const catSheet = $('#cat-sheet');
+catSheet.addEventListener('click', e => {
+  if (e.target === catSheet || e.target.closest('[data-cs="close"]')) return catSheet.close();
+  const t = e.target.closest('[data-cat]');
+  if (t) { state.category = t.dataset.cat || null; catSheet.close(); render(); $(`#cat-chips [data-cat="${state.category || ''}"]`)?.scrollIntoView({ block: 'nearest', inline: 'center' }); }
+});
+
+/* ---------- chip row arrows (desktop) ---------- */
+(() => {
+  const row = $('#cat-chips'), prev = $('.chips-nav.prev'), next = $('.chips-nav.next');
+  const upd = () => { prev.hidden = row.scrollLeft < 8; next.hidden = row.scrollLeft + row.clientWidth >= row.scrollWidth - 8; };
+  row.addEventListener('scroll', upd, { passive: true }); addEventListener('resize', upd);
+  for (const b of [prev, next]) b.addEventListener('click', () => row.scrollBy({ left: +b.dataset.scroll * row.clientWidth * 0.7 }));
+  new MutationObserver(upd).observe(row, { childList: true }); setTimeout(upd, 300);
+})();
+
+/* ---------- mobile bottom sheet ---------- */
+(() => {
+  const sheet = $('#results'), handle = $('#sheet-handle');
+  const order = ['peek', 'half', 'full'];
+  let start = null;
+  handle.addEventListener('click', () => { if (start?.moved) return; sheet.dataset.sheet = order[(order.indexOf(sheet.dataset.sheet) + 1) % order.length]; });
+  handle.addEventListener('pointerdown', e => { start = { y: e.clientY, h: sheet.getBoundingClientRect().top, moved: false }; handle.setPointerCapture(e.pointerId); sheet.classList.add('dragging'); });
+  handle.addEventListener('pointermove', e => {
+    if (!start) return;
+    const dy = e.clientY - start.y;
+    if (Math.abs(dy) > 4) start.moved = true;
+    const parent = sheet.parentElement.getBoundingClientRect();
+    const top = Math.min(Math.max(start.h + dy, parent.top + 24), parent.bottom - 120);
+    sheet.style.transform = `translateY(${top - (parent.top + 24)}px)`;
+  });
+  handle.addEventListener('pointerup', e => {
+    if (!start) return;
+    sheet.classList.remove('dragging'); sheet.style.transform = '';
+    if (start.moved) {
+      const parent = sheet.parentElement.getBoundingClientRect();
+      const frac = (e.clientY - parent.top) / parent.height;
+      sheet.dataset.sheet = frac < 0.3 ? 'full' : frac < 0.7 ? 'half' : 'peek';
+      setTimeout(() => { start = null; }, 0);
+    } else start = null;
+  });
+})();
+
+/* ---------- sticky toolbar ---------- */
+function measureToolbar() { document.documentElement.style.setProperty('--toolbar-h', `${$('#toolbar').offsetHeight}px`); }
+const sentinel = document.createElement('div');
+sentinel.style.cssText = 'position:absolute;top:-1px;height:1px;width:1px';
+$('#finder').prepend(sentinel);
+new IntersectionObserver(([en]) => {
+  const tb = $('#toolbar');
+  const stuck = !en.isIntersecting && en.boundingClientRect.top < 0;
+  if (!mq.matches) tb.classList.toggle('is-compact', stuck);
+  if (!stuck) tb.classList.remove('is-open');
+  measureToolbar();
+}, { rootMargin: `-${parseInt(getComputedStyle(document.documentElement).getPropertyValue('--header-h')) + 1}px 0px 0px 0px` }).observe(sentinel);
+
+/* ---------- logo fallback (the real asset lives on the production host) ---------- */
+document.querySelectorAll('img[data-fallback="wordmark"]').forEach(img => {
+  const swap = () => {
+    if (img.dataset.swapped) return; img.dataset.swapped = '1';
+    const s = document.createElement('span');
+    s.className = 'wordmark';
+    s.innerHTML = 'W<i>OO</i>W<sup>pay</sup>';
+    img.replaceWith(s);
+  };
+  if (img.complete && img.naturalWidth === 0) swap(); else img.addEventListener('error', swap, { once: true });
+});
+
+/* ---------- data freshness (checklist E31) ---------- */
+function renderFresh() {
+  const el = $('#fresh');
+  if (!LOADED.generated || LOADED.sample) { el.hidden = true; return; }
+  const t = new Date(LOADED.generated);
+  const p = Object.fromEntries(new Intl.DateTimeFormat('en-GB', { timeZone: 'Asia/Ulaanbaatar', month: 'numeric', day: 'numeric', hour: '2-digit', minute: '2-digit', hour12: false }).formatToParts(t).map(x => [x.type, x.value]));
+  const ub = `${p.month} сарын ${p.day}, ${p.hour}:${p.minute}`;
+  el.hidden = false;
+  el.classList.toggle('is-stale', LOADED.stale);
+  el.textContent = LOADED.stale ? `Сүүлд ${ub}-д шинэчлэгдсэн · мэдээлэл хуучирсан байж магадгүй` : `Шинэчлэгдсэн: ${ub}`;
+}
+
+/* ---------- location on arrival ----------
+   Every visit: if the browser already allows location, use it at once (nothing to ask);
+   otherwise open the WoowPay pop-up. Its button triggers the browser's own question. */
+const RADII = [0.5, 1, 3];
+const pinned = list => list.filter(m => !isOnline(m) && m.lat != null);
+function withoutRadius() { const r = state.radius; state.radius = null; const l = DATA.filter(passes); state.radius = r; return pinned(l); }
+const radiusText = r => r < 1 ? `${Math.round(r * 1000)} м` : `${r} км`;
+function nearCard() {
+  const pool = withoutRadius();
+  const r = state.radius || RADII[0];
+  const inside = pool.filter(m => km(m) <= r);
+  const openN = inside.filter(m => OPENISH.has(status.get(m.id).state)).length;
+  const closest = [...pool].sort((a, b) => km(a) - km(b))[0];
+  const what = state.category ? `«${esc(catLabel(state.category))}»` : 'мерчант';
+  const head = inside.length
+    ? `<b>Таны байршлаас ${radiusText(r)}-т <em>${inside.length} ${what}</em> байна</b>`
+    : `<b>${radiusText(r)}-т ${what} алга</b>`;
+  const sub = [inside.length ? `${openN ? `${openN} нь одоо нээлттэй` : 'Одоо бүгд хаалттай'}` : '',
+    closest ? `хамгийн ойр нь <button type="button" data-open-nearest="${esc(closest.id)}">${esc(closest.name)}</button>, ${formatKm(km(closest))}` : ''].filter(Boolean).join(' · ');
+  const btn = (v, label, n) => `<button type="button" data-radius="${v ?? ''}" aria-pressed="${(state.radius ?? null) === v}">${label}<span>${n}</span></button>`;
+  return `<div class="near-card" role="region" aria-label="Таны ойролцоо">
+    <div class="nc-top"><span class="nc-big" aria-hidden="true">${inside.length}</span><span>${head}<small>${sub.charAt(0).toUpperCase() + sub.slice(1)}</small></span></div>
+    <div class="nc-radius" role="group" aria-label="Радиус">${RADII.map(x => btn(x, radiusText(x), pool.filter(m => km(m) <= x).length)).join('')}${btn(null, 'Бүгд', pool.length)}</div>
+  </div>`;
+}
+
+const locModal = $('#loc-modal');
+function showLocModal(kind = 'ask') {
+  if (!locModal || LOADED.pending || LOADED.error || !DATA.length) return;
+  const denied = kind === 'denied';
+  $('#lm-title').textContent = denied ? 'Байршил хаалттай байна' : 'Ойр байгаа мерчантаа олоорой';
+  $('#lm-text').textContent = denied
+    ? 'Хаягийн мөрний 🔒 эсвэл aA дээр дарж «Байршил»-ыг зөвшөөрөөд дахин оролдоно уу. Эсвэл хайлтаар олоорой.'
+    : 'Байршлаа зөвшөөрвөл таны эргэн тойронд WoowPay-ээр төлөх газрууд хэдэн метрт байгааг шууд харуулна.';
+  $('#lm-go-text').textContent = denied ? 'Дахин оролдох' : 'Байршлаа зөвшөөрөх';
+  if (!locModal.open && !$('#drawer').open) locModal.showModal();
+}
+locModal?.addEventListener('click', e => {
+  if (e.target === locModal) return locModal.close();         // tap outside
+  const a = e.target.closest('[data-lm]')?.dataset.lm;
+  if (!a) return;
+  locModal.close();
+  if (a === 'locate') locate();
+  if (a === 'search') { $('#finder').scrollIntoView({ behavior: 'smooth' }); setTimeout(() => $('#search-input').focus(), 250); }
+});
+async function initLocation() {
+  if (!navigator.geolocation || LOADED.pending || LOADED.error || !DATA.length || state.origin) return;
+  let perm = 'prompt';
+  try { perm = (await navigator.permissions.query({ name: 'geolocation' })).state; } catch { /* older Safari: just ask */ }
+  if (perm === 'granted') return locate({ quiet: true });
+  if (state.selected) return;                  // opened a shared merchant link: don't cover it
+  showLocModal(perm === 'denied' ? 'denied' : 'ask');
+}
+
+/* ---------- boot ---------- */
+let hintTimer;
+// Map pins use the same colour and icon as the list.
+const pinStyle = { categories: () => CATEGORIES.map(c => c.key), get: key => ({ color: catColor(key), icon: catIconPaths(CAT.get(key)?.icon) }) };
+const mapHandlers = {
+  onSelect: id => openMerchant(id, { focusMap: 'pan' }),
+  onHover: id => { map.setHover(id); document.querySelectorAll('.m-row').forEach(r => r.classList.toggle('is-hover', r.dataset.id === String(id))); },
+  onHint: () => { $('#map-hint').classList.add('show'); clearTimeout(hintTimer); hintTimer = setTimeout(() => $('#map-hint').classList.remove('show'), 1200); },
+};
+// The outline map draws instantly and is the fallback; the street map (OpenFreeMap) replaces it once loaded.
+let map = new DemoMap($('#map'), { outline: OUTLINE, ...mapHandlers });
+async function upgradeMap() {
+  if (!SITE_CFG.mapStyle) return;
+  // A fresh #map element: the outline map's pointer handlers would otherwise swallow clicks on the street map.
+  const old = $('#map'), fresh = old.cloneNode(false);
+  const host = document.createElement('div'); host.className = 'street-map'; fresh.appendChild(host);
+  fresh.classList.add('is-street');
+  old.replaceWith(fresh);
+  const street = await StreetMap.create(host, { style: SITE_CFG.mapStyle, base: SITE_CFG.base, cooperative: !mq.matches, pinStyle, ...mapHandlers });
+  if (!street) { fresh.replaceWith(old); return; }       // keep the outline map
+  map = street;
+  window.__wmmMap = () => map;   // read-only handle for diagnostics
+  if (state.origin) map.setOrigin(state.origin);   // before render: the fit and the radius circle need it
+  render({ fit: !$('#drawer').open });
+  if (state.selected) map.setSelected(state.selected);
+}
+$('#year').textContent = new Date().getFullYear();
+readUrl();
+measureToolbar();
+if (LOADED.pending) document.documentElement.dataset.pending = '1';
+if (LOADED.pending || LOADED.error) $('#hero-sub').textContent = LOADED.pending ? 'WoowPay хүлээн авдаг газрууд удахгүй энд нэг дор харагдана.' : 'WoowPay хүлээн авдаг газрууд нэг дор.';
+render();
+renderFresh();
+if (state.selected) openMerchant(state.selected);
+initLocation();
+upgradeMap();
+mq.addEventListener('change', () => { $('#toolbar').classList.remove('is-compact', 'is-open'); measureToolbar(); map.render(); });
+setInterval(renderResults, 60_000); // statuses follow the clock
+
+</script>
+
+</body>
+</html>
